@@ -1,2 +1,2 @@
-# roro
-A freeware C#-based scripting language for desktop automation
+# OpenRPA.Roro
+Roro is an open-source robotic process automation (RPA) software.

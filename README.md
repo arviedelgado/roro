@@ -1,4 +1,4 @@
-# Roro
+# Roro (OpenRPA)
 
 Roro is an Open-Source <A HREF="https://en.wikipedia.org/wiki/Robotic_process_automation">Robotic Process Automation</A> software (or RPA).
 

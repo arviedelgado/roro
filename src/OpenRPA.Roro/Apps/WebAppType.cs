@@ -25,17 +25,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Safari;
-using OpenQA.Selenium.Opera;
-using OpenQA.Selenium.Remote;
-using System.Management;
 
 namespace OpenRPA.Roro.Apps
 {

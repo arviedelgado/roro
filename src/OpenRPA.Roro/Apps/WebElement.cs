@@ -26,16 +26,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Safari;
-using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
-using System.Management;
 
 namespace OpenRPA.Roro.Apps
 {
@@ -49,75 +40,102 @@ namespace OpenRPA.Roro.Apps
         {
             this.ownerApp = ownerApp;
             this.rawElement = rawElement;
+            this.RefreshProperties();
             var driver = (RemoteWebDriver)this.rawElement.WrappedDriver;
-            var rawParent = (RemoteWebElement)driver.ExecuteScript("return arguments[0].parentElement", this.rawElement);
-            if (rawParent != null)
-            {
-                this.Parent = new WebElement(ownerApp, rawParent);
-            }
+            //var rawParent = (RemoteWebElement)driver.ExecuteScript("return arguments[0].parentElement", this.rawElement);
+            //if (rawParent != null)
+            //{
+            //    this.Parent = new WebElement(ownerApp, rawParent);
+            //}
         }
 
         internal WebElement(WebApp ownerApp, RemoteWebElement rawElement, WebElement parent)
         {
             this.ownerApp = ownerApp;
             this.rawElement = rawElement;
+            this.RefreshProperties();
             this.Parent = parent;
+        }
+
+        private void RefreshProperties()
+        {
+            var script = @"
+                var el = arguments[0];
+                var getPath = function(elem)
+                {
+                    var path = elem.tagName;
+                    while (elem)
+                    {
+                        path = elem.tagName + '/' + path;
+                        elem = elem.parentElement || elem.ownerDocument.defaultView.frameElement; // element.document.window.iframe
+                    }
+                    return path;
+                };
+                return {
+                    id:     el.getAttribute('id') || '',
+                    class:  el.getAttribute('class') || '',
+                    name:   el.getAttribute('name') || '',
+                    type:   el.tagName || '',
+                    path:   getPath(el),
+                    left:   el.getBoundingClientRect().left,
+                    top:    el.getBoundingClientRect().top,
+                    width:  el.getBoundingClientRect().width,
+                    height: el.getBoundingClientRect().height                    
+                };
+            ";
+            var driver = (RemoteWebDriver)this.rawElement.WrappedDriver;
+            var result = (IDictionary<string, object>)driver.ExecuteScript(script, this.rawElement);
+            this.Id = result["id"].ToString();
+            this.Class = result["class"].ToString();
+            this.Name = result["name"].ToString();
+            this.Type = result["type"].ToString().ToLower();
+            this.Path = result["path"].ToString().ToLower();
+            var viewportRect = this.ownerApp.GetViewportRect();
+            this.Rect = new Rect(
+                Convert.ToInt32(result["left"]) + viewportRect.X,
+                Convert.ToInt32(result["top"])  + viewportRect.Y,
+                Convert.ToInt32(result["width"]),
+                Convert.ToInt32(result["height"])
+            ); 
         }
 
         public string Id
         {
-            get
-            {
-                return this.rawElement.GetAttribute("id");
-            }
+            get;
+            private set;
         }
 
         public string Class
         {
-            get
-            {
-                return this.rawElement.GetAttribute("class");
-            }
+            get;
+            private set;
         }
 
         public string Name
         {
-            get
-            {
-                return this.rawElement.GetAttribute("name") ?? string.Empty;
-            }
+            get;
+            private set;
         }
 
         public string Type
         {
-            get
-            {
-                return this.rawElement.TagName.ToLower();
-            }
+            get;
+            private set;
         }
 
         public string Path
         {
-            get
-            {
-                return string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
-            }
+            get;
+            private set;
+            //{
+            //    return string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
+            //}
         }
 
         public Rect Rect
         {
-            get
-            {
-                var rect = new Rect();
-                var viewportRect = this.ownerApp.GetViewportRect();
-                var driver = (RemoteWebDriver)this.rawElement.WrappedDriver;
-                var rawRect = (IDictionary<string, object>)driver.ExecuteScript("return arguments[0].getBoundingClientRect()", this.rawElement);
-                rect.X = Convert.ToInt32(rawRect["left"]) + viewportRect.X;
-                rect.Y = Convert.ToInt32(rawRect["top"]) + +viewportRect.Y;
-                rect.Width = Convert.ToInt32(rawRect["width"]);
-                rect.Height = Convert.ToInt32(rawRect["height"]);
-                return rect;
-            }
+            get;
+            private set;
         }
 
         public IElement Parent

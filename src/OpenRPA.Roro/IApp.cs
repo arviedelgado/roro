@@ -35,7 +35,7 @@ namespace OpenRPA.Roro
     {
         IElement GetElementFromFocus();
 
-        IElement GetElementFromPoint(int x, int y);
+        IElement GetElementFromPoint(int screenX, int screenY);
 
         IElement[] Children { get; }
     }

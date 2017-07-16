@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/OpenRPA.Roro.Test/bin
+/src/OpenRPA.Roro.Test/obj
+/src/OpenRPA.Roro/bin
+/src/OpenRPA.Roro/obj
+
+/bin/OpenRPA.Roro.Test.pdb
+/bin/OpenRPA.Roro.Test.exe.config
+/bin/OpenRPA.Roro.pdb

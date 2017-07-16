@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenRPA.Roro;
 using OpenRPA.Roro.Apps;
+using OpenRPA.Roro.Inspect;
 
 namespace OpenRPA.Roro.Test
 {
@@ -11,28 +8,73 @@ namespace OpenRPA.Roro.Test
     {
         static void Main()
         {
-            var app = App.Start("notepad");
 
-            //var app = WebApp.StartChrome("http://www.roroscript.com");
+            IApp app;
 
-            var moved = false;
-            var point = default(InputEventArgs);
-            Input.OnMouseMove += (ref InputEventArgs args) =>
+            // app = App.Start("notepad");
+
+            try
             {
-                moved = true;
-                point = args;
-            };
+                app = WebApp.StartChrome("http://www.example.com");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+                app = WebApp.StartIE("http://www.example.com");
+            }
+
+            var inspector = new Inspector(app);
+
             while (true)
             {
-                if (moved)
-                {
-                    moved = false;
-                    var el = app.GetElementFromPoint(point.X, point.Y);
-                    if (el == null) continue;
-                    Console.Title = string.Format("Inspector [{0}, {1}]", point.X, point.Y);
-                    Console.WriteLine("{0} Id=\"{1}\" Name=\"{2}\" Class=\"{3}\"", el.Path, el.Id, el.Name, el.Class);
-                    Flasher.Flash(el.Rect);
-                }
+                inspector.PrintAndFlash();
+            }
+        }
+    }
+
+    public class Inspector
+    {
+        private readonly IApp app;
+
+        private Func<IElement> cachedFunc;
+
+        private InputEventArgs cachedArgs;
+
+        public Inspector(IApp app)
+        {
+            this.app = app;
+            this.cachedFunc = () => { return null; };
+            Input.OnMouseMove += GetFromPoint;
+            Input.OnMouseUp += GetFromFocus;
+            Input.OnKeyUp += GetFromFocus;
+        }
+
+        private void GetFromFocus(ref InputEventArgs args)
+        {
+            this.cachedArgs = args;
+            this.cachedFunc = () => { return app.GetElementFromFocus(); };
+        }
+
+        private void GetFromPoint(ref InputEventArgs args)
+        {
+            this.cachedArgs = args;
+            this.cachedFunc = () => { return app.GetElementFromPoint(this.cachedArgs.X, this.cachedArgs.Y); };
+        }
+
+        public void PrintAndFlash()
+        {
+            try
+            {
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                var el = this.cachedFunc.Invoke();
+                if (el == null) return;
+                Console.WriteLine("{0} Id=\"{1}\" Name=\"{2}\" Class=\"{3}\"", el.Path, el.Id, el.Name, el.Class);
+                Console.WriteLine(sw.ElapsedMilliseconds / 1000.0);
+                Flasher.Flash(el.Rect);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: {0}", ex.Message);
             }
         }
     }

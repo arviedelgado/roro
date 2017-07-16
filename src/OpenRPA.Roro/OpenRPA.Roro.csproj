@@ -51,8 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apps\App.cs" />
-    <Compile Include="Apps\AppElementType.cs" />
-    <Compile Include="Apps\AppElement.cs" />
+    <Compile Include="Apps\ElementType.cs" />
+    <Compile Include="Apps\Element.cs" />
     <Compile Include="IApp.cs" />
     <Compile Include="Inspect\Flasher.cs" />
     <Compile Include="IElement.cs" />

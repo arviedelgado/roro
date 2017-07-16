@@ -28,7 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace OpenRPA.Roro
+namespace OpenRPA.Roro.Inspect
 {
     public delegate void InputEventHandler(ref InputEventArgs args);
 
@@ -77,10 +77,10 @@ namespace OpenRPA.Roro
 
     public class Input
     {
-        [DllImport("WindowsDriver.dll")]
+        [DllImport("WindowsDriver.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void SetInputState(InputEventArgs args);
 
-        [DllImport("WindowsDriver.dll")]
+        [DllImport("WindowsDriver.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void OnInputStateChanged(InputEventHandler handler);
 
         public static event InputEventHandler OnKeyUp = delegate { };
@@ -95,8 +95,9 @@ namespace OpenRPA.Roro
 
         private static readonly InputEventHandler inputEventHandler;
 
-        private static void InputEventHandler(ref InputEventArgs args)
+        private static void InputEventHandler(ref InputEventArgs e)
         {
+            var args = e;
             switch (args.Type)
             {
                 case InputEventType.KeyUp: OnKeyUp.Invoke(ref args); break;

@@ -27,10 +27,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 namespace OpenRPA.Roro.Apps
 {
@@ -65,9 +63,9 @@ namespace OpenRPA.Roro.Apps
             {
                 IntPtr element;
                 App.InvokeElement(IntPtr.Zero, "GetFromHandle", out element, Process.GetProcessById(processId).MainWindowHandle);
-                return new AppElement[]
+                return new Element[]
                 {
-                    new AppElement(element, null)
+                    new Element(element, null)
                 };
             }
         }
@@ -80,7 +78,7 @@ namespace OpenRPA.Roro.Apps
             int elementProcessId;
             App.InvokeElement(element, "GetProcessId", out elementProcessId, IntPtr.Zero);
             if (elementProcessId != this.processId) return null;
-            return new AppElement(element);
+            return new Element(element);
         }
 
         public IElement GetElementFromPoint(int x, int y)
@@ -92,7 +90,7 @@ namespace OpenRPA.Roro.Apps
             int elementProcessId;
             App.InvokeElement(element, "GetProcessId", out elementProcessId, IntPtr.Zero);
             if (elementProcessId != this.processId) return null;
-            return new AppElement(element);
+            return new Element(element);
         }
 
         public IElement GetElement(string type, Predicate<IElement> predicate)

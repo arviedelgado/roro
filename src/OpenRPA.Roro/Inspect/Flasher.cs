@@ -32,7 +32,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Drawing;
 
-namespace OpenRPA.Roro
+namespace OpenRPA.Roro.Inspect
 {
     public class Flasher
     {

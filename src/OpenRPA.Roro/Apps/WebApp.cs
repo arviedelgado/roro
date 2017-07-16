@@ -25,9 +25,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Chrome;
@@ -36,6 +34,7 @@ using OpenQA.Selenium.Safari;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
 using System.Management;
+using Microsoft.Win32;
 
 namespace OpenRPA.Roro.Apps
 {
@@ -56,10 +55,13 @@ namespace OpenRPA.Roro.Apps
                 switch (this.webAppType)
                 {
                     case WebAppType.Chrome:
-                        viewport = app.GetElement("pane", x => x.Name == "Chrome Legacy Window") ?? app.GetElement("document", x => x.Name == string.Empty);
+                        viewport = app.GetElement("pane", x => x.Class == "Chrome_RenderWidgetHostHWND");
                         break;
                     case WebAppType.IE:
-                        viewport = app.GetElement("pane", x => x.Class == "Shell DocObject View" || x.Class == "NewTabWnd");
+                        viewport = app.GetElement("pane", x => x.Class == "Internet Explorer_Server" || x.Class == "NewTabWnd");
+                        break;
+                    case WebAppType.Edge:
+                        viewport = app.GetElement("pane", x => x.Class == "Internet Explorer_Server" || x.Class == "NewTabPage");
                         break;
                     default:
                         throw new NotImplementedException();
@@ -68,26 +70,47 @@ namespace OpenRPA.Roro.Apps
             return viewport.Rect;
         }
 
-        public static WebApp StartIE(string url = "about:blank")
-        {
-            return new WebApp(WebAppType.IE, url);
-        }
-
         public static WebApp StartChrome(string url = "about:blank")
         {
             return new WebApp(WebAppType.Chrome, url);
         }
 
-        private WebApp(WebAppType driverType, string url)
+        public static WebApp StartIE(string url = "about:blank")
         {
-            this.webAppType = driverType;
+            return new WebApp(WebAppType.IE, url);
+        }
+
+        public static WebApp StartEdge(string url = "about:blank")
+        {
+            return new WebApp(WebAppType.Edge, url);
+        }
+
+        public static WebApp StartFirefox(string url = "about:blank")
+        {
+            return new WebApp(WebAppType.Firefox, url);
+        }
+
+        public static WebApp StartSafari(string url = "about:blank")
+        {
+            return new WebApp(WebAppType.Safari, url);
+        }
+
+        public static WebApp StartOpera(string url = "about:blank")
+        {
+            return new WebApp(WebAppType.Opera, url);
+        }
+
+        private WebApp(WebAppType webAppType, string url)
+        {
+            this.webAppType = webAppType;
             string instanceId = string.Format("openrpa-roro-{0}", DateTime.Now.Ticks);
-            switch (driverType)
+            switch (webAppType)
             {
                 case WebAppType.Chrome:
                     // service
                     ChromeDriverService chromeService = ChromeDriverService.CreateDefaultService();
-                    //chromeService.HideCommandPromptWindow = true;
+                    chromeService.HideCommandPromptWindow = false;
+                    
                     // options
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.AddArgument(instanceId);
@@ -95,34 +118,75 @@ namespace OpenRPA.Roro.Apps
                     break;
 
                 case WebAppType.IE:
+                    // ERROR: Unable to get browser
+                    // REPLICATE: Start driver, navigate manually to other site
+                    Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BFCACHE", "iexplore.exe", 0, RegistryValueKind.DWord);
+
+                    // ERROR: WebDriverException: Unexpected error launching Internet Explorer. Protected Mode settings are not the same for all zones. Enable Protected Mode must be set to the same value (enabled or disabled) for all zones.
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\0", "2500", 0, RegistryValueKind.DWord);
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1", "2500", 0, RegistryValueKind.DWord);
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\2", "2500", 0, RegistryValueKind.DWord);
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3", "2500", 0, RegistryValueKind.DWord);
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4", "2500", 0, RegistryValueKind.DWord);
+
                     // service
                     InternetExplorerDriverService ieService = InternetExplorerDriverService.CreateDefaultService();
-                    //ieService.HideCommandPromptWindow = true;
+                    ieService.HideCommandPromptWindow = true;
+                    
                     // options
                     InternetExplorerOptions ieOptions = new InternetExplorerOptions();
                     ieOptions.InitialBrowserUrl = string.Format("about:blank:{0}", instanceId);
                     this.webDriver = new InternetExplorerDriver(ieService, ieOptions);
                     break;
+
                 case WebAppType.Edge:
+
                     // service
                     EdgeDriverService edgeService = EdgeDriverService.CreateDefaultService();
-                    edgeService.HideCommandPromptWindow = true;
+                    edgeService.HideCommandPromptWindow = false;
+
                     // options
                     EdgeOptions edgeOptions = new EdgeOptions();
                     this.webDriver = new EdgeDriver(edgeService, edgeOptions);
                     break;
-                //case WebAppDriver.Firefox:
-                //    this.driver = new FirefoxDriver();
-                //    break;
-                //case WebAppDriver.Safari:
-                //    this.driver = new SafariDriver();
-                //    break;
-                //case WebAppDriver.Opera:
-                //    this.driver = new OperaDriver();
-                //    break;
+
+                case WebAppType.Firefox:
+                    // service
+                    FirefoxDriverService firefoxService = FirefoxDriverService.CreateDefaultService();
+                    firefoxService.HideCommandPromptWindow = false;
+                
+                    // options
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.AddArgument(instanceId);
+                    this.webDriver = new FirefoxDriver(firefoxService, firefoxOptions, new TimeSpan(0, 60, 0));
+                    break;
+
+                case WebAppType.Safari:
+                    // service
+                    SafariDriverService safariService = SafariDriverService.CreateDefaultService();
+                    safariService.HideCommandPromptWindow = false;
+                
+                    // options
+                    SafariOptions safariOptions = new SafariOptions();
+                    this.webDriver = new SafariDriver(safariService, safariOptions);
+                    break;
+
+                case WebAppType.Opera:
+                    // service
+                    OperaDriverService operaService = OperaDriverService.CreateDefaultService();
+                    operaService.HideCommandPromptWindow = false;
+                
+                    // options
+                    OperaOptions operaOptions = new OperaOptions();
+                    operaOptions.AddArgument(instanceId);
+                    this.webDriver = new OperaDriver(operaService, operaOptions);
+                    break;
+
                 default:
                     throw new NotImplementedException();
             }
+
+            this.GoTo("about:blank");
 
             using (var searcher = new ManagementObjectSearcher(string.Format("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine LIKE '%{0}%'", instanceId)))
             {
@@ -165,7 +229,8 @@ namespace OpenRPA.Roro.Apps
 
         public IElement GetElementFromFocus()
         {
-            return new WebElement(this, (RemoteWebElement)webDriver.ExecuteScript("return document.activeElement"));
+            var rawElement = (RemoteWebElement)webDriver.ExecuteScript("return document.activeElement");
+            return rawElement == null ? null : new WebElement(this, rawElement);
         }
 
         public IElement GetElementFromPoint(int screenX, int screenY)

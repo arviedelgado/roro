@@ -27,28 +27,27 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenRPA.Roro.Apps
+namespace OpenRPA.Core
 {
-    public class Element : IElement
+    public sealed class SapElement : Element
     {
-        private readonly IntPtr rawElement;
+        private SapContext.SapObject rawElement;
 
-        internal Element(IntPtr rawElement)
+        internal SapElement(SapContext.SapObject rawElement)
         {
             this.rawElement = rawElement;
-            IntPtr rawParent;
-            App.InvokeElement(this.rawElement, "GetParent", out rawParent, IntPtr.Zero);
-            if (rawParent != IntPtr.Zero)
+            var rawParent = this.rawElement.Get("Parent");
+            if (rawParent != null)
             {
-                this.Parent = new Element(rawParent);
-                if (this.Type == "window" && this.Parent.Type == "pane" && this.Parent.Parent == null)
+                this.Parent = new SapElement(rawParent);
+                if (this.Parent.Type == "session")
                 {
                     this.Parent = null;
                 }
             }
         }
 
-        internal Element(IntPtr rawElement, Element parent)
+        internal SapElement(SapContext.SapObject rawElement, SapElement parent)
         {
             this.rawElement = rawElement;
             this.Parent = parent;
@@ -58,19 +57,7 @@ namespace OpenRPA.Roro.Apps
         {
             get
             {
-                string value;
-                App.InvokeElement(this.rawElement, "GetId", out value, IntPtr.Zero);
-                return value;
-            }
-        }
-
-        public string Class
-        {
-            get
-            {
-                string value;
-                App.InvokeElement(this.rawElement, "GetClass", out value, IntPtr.Zero);
-                return value;
+                return this.rawElement.Get("Id").Object.ToString();
             }
         }
 
@@ -78,9 +65,15 @@ namespace OpenRPA.Roro.Apps
         {
             get
             {
-                string value;
-                App.InvokeElement(this.rawElement, "GetName", out value, IntPtr.Zero);
-                return value;
+                return this.rawElement.Get("Name").Object.ToString();
+            }
+        }
+
+        public string Class
+        {
+            get
+            {
+                return string.Empty; // Not supported.
             }
         }
 
@@ -88,9 +81,7 @@ namespace OpenRPA.Roro.Apps
         {
             get
             {
-                ElementType value;
-                App.InvokeElement(this.rawElement, "GetType", out value, IntPtr.Zero);
-                return value.ToString().ToLower();
+                return ((SapElementType)this.rawElement.Get("TypeAsNumber").Object).ToString().ToLower();
             }
         }
 
@@ -102,32 +93,35 @@ namespace OpenRPA.Roro.Apps
             }
         }
 
-        public Rect Rect
+        public Rect Bounds
         {
             get
             {
-                Rect value;
-                App.InvokeElement(this.rawElement, "GetRect", out value, IntPtr.Zero);
-                return value;
+                return new Rect(
+                    (int)this.rawElement.Get("ScreenLeft").Object,
+                    (int)this.rawElement.Get("ScreenTop").Object,
+                    (int)this.rawElement.Get("Width").Object,
+                    (int)this.rawElement.Get("Height").Object);
             }
         }
 
-        public IElement Parent
+        public SapElement Parent
         {
             get;
         }
 
-        public IElement[] Children
+        public IEnumerable<SapElement> Children
         {
             get
             {
-                IntPtr value;
-                List<Element> children = new List<Element>();
-                App.InvokeElement(this.rawElement, "GetChildren", out value, IntPtr.Zero);
-                while (value != IntPtr.Zero)
+                List<SapElement> children = new List<SapElement>();
+                var rawChildren = rawElement.Get("Children");
+                if (rawChildren != null)
                 {
-                    children.Add(new Element(value, this));
-                    App.InvokeElement(this.rawElement, "GetChildren", out value, value);
+                    for (int index = 0, count = rawChildren.Count; index < count; index++)
+                    {
+                        children.Add(new SapElement(rawChildren[index], this));
+                    }
                 }
                 return children.ToArray();
             }

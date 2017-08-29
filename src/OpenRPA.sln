@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Roro", "OpenRPA.Roro\OpenRPA.Roro.csproj", "{9FB9EFCB-42F8-469A-AAED-1CA4AFB7EFF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Core", "OpenRPA.Core\OpenRPA.Core.csproj", "{9FB9EFCB-42F8-469A-AAED-1CA4AFB7EFF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Roro.Test", "OpenRPA.Roro.Test\OpenRPA.Roro.Test.csproj", "{BEC47DCE-32CD-444D-9587-A0CFC3B18EC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Test", "OpenRPA.Test\OpenRPA.Test.csproj", "{BEC47DCE-32CD-444D-9587-A0CFC3B18EC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,92 +25,36 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
-namespace OpenRPA.Roro.Apps
+namespace OpenRPA.Core
 {
-    public enum ElementType
+    public struct InputEventArgs
     {
-        Button = 50000,
+        public InputEventType Type { get; set; }
 
-        Calendar = 50001,
+        public int X { get; set; }
 
-        CheckBox = 50002,
+        public int Y { get; set; }
 
-        ComboBox = 50003,
+        public MouseButton Button { get; set; }
 
-        Edit = 50004,
+        public KeyboardKey Key { get; set; }
 
-        Hyperlink = 50005,
+        public bool AltKey { get; }
 
-        Image = 50006,
+        public bool CtrlKey { get; }
 
-        ListItem = 50007,
+        public bool ShiftKey { get; }
 
-        List = 50008,
+        public bool WinKey { get; }
 
-        Menu = 50009,
-
-        MenuBar = 50010,
-
-        MenuItem = 50011,
-
-        ProgressBar = 50012,
-
-        RadioButton = 50013,
-
-        ScrollBar = 50014,
-
-        Slider = 50015,
-
-        Spinner = 50016,
-
-        StatusBar = 50017,
-
-        Tab = 50018,
-
-        TabItem = 50019,
-
-        Text = 50020,
-
-        ToolBar = 50021,
-
-        ToolTip = 50022,
-
-        Tree = 50023,
-
-        TreeItem = 50024,
-
-        Custom = 50025,
-
-        Group = 50026,
-
-        Thumb = 50027,
-
-        DataGrid = 50028,
-
-        DataItem = 50029,
-
-        Document = 50030,
-
-        SplitButton = 50031,
-
-        Window = 50032,
-
-        Pane = 50033,
-
-        Header = 50034,
-
-        HeaderItem = 50035,
-
-        Table = 50036,
-
-        TitleBar = 50037,
-
-        Separator = 50038,
-
-        SemanticZoom = 50039,
-
-        AppBar = 50040,
-
+        public override string ToString()
+        {
+            return string.Format(
+                "[{0} X={1}, Y={2}, Button={3}, Key={4}, AltKey={5}, CtrlKey={6}, ShiftKey={7}, WinKey={8}]",
+                this.Type, this.X, this.Y, this.Button, this.Key, this.AltKey, this.CtrlKey, this.ShiftKey, this.WinKey);
+        }
     }
 }

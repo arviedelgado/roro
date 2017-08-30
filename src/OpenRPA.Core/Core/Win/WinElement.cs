@@ -204,7 +204,7 @@ namespace OpenRPA.Core
             return value == null ? null : new WinElement(value);
         }
 
-        [DllImport("WindowsDriver.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+        [DllImport("WinDriver.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         private static extern bool InvokeElement(IntPtr handle, string name, IntPtr outParam, IntPtr inParam);
 
         private bool Invoke<Out, In>(out Out outParam, In inParam, [CallerMemberName] string name = null)

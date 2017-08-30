@@ -7,10 +7,10 @@ namespace OpenRPA.Test
     {
         static void Main()
         {
-            var inspector = new Desktop();
-       //     inspector.LaunchChrome();
-       //     inspector.LaunchEdge();
-            inspector.LaunchIE("http://www.google.com/");
+            var desktop = new Desktop();
+            //     desktop.LaunchChrome();
+            //     desktop.LaunchEdge();
+            desktop.LaunchIE("http://www.google.com/");
             Console.ReadLine();
         }
     }

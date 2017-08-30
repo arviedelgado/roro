@@ -32,10 +32,10 @@ namespace OpenRPA.Core
 {
     public class Input
     {
-        [DllImport("WindowsDriver.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WinDriver.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void SetInputState(InputEventArgs e);
 
-        [DllImport("WindowsDriver.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WinDriver.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void OnInputStateChanged(InputEventHandler handler);
 
         public static event InputEventHandler OnKeyUp = delegate { };

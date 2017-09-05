@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace OpenRPA.Core
 {
@@ -52,15 +53,17 @@ namespace OpenRPA.Core
 
         private static void InputEventHandler(InputEventArgs e)
         {
-            var args = e;
-            switch (args.Type)
+            new Thread(() =>
             {
-                case InputEventType.KeyUp: OnKeyUp.Invoke(args); break;
-                case InputEventType.KeyDown: OnKeyDown.Invoke(args); break;
-                case InputEventType.MouseUp: OnMouseUp.Invoke(args); break;
-                case InputEventType.MouseDown: OnMouseDown.Invoke(args); break;
-                case InputEventType.MouseMove: OnMouseMove.Invoke(args); break;
-            }
+                switch (e.Type)
+                {
+                    case InputEventType.KeyUp: OnKeyUp.Invoke(e); break;
+                    case InputEventType.KeyDown: OnKeyDown.Invoke(e); break;
+                    case InputEventType.MouseUp: OnMouseUp.Invoke(e); break;
+                    case InputEventType.MouseDown: OnMouseDown.Invoke(e); break;
+                    case InputEventType.MouseMove: OnMouseMove.Invoke(e); break;
+                }
+            }).Start();
         }
 
         static Input()

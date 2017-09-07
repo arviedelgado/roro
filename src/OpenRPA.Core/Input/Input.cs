@@ -104,15 +104,17 @@ namespace OpenRPA.Core
 
         public static void Press(params KeyboardKey[] keys)
         {
-            Dictionary<KeyboardKey, bool> modKeys = new Dictionary<KeyboardKey, bool>();
-            modKeys.Add(KeyboardKey.LeftAlt, false);
-            modKeys.Add(KeyboardKey.LeftCtrl, false);
-            modKeys.Add(KeyboardKey.LeftShift, false);
-            modKeys.Add(KeyboardKey.LeftWin, false);
-            modKeys.Add(KeyboardKey.RightAlt, false);
-            modKeys.Add(KeyboardKey.RightCtrl, false);
-            modKeys.Add(KeyboardKey.RightShift, false);
-            modKeys.Add(KeyboardKey.RightWin, false);
+            var modKeys = new Dictionary<KeyboardKey, bool>
+            {
+                { KeyboardKey.LeftAlt, false },
+                { KeyboardKey.LeftCtrl, false },
+                { KeyboardKey.LeftShift, false },
+                { KeyboardKey.LeftWin, false },
+                { KeyboardKey.RightAlt, false },
+                { KeyboardKey.RightCtrl, false },
+                { KeyboardKey.RightShift, false },
+                { KeyboardKey.RightWin, false }
+            };
             foreach (KeyboardKey key in keys)
             {
                 Input.KeyDown(key);
@@ -136,7 +138,7 @@ namespace OpenRPA.Core
 
         public static void Write(string text)
         {
-            foreach (char c in text)
+            foreach (char c in text ?? string.Empty)
             {
                 Input.KeyDown((KeyboardKey)(-c));
                 Input.KeyUp((KeyboardKey)(-c));

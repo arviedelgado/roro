@@ -50,15 +50,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Element.cs" />
-    <Compile Include="Core\Desktop.cs" />
+    <Compile Include="Core\BotElement.cs" />
+    <Compile Include="Core\Inspector.cs" />
     <Compile Include="Core\Win\WinElement.cs" />
     <Compile Include="Core\Win\WinElementType.cs" />
-    <Compile Include="Core\Sap\SapContext.cs" />
-    <Compile Include="Core\Sap\SapElement.cs" />
-    <Compile Include="Core\Sap\SapElementType.cs" />
-    <Compile Include="Core\Web\WebContext.cs" />
-    <Compile Include="Core\Web\WebElement.cs" />
     <Compile Include="Core\Highlighter.cs" />
     <Compile Include="Input\InputEventHandler.cs" />
     <Compile Include="Input\InputEventArgs.cs" />

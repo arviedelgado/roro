@@ -28,10 +28,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using OpenRPA.Core.Queries;
+using System.Linq;
 
 namespace OpenRPA.Core
 {
-    public sealed class WinElement : Element
+    public sealed class WinElement : BotElement
     {
         private readonly IntPtr rawElement;
 
@@ -40,68 +42,37 @@ namespace OpenRPA.Core
             this.rawElement = rawElement;
         }
 
-        public string Id
+        [BotProperty]
+        public string Id => this.Invoke<string>();
+
+        [BotProperty]
+        public string Class => this.Invoke<string>();
+
+        [BotProperty]
+        public string Name => this.Invoke<string>();
+
+        [BotProperty]
+        public string Type => this.Invoke<WinElementType>().ToString().ToLower();
+
+        [BotProperty]
+        public string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
+
+        public Rect Bounds => this.Invoke<Rect>();
+
+        [BotProperty]
+        public int Index
         {
             get
             {
-                this.Invoke(out string value, IntPtr.Zero);
-                return value;
+                if (this.Parent is WinElement parent)
+                {
+                    return parent.Children.ToList().IndexOf(this);
+                }
+                return 0;
             }
         }
 
-        public string Class
-        {
-            get
-            {
-                this.Invoke(out string value, IntPtr.Zero);
-                return value;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                this.Invoke(out string value, IntPtr.Zero);
-                return value;
-            }
-        }
-
-        public string Type
-        {
-            get
-            {
-                this.Invoke(out WinElementType value, IntPtr.Zero);
-                return value.ToString().ToLower();
-            }
-        }
-
-        public string Path
-        {
-            get
-            {
-                var parent = this.Parent;
-                return string.Format("{0}/{1}", parent == null ? string.Empty : parent.Path, this.Type);
-            }
-        }
-
-        public Rect Bounds
-        {
-            get
-            {
-                this.Invoke(out Rect value, IntPtr.Zero);
-                return value;
-            }
-        }
-
-        public int ProcessId
-        {
-            get
-            {
-                this.Invoke(out int value, IntPtr.Zero);
-                return value;
-            }
-        }
+        public int ProcessId => this.Invoke<int>();
 
         public WinElement MainWindow
         {
@@ -134,7 +105,7 @@ namespace OpenRPA.Core
         {
             get
             {
-                this.Invoke(out IntPtr value, IntPtr.Zero);
+                IntPtr value = this.Invoke<IntPtr>();
                 return value == IntPtr.Zero ? null : new WinElement(value);
             }
         }
@@ -144,11 +115,11 @@ namespace OpenRPA.Core
             get
             {
                 var children = new List<WinElement>();
-                this.Invoke(out IntPtr value, IntPtr.Zero);
+                IntPtr value = this.Invoke<IntPtr>();
                 while (value != IntPtr.Zero)
                 {
                     children.Add(new WinElement(value));
-                    this.Invoke(out value, value);
+                    value = this.Invoke<IntPtr>(value);
                 }
                 return children;
             }
@@ -173,67 +144,96 @@ namespace OpenRPA.Core
             return null;
         }
 
-        public override bool Equals(object obj)
-        {
-            WinElement other = obj as WinElement;
-            if (other == null) return false;
-            this.Invoke(out bool result, other.rawElement);
-            return result;
-        }
+        public override bool Equals(object obj) => (obj is WinElement other && this.Invoke<bool>(other.rawElement));
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
         public static WinElement GetRoot()
         {
-            new WinElement(IntPtr.Zero).Invoke(out IntPtr value, IntPtr.Zero);
+            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
             return value == null ? null : new WinElement(value);
         }
 
         public static WinElement GetFromFocus()
         {
-            new WinElement(IntPtr.Zero).Invoke(out IntPtr value, IntPtr.Zero);
+            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
             return value == null ? null : new WinElement(value);
         }
 
         public static WinElement GetFromPoint(int screenX, int screenY)
         {
-            new WinElement(IntPtr.Zero).Invoke(out IntPtr value, (Int64)screenY << 32 | (Int64)screenX);
+            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>((Int64)screenY << 32 | (Int64)screenX);
             return value == null ? null : new WinElement(value);
         }
 
         [DllImport("WinDriver.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        private static extern bool InvokeElement(IntPtr handle, string name, IntPtr outParam, IntPtr inParam);
+        private static extern void InvokeElement(IntPtr handle, string name, IntPtr result, IntPtr param);
 
-        private bool Invoke<Out, In>(out Out outParam, In inParam, [CallerMemberName] string name = null)
+        private T Invoke<T>(object param = null, [CallerMemberName] string name = null)
         {
-            bool result;
-            if (typeof(In) == typeof(string))
+            T result;
+
+            param = param ?? IntPtr.Zero;
+
+            var paramType = param.GetType();
+            if (paramType.IsEnum) paramType = Enum.GetUnderlyingType(paramType);
+
+            var resultType = typeof(T);
+            if (resultType.IsEnum) resultType = Enum.GetUnderlyingType(resultType);
+
+            if (paramType == typeof(string))
             {
-                IntPtr inStrParam = Marshal.StringToBSTR(inParam == null ? string.Empty : inParam.ToString());
-                result = Invoke(out outParam, inStrParam, name);
-                Marshal.FreeBSTR(inStrParam);
+                IntPtr strParam = Marshal.StringToBSTR(param.ToString());
+                result = Invoke<T>(strParam, name);
+                Marshal.FreeBSTR(strParam);
                 return result;
             }
-            if (typeof(Out) == typeof(string))
+
+            if (resultType == typeof(string))
             {
-                result = Invoke(out IntPtr outStrParam, inParam, name);
-                outParam = (Out)(outStrParam == IntPtr.Zero ? string.Empty : (object)Marshal.PtrToStringBSTR(outStrParam));
-                Marshal.FreeBSTR(outStrParam);
+                IntPtr strResult = Invoke<IntPtr>(param, name);
+                result = (T)(strResult == IntPtr.Zero ? string.Empty : (object)Marshal.PtrToStringBSTR(strResult));
+                Marshal.FreeBSTR(strResult);
                 return result;
             }
-            Type inParamType = typeof(In).IsEnum ? Enum.GetUnderlyingType(typeof(In)) : typeof(In);
-            Type outParamType = typeof(Out).IsEnum ? Enum.GetUnderlyingType(typeof(Out)) : typeof(Out);
-            IntPtr inParamPtr = Marshal.AllocHGlobal(Marshal.SizeOf(inParamType));
-            IntPtr outParamPtr = Marshal.AllocHGlobal(Marshal.SizeOf(outParamType));
-            Marshal.StructureToPtr(Convert.ChangeType(inParam, inParamType), inParamPtr, false);
-            result = InvokeElement(this.rawElement, name, outParamPtr, inParamPtr);
-            outParam = (Out)Marshal.PtrToStructure(outParamPtr, outParamType);
-            Marshal.FreeHGlobal(inParamPtr);
-            Marshal.FreeHGlobal(outParamPtr);
+
+            IntPtr paramPtr = Marshal.AllocHGlobal(Marshal.SizeOf(paramType));
+            IntPtr resultPtr = Marshal.AllocHGlobal(Marshal.SizeOf(resultType));
+
+            Marshal.StructureToPtr(Convert.ChangeType(param, paramType), paramPtr, false);
+            InvokeElement(this.rawElement, name, resultPtr, paramPtr);
+            result = (T)Marshal.PtrToStructure(resultPtr, resultType);
+
+            Marshal.FreeHGlobal(paramPtr);
+            Marshal.FreeHGlobal(resultPtr);
+
             return result;
         }
+
+
+        #region BotProperty Extensions
+
+        [BotProperty]
+        public int Width => this.Bounds.Width;
+
+        [BotProperty]
+        public int Height => this.Bounds.Height;
+
+        [BotProperty]
+        public string Window_Title => this.Type == "window" ? this.Name : this.Window.Name;
+
+        [BotProperty]
+        public string Parent_Name => this.Parent.Name;
+
+        [BotProperty]
+        public int Parent_Index => this.Parent.Index;
+
+        [BotProperty]
+        public int Parent_Width => this.Parent.Width;
+
+        [BotProperty]
+        public int Parent_Height => this.Parent.Height;
+
+        #endregion
     }
 }

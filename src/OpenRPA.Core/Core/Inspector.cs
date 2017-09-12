@@ -27,17 +27,19 @@
 using OpenRPA.Core;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace OpenRPA.Core
 {
-    public sealed class Desktop
+    public sealed class Inspector
     {
         private readonly Highligher highligter;
 
-        private readonly SapContext sapContext;
+        //private readonly SapContext sapContext;
 
-        private readonly WebContext webContext;
+        //private readonly WebContext webContext;
 
         private readonly Timer focusTimer;
 
@@ -45,11 +47,11 @@ namespace OpenRPA.Core
 
         private InputEventArgs pointEvent;
         
-        public Desktop()
+        public Inspector()
         {
             this.highligter = new Highligher();
-            this.sapContext = new SapContext();
-            this.webContext = new WebContext();
+            //this.sapContext = new SapContext();
+            //this.webContext = new WebContext();
             this.focusTimer = new Timer(GetElementFromFocus, null, Timeout.Infinite, Timeout.Infinite);
             this.pointTimer = new Timer(GetElementFromPoint, null, Timeout.Infinite, Timeout.Infinite);
 
@@ -82,13 +84,14 @@ namespace OpenRPA.Core
             {
                 WinElement winElement = WinElement.GetFromFocus();
 
-                WebElement webElement = this.webContext.GetElementFromFocus(winElement);
+                //WebElement webElement = this.webContext.GetElementFromFocus(winElement);
 
-                Element element = webElement ?? winElement as Element;
+                //Element element = webElement ?? winElement as Element;
 
-                Console.WriteLine("FOCUS: {0}", element.Path);
+                //Console.WriteLine("FOCUS: {0}", element.Path);
 
-                this.highligter.Invoke(element.Bounds);
+                this.highligter.Invoke(winElement.Bounds);
+                Console.Write(winElement.Serialize());
             }
             catch (Exception ex)
             {
@@ -104,13 +107,22 @@ namespace OpenRPA.Core
 
                 WinElement winElement = WinElement.GetFromPoint(e.X, e.Y);
 
-                WebElement webElement = this.webContext.GetElementFromPoint(e.X, e.Y, winElement);
+                //WebElement webElement = this.webContext.GetElementFromPoint(e.X, e.Y, winElement);
 
-                Element element = webElement ?? winElement as Element;
+                //Element element = webElement ?? winElement as Element;
 
-                Console.WriteLine("POINT: {0}", element.Path);
+               // Console.WriteLine("POINT: {0}", element.Path);
 
-                this.highligter.Invoke(element.Bounds);
+                this.highligter.Invoke(winElement.Bounds);
+                var doc = XDocument.Parse(winElement.Serialize());
+                Console.Clear();
+                foreach (var elem in doc.Root.Elements())
+                {
+                    var name = elem.Elements().Where(x => x.Name == "Name").First().Value;
+                    var type = elem.Elements().Where(x => x.Name == "Type").First().Value.Split('.').Last();
+                    var value = elem.Elements().Where(x => x.Name == "Value").First().Value;
+                    Console.WriteLine("{0}\t{1}\t{2}", type, name, value);
+                }
             }
             catch (Exception ex)
             {
@@ -130,17 +142,17 @@ namespace OpenRPA.Core
 
         public void LaunchIE(string url = null)
         {
-            this.webContext.StartIE(url);
+            //this.webContext.StartIE(url);
         }
 
         public void LaunchEdge(string url = null)
         {
-            this.webContext.StartEdge(url);
+            //this.webContext.StartEdge(url);
         }
 
         public void LaunchChrome(string url = null)
         {
-            this.webContext.StartChrome(url);
+            //this.webContext.StartChrome(url);
         }
     }
 }

@@ -29,7 +29,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace OpenRPA.Core
+namespace OpenRPA.Inputs
 {
     public class Input
     {

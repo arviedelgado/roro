@@ -39,14 +39,14 @@ namespace OpenRPA.Core
 
         private readonly Form form;
 
-        private const int border = 5;
+        private const int border = 3;
 
         public Highligher()
         {
             this.form = new Form();
             new Thread(() =>
             {
-                this.form.Opacity = 0.5;
+                this.form.Opacity = 0.8;
                 this.form.BackColor = Color.Red;
                 this.form.FormBorderStyle = FormBorderStyle.None;
                 this.form.Bounds = this.rect = this.toRect = Rectangle.Empty;
@@ -69,9 +69,18 @@ namespace OpenRPA.Core
             }).Start();
         }
 
-        public void Invoke(Rect r)
+        public void Invoke(Rect r, bool dispose)
         {
             this.rect = this.toRect = new Rectangle(r.X, r.Y, r.Width, r.Height);
+            if (dispose)
+            {
+                this.form.BackColor = Color.Blue;
+                new Thread(() =>
+                {
+                    Thread.Sleep(2000);
+                    this.form.Dispose();
+                }).Start();
+            }
             this.form.Invalidate();
         }
     }

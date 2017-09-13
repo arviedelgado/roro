@@ -24,90 +24,52 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenRPA.Core.Queries;
 using System;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
-namespace OpenRPA.Core.Queries
+namespace OpenRPA.Queries
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class BotPropertyAttribute : Attribute
+    public sealed class Query : IEnumerable<Property>
     {
-        public BotPropertyAttribute()
-        {
+        private readonly IList<Property> props;
 
+        public Query()
+        {
+            this.props = new List<Property>();
         }
-    }
 
-    [AttributeUsage(AttributeTargets.Method)]
-    public class BotMethodAttribute : Attribute
-    {
-        public BotMethodAttribute()
+        public IEnumerator<Property> GetEnumerator()
         {
-
+            return this.props.GetEnumerator();
         }
-    }
 
-    [Flags]
-    public enum Operator
-    {
-        Equal,
-        NotEqual,
-        LessThan,
-        LessThanOrEqual,
-        GreaterThan,
-        GreaterThanOrEqual,
-        Contains,
-        StartsWith,
-        EndsWith
-    }
-    
-    public abstract class BotElement
-    {
-        public string Serialize()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            Console.Clear();
-            var sb = new StringBuilder();
+            return this.GetEnumerator();
+        }
 
-            var props = this.GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(attr => Attribute.IsDefined(attr, typeof(BotPropertyAttribute)));
+        public Query Append(string name, object value)
+        {
+            this.props.Add(new Property(name, value));
+            return this;
+        }
 
+        public override string ToString()
+        {
             var xdoc = new XDocument();
             xdoc.Add(new XElement(this.GetType().Name));
             foreach (var prop in props)
             {
                 xdoc.Root.Add(
-                    new XElement(prop.MemberType.ToString(),
-                        new XAttribute("Enabled", true.ToString()),
+                    new XElement(prop.GetType().Name,
                         new XElement("Name", prop.Name),
-                        new XElement("Type", prop.PropertyType),
-                        new XElement("Value", prop.GetValue(this))
+                        new XElement("Value", prop.Value)
                     )
                 );
             }
-
             return xdoc.ToString();
         }
-
-        //public static T Deserialize(string text)
-        //{
-        //    if (text == null)
-        //        throw new ArgumentNullException("text");
-
-        //var xs = new XmlSerializer(this.GetType());
-        //xs.Serialize(writer, this);
-        //return writer.ToString();
-
-        //    using (var reader = new StringReader(text))
-        //    {
-        //        var xs = new XmlSerializer(typeof(T));
-        //        return (T)xs.Deserialize(reader);
-        //    }
-        //}
     }
 }

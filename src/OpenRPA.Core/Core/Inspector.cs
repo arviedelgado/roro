@@ -24,12 +24,10 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenRPA.Core;
+using OpenRPA.Inputs;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
-using System.Xml.Linq;
 
 namespace OpenRPA.Core
 {
@@ -80,23 +78,23 @@ namespace OpenRPA.Core
 
         private void GetElementFromFocus(object state)
         {
-            try
-            {
-                WinElement winElement = WinElement.GetFromFocus();
+//            try
+//            {
+//                WinElement winElement = WinElement.GetFromFocus();
 
-                //WebElement webElement = this.webContext.GetElementFromFocus(winElement);
+//                //WebElement webElement = this.webContext.GetElementFromFocus(winElement);
 
-                //Element element = webElement ?? winElement as Element;
+//                //Element element = webElement ?? winElement as Element;
 
-                //Console.WriteLine("FOCUS: {0}", element.Path);
+//                //Console.WriteLine("FOCUS: {0}", element.Path);
 
-                this.highligter.Invoke(winElement.Bounds);
-                Console.Write(winElement.Serialize());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("ERROR: {0}", ex);
-            }
+//                this.highligter.Invoke(winElement.Bounds);
+////                Console.Write(winElement.Serialize());
+//            }
+//            catch (Exception ex)
+//            {
+//                Console.WriteLine("ERROR: {0}", ex);
+//            }
         }
 
         private void GetElementFromPoint(object state)
@@ -107,21 +105,16 @@ namespace OpenRPA.Core
 
                 WinElement winElement = WinElement.GetFromPoint(e.X, e.Y);
 
-                //WebElement webElement = this.webContext.GetElementFromPoint(e.X, e.Y, winElement);
-
-                //Element element = webElement ?? winElement as Element;
-
-               // Console.WriteLine("POINT: {0}", element.Path);
-
-                this.highligter.Invoke(winElement.Bounds);
-                var doc = XDocument.Parse(winElement.Serialize());
+                this.highligter.Invoke(winElement.Bounds, false);
                 Console.Clear();
-                foreach (var elem in doc.Root.Elements())
+                var query = winElement.GetQuery();
+                Console.Title = winElement.Path;
+                Console.WriteLine(query);
+                Console.WriteLine();
+                var result = WinElement.GetFromQuery(query);
+                foreach (var el in result)
                 {
-                    var name = elem.Elements().Where(x => x.Name == "Name").First().Value;
-                    var type = elem.Elements().Where(x => x.Name == "Type").First().Value.Split('.').Last();
-                    var value = elem.Elements().Where(x => x.Name == "Value").First().Value;
-                    Console.WriteLine("{0}\t{1}\t{2}", type, name, value);
+                    new Highligher().Invoke((el as WinElement).Bounds, true);
                 }
             }
             catch (Exception ex)

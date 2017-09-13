@@ -28,12 +28,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using OpenRPA.Core.Queries;
+using OpenRPA.Queries;
 using System.Linq;
+using System.Diagnostics;
 
 namespace OpenRPA.Core
 {
-    public sealed class WinElement : BotElement
+    public sealed class WinElement : Element
     {
         private readonly IntPtr rawElement;
 
@@ -60,17 +61,7 @@ namespace OpenRPA.Core
         public Rect Bounds => this.Invoke<Rect>();
 
         [BotProperty]
-        public int Index
-        {
-            get
-            {
-                if (this.Parent is WinElement parent)
-                {
-                    return parent.Children.ToList().IndexOf(this);
-                }
-                return 0;
-            }
-        }
+        public int Index => (this.Parent is WinElement parent ? parent.Children.ToList().IndexOf(this) : 0);
 
         public int ProcessId => this.Invoke<int>();
 
@@ -153,7 +144,7 @@ namespace OpenRPA.Core
             IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
             return value == null ? null : new WinElement(value);
         }
-
+        
         public static WinElement GetFromFocus()
         {
             IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
@@ -164,6 +155,41 @@ namespace OpenRPA.Core
         {
             IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>((Int64)screenY << 32 | (Int64)screenX);
             return value == null ? null : new WinElement(value);
+        }
+
+        public static IReadOnlyList<WinElement> GetFromQuery(Query query)
+        {
+            var sw = Stopwatch.StartNew();
+            var result = new List<WinElement>();
+            var candidates = new Queue<WinElement>();
+            var targetPath = query.First(x => x.Name == "Path").Value.ToString();
+
+            candidates.Enqueue(WinElement.GetRoot());
+            while (candidates.Count > 0)
+            {
+                var candidate = candidates.Dequeue();
+                var candidatePath = candidate.Path;
+                if (targetPath.StartsWith(candidatePath))
+                {
+                    Console.WriteLine(candidatePath);
+                    if (targetPath.Equals(candidatePath))
+                    {
+                        if (candidate.TryQuery(query))
+                        {
+                            result.Add(candidate);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var child in candidate.Children)
+                        {
+                            candidates.Enqueue(child);
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Matches: {0} in {1} seconds", result.Count, sw.ElapsedMilliseconds / 1000.0);
+            return result;
         }
 
         [DllImport("WinDriver.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
@@ -211,29 +237,29 @@ namespace OpenRPA.Core
         }
 
 
-        #region BotProperty Extensions
+        //#region BotProperty Extensions
 
-        [BotProperty]
-        public int Width => this.Bounds.Width;
+        //[BotProperty]
+        //public int Width => this.Bounds.Width;
 
-        [BotProperty]
-        public int Height => this.Bounds.Height;
+        //[BotProperty]
+        //public int Height => this.Bounds.Height;
 
-        [BotProperty]
-        public string Window_Title => this.Type == "window" ? this.Name : this.Window.Name;
+        //[BotProperty]
+        //public string Window_Title => this.Type == "window" ? this.Name : this.Window.Name;
 
-        [BotProperty]
-        public string Parent_Name => this.Parent.Name;
+        //[BotProperty]
+        //public string Parent_Name => this.Parent.Name;
 
-        [BotProperty]
-        public int Parent_Index => this.Parent.Index;
+        //[BotProperty]
+        //public int Parent_Index => this.Parent.Index;
 
-        [BotProperty]
-        public int Parent_Width => this.Parent.Width;
+        //[BotProperty]
+        //public int Parent_Width => this.Parent.Width;
 
-        [BotProperty]
-        public int Parent_Height => this.Parent.Height;
+        //[BotProperty]
+        //public int Parent_Height => this.Parent.Height;
 
-        #endregion
+        //#endregion
     }
 }

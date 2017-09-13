@@ -25,36 +25,18 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
-namespace OpenRPA.Core
+namespace OpenRPA.Inputs
 {
-    public struct InputEventArgs
+    [Flags]
+    public enum MouseButton
     {
-        public InputEventType Type { get; set; }
+        None,
 
-        public int X { get; set; }
+        Left,
 
-        public int Y { get; set; }
+        Right,
 
-        public MouseButton Button { get; set; }
-
-        public KeyboardKey Key { get; set; }
-
-        public bool AltKey { get; }
-
-        public bool CtrlKey { get; }
-
-        public bool ShiftKey { get; }
-
-        public bool WinKey { get; }
-
-        public override string ToString()
-        {
-            return string.Format(
-                "[{0} X={1}, Y={2}, Button={3}, Key={4}, AltKey={5}, CtrlKey={6}, ShiftKey={7}, WinKey={8}]",
-                this.Type, this.X, this.Y, this.Button, this.Key, this.AltKey, this.CtrlKey, this.ShiftKey, this.WinKey);
-        }
+        Middle = 4
     }
 }

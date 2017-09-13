@@ -26,7 +26,7 @@
 
 using System;
 
-namespace OpenRPA.Core
+namespace OpenRPA.Inputs
 {
     public enum KeyboardKey
     {

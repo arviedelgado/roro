@@ -26,17 +26,18 @@
 
 using System;
 
-namespace OpenRPA.Core
+namespace OpenRPA.Inputs
 {
-    [Flags]
-    public enum MouseButton
+    public enum InputEventType
     {
-        None,
+        KeyUp = 0x0101,
 
-        Left,
+        KeyDown = 0x0100,
 
-        Right,
+        MouseUp = 0x0202,
 
-        Middle = 4
+        MouseDown = 0x0201,
+
+        MouseMove = 0x0200,
     }
 }

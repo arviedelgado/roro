@@ -50,17 +50,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BotElement.cs" />
+    <Compile Include="Queries\Attributes.cs" />
+    <Compile Include="Queries\Query.cs" />
+    <Compile Include="Queries\Property.cs" />
+    <Compile Include="Queries\Element.cs" />
     <Compile Include="Core\Inspector.cs" />
     <Compile Include="Core\Win\WinElement.cs" />
     <Compile Include="Core\Win\WinElementType.cs" />
     <Compile Include="Core\Highlighter.cs" />
-    <Compile Include="Input\InputEventHandler.cs" />
-    <Compile Include="Input\InputEventArgs.cs" />
-    <Compile Include="Input\MouseButton.cs" />
-    <Compile Include="Input\InputEventType.cs" />
-    <Compile Include="Input\KeyboardKey.cs" />
-    <Compile Include="Input\Input.cs" />
+    <Compile Include="Inputs\InputEventHandler.cs" />
+    <Compile Include="Inputs\InputEventArgs.cs" />
+    <Compile Include="Inputs\MouseButton.cs" />
+    <Compile Include="Inputs\InputEventType.cs" />
+    <Compile Include="Inputs\KeyboardKey.cs" />
+    <Compile Include="Inputs\Input.cs" />
     <Compile Include="Core\Rect.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,18 @@
 
 using System;
 
-namespace OpenRPA.Core
+namespace OpenRPA.Queries
 {
-    public delegate void InputEventHandler(InputEventArgs e);
+    public sealed class Property
+    {
+        public string Name { get; }
+
+        public object Value { get; }
+
+        public Property(string name, object value)
+        {
+            this.Name = name;
+            this.Value = value;
+        }
+    }
 }

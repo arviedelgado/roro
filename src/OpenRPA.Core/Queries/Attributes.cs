@@ -26,18 +26,23 @@
 
 using System;
 
-namespace OpenRPA.Core
+namespace OpenRPA.Queries
 {
-    public enum InputEventType
+    [AttributeUsage(AttributeTargets.Property)]
+    public class BotPropertyAttribute : Attribute
     {
-        KeyUp = 0x0101,
+        public BotPropertyAttribute()
+        {
 
-        KeyDown = 0x0100,
+        }
+    }
 
-        MouseUp = 0x0202,
+    [AttributeUsage(AttributeTargets.Method)]
+    public class BotMethodAttribute : Attribute
+    {
+        public BotMethodAttribute()
+        {
 
-        MouseDown = 0x0201,
-
-        MouseMove = 0x0200,
+        }
     }
 }

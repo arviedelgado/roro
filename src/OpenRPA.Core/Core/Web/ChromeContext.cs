@@ -24,40 +24,44 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenRPA.Core;
 using System;
-using System.Linq;
+using OpenQA.Selenium.Chrome;
 
-namespace OpenRPA.Queries
+namespace OpenRPA.Core
 {
-    public abstract class Element
+    public sealed class ChromeContext : WebContext
     {
-        public abstract string Path { get; }
-
-        public abstract Rect Bounds { get; }
-
-        public Query GetQuery()
+        public ChromeContext()
         {
-            var query = new Query();
-            var props = this.GetType().GetProperties().Where(attr => Attribute.IsDefined(attr, typeof(BotPropertyAttribute)));
-            foreach (var prop in props)
-            {
-                query.Append(prop.Name, prop.GetValue(this));
-            }
-            return query;
+            // session
+            var session = Guid.NewGuid();
+            
+            // service
+            var service = ChromeDriverService.CreateDefaultService();
+
+            // options
+            var options = new ChromeOptions();
+            options.AddArgument("--force-renderer-accessibility");
+            options.AddArgument(session.ToString());
+
+            // driver
+            this.Driver = new ChromeDriver(service, options);
+
+            // process
+            this.ProcessId = this.GetProcessIdFromSession(session);
         }
 
-        public bool TryQuery(Query query)
+        public override WinElement Viewport { get; protected set; }
+
+        public override bool UpdateViewport(WinElement winElement)
         {
-            foreach (var prop in query)
+            this.Viewport = null;
+            if (winElement != null && winElement.MainWindow is WinElement target && target.ProcessId == this.ProcessId)
             {
-                if (this.GetType().GetProperty(prop.Name).GetValue(this).Equals(prop.Value))
-                {
-                    continue;
-                }
-                return false;
+                this.Viewport = target.GetElement(x => x.Class == "Chrome_RenderWidgetHostHWND");
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }

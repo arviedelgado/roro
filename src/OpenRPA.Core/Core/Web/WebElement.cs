@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
+using OpenRPA.Queries;
 
 namespace OpenRPA.Core
 {
@@ -40,7 +41,7 @@ namespace OpenRPA.Core
             var script = @"
                 var el = arguments[0];
                 var getPath = function(elem) {
-                    var path = '/' + elem.tagName;
+                    var path = '';
                     while (elem) {
                         path = '/' + elem.tagName + path;
                         elem = elem.parentElement || elem.ownerDocument.defaultView.frameElement; // element.document.window.iframe
@@ -75,36 +76,22 @@ namespace OpenRPA.Core
             );
         }
 
-        public string Id
-        {
-            get;
-        }
+        [BotProperty]
+        public string Id { get; }
 
-        public string Class
-        {
-            get;
-        }
+        [BotProperty]
+        public string Class { get; }
 
-        public string Name
-        {
-            get;
-        }
+        [BotProperty]
+        public string Name { get; }
 
-        public string Type
-        {
-            get;
-        }
+        [BotProperty]
+        public string Type { get; }
 
-        public string Path
-        {
-            get;
-        }
-
-        public Rect Bounds
-        {
-            get;
-            internal set;
-        }
+        [BotProperty]
+        public override string Path { get; }
+        
+        public override Rect Bounds { get; }
 
         public WebElement Parent
         {

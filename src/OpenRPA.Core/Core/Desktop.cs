@@ -25,31 +25,33 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenRPA.Inputs;
+using OpenRPA.Queries;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 
 namespace OpenRPA.Core
 {
-    public sealed class Inspector
+    public sealed class Desktop
     {
         private readonly Highligher highligter;
 
         //private readonly SapContext sapContext;
 
-        //private readonly WebContext webContext;
+        private readonly WebContext webContext;
 
         private readonly Timer focusTimer;
 
         private readonly Timer pointTimer;
 
         private InputEventArgs pointEvent;
-        
-        public Inspector()
+
+        public Desktop()
         {
             this.highligter = new Highligher();
             //this.sapContext = new SapContext();
-            //this.webContext = new WebContext();
+            this.webContext = new ChromeContext();
             this.focusTimer = new Timer(GetElementFromFocus, null, Timeout.Infinite, Timeout.Infinite);
             this.pointTimer = new Timer(GetElementFromPoint, null, Timeout.Infinite, Timeout.Infinite);
 
@@ -78,43 +80,62 @@ namespace OpenRPA.Core
 
         private void GetElementFromFocus(object state)
         {
-//            try
-//            {
-//                WinElement winElement = WinElement.GetFromFocus();
+            //            try
+            //            {
+            //                WinElement winElement = WinElement.GetFromFocus();
 
-//                //WebElement webElement = this.webContext.GetElementFromFocus(winElement);
+            //                //WebElement webElement = this.webContext.GetElementFromFocus(winElement);
 
-//                //Element element = webElement ?? winElement as Element;
+            //                //Element element = webElement ?? winElement as Element;
 
-//                //Console.WriteLine("FOCUS: {0}", element.Path);
+            //                //Console.WriteLine("FOCUS: {0}", element.Path);
 
-//                this.highligter.Invoke(winElement.Bounds);
-////                Console.Write(winElement.Serialize());
-//            }
-//            catch (Exception ex)
-//            {
-//                Console.WriteLine("ERROR: {0}", ex);
-//            }
+            //                this.highligter.Invoke(winElement.Bounds);
+            ////                Console.Write(winElement.Serialize());
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Console.WriteLine("ERROR: {0}", ex);
+            //            }
         }
 
         private void GetElementFromPoint(object state)
         {
             try
             {
-                InputEventArgs e = pointEvent;
+                var e = pointEvent;
 
-                WinElement winElement = WinElement.GetFromPoint(e.X, e.Y);
+                Context context = WinContext.Shared;
+                Element element = context.GetElementFromPoint(e.X, e.Y);
+                Rect offset = new Rect();
 
-                this.highligter.Invoke(winElement.Bounds, false);
+                this.highligter.Invoke(element.Bounds, Color.Red);
+
+                if (this.webContext.GetElementFromPoint(e.X, e.Y) is WebElement webElement)
+                {
+                    context = this.webContext;
+                    element = webElement;
+                    offset = this.webContext.Viewport.Bounds;
+                }
+
+                var query = element.GetQuery();
+
+                Console.Title = element.Path;
                 Console.Clear();
-                var query = winElement.GetQuery();
-                Console.Title = winElement.Path;
                 Console.WriteLine(query);
                 Console.WriteLine();
-                var result = WinElement.GetFromQuery(query);
-                foreach (var el in result)
+
+                var sw = Stopwatch.StartNew();
+                var elements = context.GetElementsFromQuery(query);
+                Console.WriteLine("Matches: {0} in {1} seconds", elements.Count, sw.ElapsedMilliseconds / 1000.0);
+
+                foreach (var el in elements)
                 {
-                    new Highligher().Invoke((el as WinElement).Bounds, true);
+                    var bounds = el.Bounds;
+                    bounds.X += offset.X;
+                    bounds.Y += offset.Y;
+                    Console.WriteLine(bounds);
+                    this.highligter.Invoke(bounds, Color.Blue);
                 }
             }
             catch (Exception ex)
@@ -131,21 +152,6 @@ namespace OpenRPA.Core
                 p.WaitForInputIdle(1000);
                 p.Refresh();
             }
-        }
-
-        public void LaunchIE(string url = null)
-        {
-            //this.webContext.StartIE(url);
-        }
-
-        public void LaunchEdge(string url = null)
-        {
-            //this.webContext.StartEdge(url);
-        }
-
-        public void LaunchChrome(string url = null)
-        {
-            //this.webContext.StartChrome(url);
         }
     }
 }

@@ -26,271 +26,108 @@
 
 using System;
 using System.Linq;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Safari;
-using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
 using System.Management;
-using Microsoft.Win32;
+using OpenRPA.Queries;
 using System.Collections.Generic;
 
 namespace OpenRPA.Core
 {
-    public sealed class WebContext
+    public abstract class WebContext : Context
     {
-        private RemoteWebDriver driver;
-
-        private IDictionary<int, RemoteWebDriver> drivers;
-
         private const string defaultUrl = "about:blank";
 
-        public WebContext()
+        public int ProcessId { get; protected set; }
+
+        protected RemoteWebDriver Driver { get; set; }
+
+        public abstract WinElement Viewport { get; protected set; }
+
+        public abstract bool UpdateViewport(WinElement target);
+
+        public override Element GetElementFromFocus()
         {
-            this.drivers = new Dictionary<int, RemoteWebDriver>();
+            if (WinContext.Shared.GetElementFromFocus() is WinElement target
+                && this.UpdateViewport(target)
+                && this.Viewport is WinElement viewport)
+            {
+                if (this.ExecuteScript("return document.activeElement") is RemoteWebElement rawElement)
+                {
+                    return new WebElement(rawElement);
+                }
+            }
+            return null;
         }
 
-        private void Start<T>(string url) where T : RemoteWebDriver
+        public override Element GetElementFromPoint(int screenX, int screenY)
         {
-            int processId;
-            RemoteWebDriver driver;
-            string opaqueSessionId = Guid.NewGuid().ToString();
-
-            //
-            // CHROME
-            //
-
-            if (typeof(T) == typeof(ChromeDriver))
+            if (WinContext.Shared.GetElementFromPoint(screenX, screenY) is WinElement target
+                && this.UpdateViewport(target)
+                && this.Viewport is WinElement viewport)
             {
-                // service
-                ChromeDriverService chromeService = ChromeDriverService.CreateDefaultService();
-
-                // options
-                ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.AddArgument("--force-renderer-accessibility");
-                chromeOptions.AddArgument(opaqueSessionId);
-
-                // driver
-                driver = new ChromeDriver(chromeService, chromeOptions);
+                if (this.ExecuteScript("return document.elementFromPoint(arguments[0], arguments[1])", screenX - viewport.Bounds.X, screenY - viewport.Bounds.Y) is RemoteWebElement rawElement)
+                {
+                    return new WebElement(rawElement);
+                }
             }
-
-            //
-            // IE
-            //
-
-            else if (typeof(T) == typeof(InternetExplorerDriver))
-            {
-                //// ERROR: Unable to get browser
-                //// REPLICATE: Start driver, navigate manually to other site
-                Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BFCACHE", "iexplore.exe", 0, RegistryValueKind.DWord);
-
-                //// ERROR: WebDriverException: Unexpected error launching Internet Explorer. Protected Mode settings are not the same for all zones. Enable Protected Mode must be set to the same value (enabled or disabled) for all zones.
-                Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\0", "2500", 0, RegistryValueKind.DWord);
-                Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1", "2500", 0, RegistryValueKind.DWord);
-                Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\2", "2500", 0, RegistryValueKind.DWord);
-                Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3", "2500", 0, RegistryValueKind.DWord);
-                Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4", "2500", 0, RegistryValueKind.DWord);
-
-                // service
-                InternetExplorerDriverService ieService = InternetExplorerDriverService.CreateDefaultService();
-                ieService.HideCommandPromptWindow = false;
-
-                // options
-                InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-                ieOptions.InitialBrowserUrl = string.Format("{0}:{1}", WebContext.defaultUrl, opaqueSessionId);
-
-                // driver
-                driver = new InternetExplorerDriver(ieService, ieOptions);
-            }
-
-            //
-            // EDGE
-            //
-
-            else if (typeof(T) == typeof(EdgeDriver))
-            {
-                // service
-                EdgeDriverService edgeService = EdgeDriverService.CreateDefaultService();
-                edgeService.HideCommandPromptWindow = false;
-                
-                // options
-                EdgeOptions edgeOptions = new EdgeOptions();
-                opaqueSessionId = "-ServerName:MicrosoftEdge";
-
-                // driver
-                driver = new EdgeDriver(edgeService, edgeOptions);
-            }
-
-            //
-            // OTHERS
-            //
-
-            else
-            {
-                throw new NotImplementedException();
-            }
-
-            using (var searcher = new ManagementObjectSearcher(string.Format("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine LIKE '%{0}%'", opaqueSessionId)))
-            {
-                processId = (Convert.ToInt32(searcher.Get().Cast<ManagementObject>().First()["ProcessId"]));
-                this.drivers.Add(processId, driver);
-                this.driver = driver;
-                this.GoTo(WebContext.defaultUrl);
-                this.GoTo(url ?? WebContext.defaultUrl);
-                return;
-            }
-
-            throw new Exception("ProcessId not found.");
+            return null;
         }
 
-        public void StartIE(string url = null)
+        public override IReadOnlyList<Element> GetElementsFromQuery(Query query)
         {
-            Start<InternetExplorerDriver>(url);
+            var result = new List<WebElement>();
+            var targetPath = query.First(x => x.Name == "Path").Value.ToString().Remove(0, 1).Replace('/', '>');
+
+            if (this.ExecuteScript("console.log(arguments[0]); return document.querySelectorAll(arguments[0])", targetPath) is IEnumerable<object> rawElements)
+            {
+                foreach (var rawElement in rawElements)
+                {
+                    var candidate = new WebElement(rawElement as RemoteWebElement);
+                    if (candidate.TryQuery(query))
+                    {
+                        result.Add(candidate);
+                    }
+                }
+            }
+            return result;
         }
 
-        public void StartEdge(string url = null)
+        protected int GetProcessIdFromSession(Guid session)
         {
-            Start<EdgeDriver>(url);
+            using (var searcher = new ManagementObjectSearcher(string.Format("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine LIKE '%{0}%'", session)))
+            {
+                return (Convert.ToInt32(searcher.Get().Cast<ManagementObject>().First()["ProcessId"]));
+            }
+            throw new Exception(string.Format("{0} session {1} not found.", this.GetType().Name, session));
         }
 
-        public void StartChrome(string url = null)
-        {
-            Start<ChromeDriver>(url);
-        }
+        #region WebContext Common
 
-        public void GoTo(string url)
+        public void GoToUrl(string url)
         {
-            this.driver.Navigate().GoToUrl(url);
+            this.Driver.Navigate().GoToUrl(url);
         }
 
         public void GoBack()
         {
-            this.driver.Navigate().Back();
+            this.Driver.Navigate().Back();
         }
 
         public void GoForward()
         {
-            this.driver.Navigate().Forward();
+            this.Driver.Navigate().Forward();
         }
 
         public void Refresh()
         {
-            this.driver.Navigate().Refresh();
+            this.Driver.Navigate().Refresh();
         }
 
         public object ExecuteScript(string script, params object[] args)
         {
-            return this.driver.ExecuteScript(script, args);
+            return this.Driver.ExecuteScript(script, args);
         }
 
-        public WinElement GetViewport(WinElement mainWindow)
-        {
-            var driverType = this.driver.GetType();
-            if (driverType == typeof(ChromeDriver))
-            {
-                return mainWindow.GetElement(x => x.Class == "Chrome_RenderWidgetHostHWND");
-            }
-            if (driverType == typeof(InternetExplorerDriver))
-            {
-                return mainWindow.GetElement(x => x.Class == "Internet Explorer_Server" || x.Class == "NewTabWnd");
-            }
-            if (driverType == typeof(EdgeDriver))
-            {
-                return mainWindow.GetElement(x => x.Class == "Internet Explorer_Server" || x.Class == "NewTabPage");
-            }
-            throw new Exception("Viewport not found");
-        }
-
-        public WebElement GetElementFromFocus(WinElement winElement)
-        {
-            if (winElement == null)
-            {
-                return null;
-            }
-
-            var mainWindow = winElement.MainWindow;
-            if (mainWindow == null)
-            {
-                return null;
-            }
-
-            var processId = mainWindow.ProcessId;
-            if (mainWindow.Class == "ApplicationFrameWindow")
-            {
-                var edgeWindow = mainWindow.Children.FirstOrDefault(x =>
-                    x.Type == "window" &&
-                    x.Name == "Microsoft Edge" &&
-                    x.Class == "Windows.UI.Core.CoreWindow");
-                if (edgeWindow != null)
-                {
-                    processId = edgeWindow.ProcessId;
-                }
-            }
-
-            if (this.drivers.TryGetValue(processId, out RemoteWebDriver driver))
-            {
-                this.driver = driver;
-                var viewportRect = GetViewport(mainWindow).Bounds;
-                if (this.ExecuteScript("return document.activeElement") is RemoteWebElement rawElement)
-                {
-                    var element = new WebElement(rawElement);
-                    element.Bounds = new Rect(
-                        element.Bounds.X + viewportRect.X,
-                        element.Bounds.Y + viewportRect.Y,
-                        element.Bounds.Width,
-                        element.Bounds.Height);
-                    return element;
-                }
-            }
-
-            return null;
-        }
-
-        public WebElement GetElementFromPoint(int screenX, int screenY, WinElement winElement)
-        {
-            if (winElement == null)
-            {
-                return null;
-            }
-
-            var mainWindow = winElement.MainWindow;
-            if (mainWindow == null)
-            {
-                return null;
-            }
-
-            var processId = mainWindow.ProcessId;
-            if (mainWindow.Class == "ApplicationFrameWindow")
-            {
-                var edgeWindow = mainWindow.Children.FirstOrDefault(x =>
-                    x.Type == "window" &&
-                    x.Name == "Microsoft Edge" &&
-                    x.Class == "Windows.UI.Core.CoreWindow");
-                if (edgeWindow != null)
-                {
-                    processId = edgeWindow.ProcessId;
-                }
-            }
-
-            if (this.drivers.TryGetValue(processId, out RemoteWebDriver driver))
-            {
-                this.driver = driver;
-                var viewportRect = GetViewport(mainWindow).Bounds;
-                if (this.ExecuteScript("return document.elementFromPoint(arguments[0], arguments[1])", screenX - viewportRect.X, screenY - viewportRect.Y) is RemoteWebElement rawElement)
-                {
-                    var element = new WebElement(rawElement);
-                    element.Bounds = new Rect(
-                        element.Bounds.X + viewportRect.X,
-                        element.Bounds.Y + viewportRect.Y,
-                        element.Bounds.Width,
-                        element.Bounds.Height);
-                    return element;
-                }
-            }
-
-            return null;
-        }
+        #endregion
     }
 }

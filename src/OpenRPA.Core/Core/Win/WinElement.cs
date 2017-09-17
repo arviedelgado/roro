@@ -56,9 +56,9 @@ namespace OpenRPA.Core
         public string Type => this.Invoke<WinElementType>().ToString().ToLower();
 
         [BotProperty]
-        public string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
+        public override string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
 
-        public Rect Bounds => this.Invoke<Rect>();
+        public override Rect Bounds => this.Invoke<Rect>();
 
         [BotProperty]
         public int Index => (this.Parent is WinElement parent ? parent.Children.ToList().IndexOf(this) : 0);
@@ -139,57 +139,22 @@ namespace OpenRPA.Core
 
         public override int GetHashCode() => base.GetHashCode();
 
-        public static WinElement GetRoot()
-        {
-            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
-            return value == null ? null : new WinElement(value);
-        }
-        
-        public static WinElement GetFromFocus()
+        internal static WinElement GetRoot()
         {
             IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
             return value == null ? null : new WinElement(value);
         }
 
-        public static WinElement GetFromPoint(int screenX, int screenY)
+        internal static WinElement GetFromFocus()
+        {
+            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
+            return value == null ? null : new WinElement(value);
+        }
+
+        internal static WinElement GetFromPoint(int screenX, int screenY)
         {
             IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>((Int64)screenY << 32 | (Int64)screenX);
             return value == null ? null : new WinElement(value);
-        }
-
-        public static IReadOnlyList<WinElement> GetFromQuery(Query query)
-        {
-            var sw = Stopwatch.StartNew();
-            var result = new List<WinElement>();
-            var candidates = new Queue<WinElement>();
-            var targetPath = query.First(x => x.Name == "Path").Value.ToString();
-
-            candidates.Enqueue(WinElement.GetRoot());
-            while (candidates.Count > 0)
-            {
-                var candidate = candidates.Dequeue();
-                var candidatePath = candidate.Path;
-                if (targetPath.StartsWith(candidatePath))
-                {
-                    Console.WriteLine(candidatePath);
-                    if (targetPath.Equals(candidatePath))
-                    {
-                        if (candidate.TryQuery(query))
-                        {
-                            result.Add(candidate);
-                        }
-                    }
-                    else
-                    {
-                        foreach (var child in candidate.Children)
-                        {
-                            candidates.Enqueue(child);
-                        }
-                    }
-                }
-            }
-            Console.WriteLine("Matches: {0} in {1} seconds", result.Count, sw.ElapsedMilliseconds / 1000.0);
-            return result;
         }
 
         [DllImport("WinDriver.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]

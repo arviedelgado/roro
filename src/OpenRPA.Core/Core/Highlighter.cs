@@ -69,18 +69,10 @@ namespace OpenRPA.Core
             }).Start();
         }
 
-        public void Invoke(Rect r, bool dispose)
+        public void Invoke(Rect rect, Color color)
         {
-            this.rect = this.toRect = new Rectangle(r.X, r.Y, r.Width, r.Height);
-            if (dispose)
-            {
-                this.form.BackColor = Color.Blue;
-                new Thread(() =>
-                {
-                    Thread.Sleep(2000);
-                    this.form.Dispose();
-                }).Start();
-            }
+            this.rect = this.toRect = new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+            this.form.BackColor = color;
             this.form.Invalidate();
         }
     }

@@ -7,8 +7,7 @@ namespace OpenRPA.Test
     {
         static void Main()
         {
-
-            var insp = new Inspector();
+            var desktop = new Desktop();
             Console.ReadLine();
         }
     }

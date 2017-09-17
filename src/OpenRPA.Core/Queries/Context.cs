@@ -24,40 +24,17 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenRPA.Core;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace OpenRPA.Queries
 {
-    public abstract class Element
+    public abstract class Context
     {
-        public abstract string Path { get; }
+        public abstract Element GetElementFromFocus();
 
-        public abstract Rect Bounds { get; }
+        public abstract Element GetElementFromPoint(int screenX, int screenY);
 
-        public Query GetQuery()
-        {
-            var query = new Query();
-            var props = this.GetType().GetProperties().Where(attr => Attribute.IsDefined(attr, typeof(BotPropertyAttribute)));
-            foreach (var prop in props)
-            {
-                query.Append(prop.Name, prop.GetValue(this));
-            }
-            return query;
-        }
-
-        public bool TryQuery(Query query)
-        {
-            foreach (var prop in query)
-            {
-                if (this.GetType().GetProperty(prop.Name).GetValue(this).Equals(prop.Value))
-                {
-                    continue;
-                }
-                return false;
-            }
-            return true;
-        }
+        public abstract IReadOnlyList<Element> GetElementsFromQuery(Query query);
     }
 }

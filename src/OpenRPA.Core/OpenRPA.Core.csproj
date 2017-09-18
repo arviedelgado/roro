@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Web\EdgeContext.cs" />
+    <Compile Include="Core\Web\InternetExplorerContext.cs" />
     <Compile Include="Core\Web\ChromeContext.cs" />
     <Compile Include="Core\Web\WebContext.cs" />
     <Compile Include="Core\Web\WebElement.cs" />

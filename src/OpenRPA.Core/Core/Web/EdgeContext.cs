@@ -25,28 +25,28 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
+using Microsoft.Win32;
+using System.Linq;
 
 namespace OpenRPA.Core
 {
-    public sealed class ChromeContext : WebContext
+    public sealed class EdgeContext : WebContext
     {
-        public ChromeContext()
+        public EdgeContext()
         {
             // session
-            var session = Guid.NewGuid().ToString();
-            
+            var session = "-ServerName:MicrosoftEdge";
+
             // service
-            var service = ChromeDriverService.CreateDefaultService();
+            var service = EdgeDriverService.CreateDefaultService();
             service.HideCommandPromptWindow = false;
 
             // options
-            var options = new ChromeOptions();
-            options.AddArgument("--force-renderer-accessibility");
-            options.AddArgument(session.ToString());
+            var options = new EdgeOptions();
 
             // driver
-            this.Driver = new ChromeDriver(service, options);
+            this.Driver = new EdgeDriver(service, options);
 
             // process
             this.ProcessId = this.GetProcessIdFromSession(session);
@@ -55,9 +55,12 @@ namespace OpenRPA.Core
         protected override bool UpdateViewportOffset(WinElement winElement)
         {
             this.Offset = default(Rect);
-            if (winElement != null && winElement.MainWindow is WinElement target && target.ProcessId == this.ProcessId)
+            if (winElement != null && winElement.MainWindow is WinElement mainWindow
+                && mainWindow.Class == "ApplicationFrameWindow"
+                && mainWindow.Children.FirstOrDefault(x => x.Type == "window" && x.Name == "Microsoft Edge" && x.Class == "Windows.UI.Core.CoreWindow") is WinElement target
+                && target.ProcessId == this.ProcessId)
             {
-                if (target.GetElement(x => x.Class == "Chrome_RenderWidgetHostHWND") is WinElement viewport)
+                if (target.GetElement(x => x.Class == "Internet Explorer_Server" || x.Class == "NewTabPage") is WinElement viewport)
                 {
                     this.Offset = viewport.Bounds;
                     return true;

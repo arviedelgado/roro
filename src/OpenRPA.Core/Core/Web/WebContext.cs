@@ -35,21 +35,15 @@ namespace OpenRPA.Core
 {
     public abstract class WebContext : Context
     {
-        private const string defaultUrl = "about:blank";
-
-        public int ProcessId { get; protected set; }
+        protected const string DefaultUrl = "about:blank";
 
         protected RemoteWebDriver Driver { get; set; }
 
-        public abstract WinElement Viewport { get; protected set; }
-
-        public abstract bool UpdateViewport(WinElement target);
+        protected abstract bool UpdateViewportOffset(WinElement target);
 
         public override Element GetElementFromFocus()
         {
-            if (WinContext.Shared.GetElementFromFocus() is WinElement target
-                && this.UpdateViewport(target)
-                && this.Viewport is WinElement viewport)
+            if (WinContext.CurrentElement is WinElement target && this.UpdateViewportOffset(target))
             {
                 if (this.ExecuteScript("return document.activeElement") is RemoteWebElement rawElement)
                 {
@@ -61,11 +55,9 @@ namespace OpenRPA.Core
 
         public override Element GetElementFromPoint(int screenX, int screenY)
         {
-            if (WinContext.Shared.GetElementFromPoint(screenX, screenY) is WinElement target
-                && this.UpdateViewport(target)
-                && this.Viewport is WinElement viewport)
+            if (WinContext.CurrentElement is WinElement target && this.UpdateViewportOffset(target))
             {
-                if (this.ExecuteScript("return document.elementFromPoint(arguments[0], arguments[1])", screenX - viewport.Bounds.X, screenY - viewport.Bounds.Y) is RemoteWebElement rawElement)
+                if (this.ExecuteScript("return document.elementFromPoint(arguments[0], arguments[1])", screenX - this.Offset.X, screenY - this.Offset.Y) is RemoteWebElement rawElement)
                 {
                     return new WebElement(rawElement);
                 }
@@ -92,10 +84,11 @@ namespace OpenRPA.Core
             return result;
         }
 
-        protected int GetProcessIdFromSession(Guid session)
+        protected int GetProcessIdFromSession(string session)
         {
             using (var searcher = new ManagementObjectSearcher(string.Format("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine LIKE '%{0}%'", session)))
             {
+                this.GoToUrl(WebContext.DefaultUrl);
                 return (Convert.ToInt32(searcher.Get().Cast<ManagementObject>().First()["ProcessId"]));
             }
             throw new Exception(string.Format("{0} session {1} not found.", this.GetType().Name, session));
@@ -105,7 +98,7 @@ namespace OpenRPA.Core
 
         public void GoToUrl(string url)
         {
-            this.Driver.Navigate().GoToUrl(url);
+            this.Driver.Navigate().GoToUrl(url ?? WebContext.DefaultUrl);
         }
 
         public void GoBack()

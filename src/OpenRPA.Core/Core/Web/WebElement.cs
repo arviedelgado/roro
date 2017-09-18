@@ -52,28 +52,34 @@ namespace OpenRPA.Core
                     id:     el.getAttribute('id') || '',
                     class:  el.getAttribute('class') || '',
                     name:   el.getAttribute('name') || '',
-                    type:   el.tagName || '',
-                    path:   getPath(el),
+                    type:   el.tagName.toLowerCase(),
+                    path:   getPath(el).toLowerCase(),
                     left:   el.getBoundingClientRect().left,
                     top:    el.getBoundingClientRect().top,
                     width:  el.getBoundingClientRect().width,
-                    height: el.getBoundingClientRect().height                    
+                    height: el.getBoundingClientRect().height,
+                    text:   el.innerText || '',
+                    value:  el.value || '',
+                    checked:el.checked || false,
                 };
                 return result;
             ";
             var driver = this.rawElement.WrappedDriver as RemoteWebDriver;
             var result = driver.ExecuteScript(script, this.rawElement) as IDictionary<string, object>;
             this.Id = result["id"].ToString();
-            this.Class = result["class"].ToString();
-            this.Name = result["name"].ToString();
-            this.Type = result["type"].ToString().ToLower();
-            this.Path = result["path"].ToString().ToLower();
+            this.Class = Convert.ToString(result["class"]);
+            this.Name = Convert.ToString(result["name"]);
+            this.Type = Convert.ToString(result["type"]);
+            this.Path = Convert.ToString(result["path"]);
             this.Bounds = new Rect(
                 Convert.ToInt32(result["left"]),
                 Convert.ToInt32(result["top"]),
                 Convert.ToInt32(result["width"]),
                 Convert.ToInt32(result["height"])
             );
+            this.Text = Convert.ToString(result["text"]);
+            this.Value = Convert.ToString(result["value"]);
+            this.Checked = Convert.ToBoolean(result["checked"]);
         }
 
         [BotProperty]
@@ -93,6 +99,15 @@ namespace OpenRPA.Core
         
         public override Rect Bounds { get; }
 
+        [BotProperty]
+        public string Text { get; }
+
+        [BotProperty]
+        public string Value { get; }
+
+        [BotProperty]
+        public bool Checked { get; }
+        
         public WebElement Parent
         {
             get

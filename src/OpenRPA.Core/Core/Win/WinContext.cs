@@ -35,14 +35,21 @@ namespace OpenRPA.Core
     {
         public static readonly WinContext Shared = new WinContext();
 
+        public static WinElement CurrentElement { get; private set; }
+
+        private WinContext()
+        {
+            this.ProcessId = WinElement.GetRoot().ProcessId;
+        }
+
         public override Element GetElementFromFocus()
         {
-            return WinElement.GetFromFocus();
+            return WinContext.CurrentElement = WinElement.GetFromFocus();
         }
 
         public override Element GetElementFromPoint(int screenX, int screenY)
         {
-            return WinElement.GetFromPoint(screenX, screenY);
+            return WinContext.CurrentElement = WinElement.GetFromPoint(screenX, screenY);
         }
 
         public override IReadOnlyList<Element> GetElementsFromQuery(Query query)

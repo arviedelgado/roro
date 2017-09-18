@@ -8,6 +8,9 @@ namespace OpenRPA.Test
         static void Main()
         {
             var desktop = new Desktop();
+            desktop.LaunchChrome("http://rpaaas.com");
+            desktop.LaunchEdge("http://rpaaas.com");
+            desktop.LaunchInternetExplorer("http://rpaaas.com");
             Console.ReadLine();
         }
     }

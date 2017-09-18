@@ -24,6 +24,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenRPA.Core;
 using System;
 using System.Collections.Generic;
 
@@ -31,6 +32,10 @@ namespace OpenRPA.Queries
 {
     public abstract class Context
     {
+        public virtual Rect Offset { get; protected set; }
+
+        public virtual int ProcessId { get; protected set; }
+
         public abstract Element GetElementFromFocus();
 
         public abstract Element GetElementFromPoint(int screenX, int screenY);

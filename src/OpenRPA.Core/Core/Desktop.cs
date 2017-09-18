@@ -27,8 +27,10 @@
 using OpenRPA.Inputs;
 using OpenRPA.Queries;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 
 namespace OpenRPA.Core
@@ -39,7 +41,7 @@ namespace OpenRPA.Core
 
         //private readonly SapContext sapContext;
 
-        private readonly WebContext webContext;
+        private readonly IList<Context> contexts;
 
         private readonly Timer focusTimer;
 
@@ -51,7 +53,7 @@ namespace OpenRPA.Core
         {
             this.highligter = new Highligher();
             //this.sapContext = new SapContext();
-            this.webContext = new ChromeContext();
+            this.contexts = new List<Context>();
             this.focusTimer = new Timer(GetElementFromFocus, null, Timeout.Infinite, Timeout.Infinite);
             this.pointTimer = new Timer(GetElementFromPoint, null, Timeout.Infinite, Timeout.Infinite);
 
@@ -107,15 +109,17 @@ namespace OpenRPA.Core
 
                 Context context = WinContext.Shared;
                 Element element = context.GetElementFromPoint(e.X, e.Y);
-                Rect offset = new Rect();
 
                 this.highligter.Invoke(element.Bounds, Color.Red);
 
-                if (this.webContext.GetElementFromPoint(e.X, e.Y) is WebElement webElement)
+                foreach (var ctx in this.contexts)
                 {
-                    context = this.webContext;
-                    element = webElement;
-                    offset = this.webContext.Viewport.Bounds;
+                    if (ctx.GetElementFromPoint(e.X, e.Y) is Element elem)
+                    {
+                        context = ctx;
+                        element = elem;
+                        continue;
+                    }
                 }
 
                 var query = element.GetQuery();
@@ -129,13 +133,13 @@ namespace OpenRPA.Core
                 var elements = context.GetElementsFromQuery(query);
                 Console.WriteLine("Matches: {0} in {1} seconds", elements.Count, sw.ElapsedMilliseconds / 1000.0);
 
-                foreach (var el in elements)
+                if (elements.FirstOrDefault() is Element el)
                 {
                     var bounds = el.Bounds;
-                    bounds.X += offset.X;
-                    bounds.Y += offset.Y;
-                    Console.WriteLine(bounds);
+                    bounds.X += context.Offset.X;
+                    bounds.Y += context.Offset.Y;
                     this.highligter.Invoke(bounds, Color.Blue);
+                    Console.WriteLine(bounds);
                 }
             }
             catch (Exception ex)
@@ -153,5 +157,27 @@ namespace OpenRPA.Core
                 p.Refresh();
             }
         }
+
+        public void LaunchChrome(string url = null)
+        {
+            var ctx = new ChromeContext();
+            this.contexts.Add(ctx);
+            ctx.GoToUrl(url);
+        }
+
+        public void LaunchInternetExplorer(string url = null)
+        {
+            var ctx = new InternetExplorerContext();
+            this.contexts.Add(ctx);
+            ctx.GoToUrl(url);
+        }
+
+        public void LaunchEdge(string url = null)
+        {
+            var ctx = new EdgeContext();
+            this.contexts.Add(ctx);
+            ctx.GoToUrl(url);
+        }
+
     }
 }

@@ -74,6 +74,7 @@ namespace OpenRPA.Core
             this.rect = this.toRect = new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
             this.form.BackColor = color;
             this.form.Invalidate();
+            this.form.Show();
         }
     }
 }

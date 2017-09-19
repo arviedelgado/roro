@@ -39,8 +39,6 @@ namespace OpenRPA.Core
     {
         private readonly Highligher highligter;
 
-        //private readonly SapContext sapContext;
-
         private readonly IList<Context> contexts;
 
         private readonly Timer focusTimer;
@@ -52,7 +50,6 @@ namespace OpenRPA.Core
         public Desktop()
         {
             this.highligter = new Highligher();
-            //this.sapContext = new SapContext();
             this.contexts = new List<Context>();
             this.focusTimer = new Timer(GetElementFromFocus, null, Timeout.Infinite, Timeout.Infinite);
             this.pointTimer = new Timer(GetElementFromPoint, null, Timeout.Infinite, Timeout.Infinite);
@@ -105,6 +102,8 @@ namespace OpenRPA.Core
         {
             try
             {
+                Console.Clear();
+
                 var e = pointEvent;
 
                 Context context = WinContext.Shared;
@@ -124,9 +123,8 @@ namespace OpenRPA.Core
 
                 var query = element.GetQuery();
 
-                Console.Title = element.Path;
-                Console.Clear();
                 Console.WriteLine(query);
+                Console.Title = element.Path;
                 Console.WriteLine();
 
                 var sw = Stopwatch.StartNew();
@@ -135,11 +133,8 @@ namespace OpenRPA.Core
 
                 if (elements.FirstOrDefault() is Element el)
                 {
-                    var bounds = el.Bounds;
-                    bounds.X += context.Offset.X;
-                    bounds.Y += context.Offset.Y;
-                    this.highligter.Invoke(bounds, Color.Blue);
-                    Console.WriteLine(bounds);
+                    this.highligter.Invoke(el.Bounds, Color.Blue);
+                    Console.WriteLine(el.Bounds);
                 }
             }
             catch (Exception ex)
@@ -158,11 +153,12 @@ namespace OpenRPA.Core
             }
         }
 
-        public void LaunchChrome(string url = null)
+        public WebContext LaunchChrome(string url = null)
         {
             var ctx = new ChromeContext();
             this.contexts.Add(ctx);
             ctx.GoToUrl(url);
+            return ctx;
         }
 
         public void LaunchInternetExplorer(string url = null)

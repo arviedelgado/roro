@@ -35,7 +35,7 @@ namespace OpenRPA.Core
     {
         private readonly RemoteWebElement rawElement;
 
-        internal WebElement(RemoteWebElement rawElement)
+        internal WebElement(RemoteWebElement rawElement, int offsetX, int offsetY)
         {
             this.rawElement = rawElement;
             var script = @"
@@ -72,8 +72,8 @@ namespace OpenRPA.Core
             this.Type = Convert.ToString(result["type"]);
             this.Path = Convert.ToString(result["path"]);
             this.Bounds = new Rect(
-                Convert.ToInt32(result["left"]),
-                Convert.ToInt32(result["top"]),
+                Convert.ToInt32(result["left"]) + offsetX,
+                Convert.ToInt32(result["top"]) + offsetY,
                 Convert.ToInt32(result["width"]),
                 Convert.ToInt32(result["height"])
             );
@@ -115,7 +115,7 @@ namespace OpenRPA.Core
                 var driver = this.rawElement.WrappedDriver as RemoteWebDriver;
                 if (driver.ExecuteScript("return arguments[0].parentElement", this.rawElement) is RemoteWebElement rawParent)
                 {
-                    return new WebElement(rawParent);
+                    return new WebElement(rawParent, 0, 0);
                 }
                 return null;
             }
@@ -129,9 +129,9 @@ namespace OpenRPA.Core
                 var driver = this.rawElement.WrappedDriver as RemoteWebDriver;
                 if (driver.ExecuteScript("return arguments[0].children", this.rawElement) is IEnumerable<object> rawChildren)
                 {
-                    foreach (var rawChild in rawChildren)
+                    foreach (RemoteWebElement rawChild in rawChildren)
                     {
-                        children.Add(new WebElement(rawChild as RemoteWebElement));
+                        children.Add(new WebElement(rawChild, 0, 0));
                     }
                 }
                 return children;

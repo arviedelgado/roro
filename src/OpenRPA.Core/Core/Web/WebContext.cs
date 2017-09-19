@@ -47,7 +47,7 @@ namespace OpenRPA.Core
             {
                 if (this.ExecuteScript("return document.activeElement") is RemoteWebElement rawElement)
                 {
-                    return new WebElement(rawElement);
+                    return new WebElement(rawElement, this.Offset.X, this.Offset.Y);
                 }
             }
             return null;
@@ -57,9 +57,30 @@ namespace OpenRPA.Core
         {
             if (WinContext.CurrentElement is WinElement target && this.UpdateViewportOffset(target))
             {
-                if (this.ExecuteScript("return document.elementFromPoint(arguments[0], arguments[1])", screenX - this.Offset.X, screenY - this.Offset.Y) is RemoteWebElement rawElement)
+                var script = @"
+                    var x = arguments[0];
+                    var y = arguments[1];
+                    return document.elementFromPoint(x, y);
+                ";
+                var frameScreenX = this.Offset.X;
+                var frameScreenY = this.Offset.Y;
+                this.Driver.SwitchTo().DefaultContent();
+                while(true)
                 {
-                    return new WebElement(rawElement);
+                    if (this.ExecuteScript(script, screenX - frameScreenX, screenY - frameScreenY) is RemoteWebElement rawElement)
+                    {
+                        var element = new WebElement(rawElement, frameScreenX, frameScreenY);
+                        if (element.Type == "iframe")
+                        {
+                            frameScreenX = element.Bounds.X;
+                            frameScreenY = element.Bounds.Y;
+                            this.Driver.SwitchTo().Frame(rawElement);
+                            continue;
+                        }
+                        this.Driver.SwitchTo().DefaultContent();
+                        return element;
+                    }
+                    break;
                 }
             }
             return null;
@@ -67,20 +88,35 @@ namespace OpenRPA.Core
 
         public override IReadOnlyList<Element> GetElementsFromQuery(Query query)
         {
-            var result = new List<WebElement>();
-            var targetPath = query.First(x => x.Name == "Path").Value.ToString().Remove(0, 1).Replace('/', '>');
+            var result = new List<Element>();
+            var fullPath = query.First(x => x.Name == "Path").Value.ToString();
+            var subPaths = fullPath.Substring(1).Replace('/', '>').Replace(">iframe>", ">iframe#").Split('#');
 
-            if (this.ExecuteScript("console.log(arguments[0]); return document.querySelectorAll(arguments[0])", targetPath) is IEnumerable<object> rawElements)
+            var frameScreenX = this.Offset.X;
+            var frameScreenY = this.Offset.Y;
+            this.Driver.SwitchTo().DefaultContent();
+            foreach (var subPath in subPaths)
             {
-                foreach (var rawElement in rawElements)
+                if (this.ExecuteScript("return document.querySelectorAll(arguments[0])", subPath) is IEnumerable<object> rawElements)
                 {
-                    var candidate = new WebElement(rawElement as RemoteWebElement);
-                    if (candidate.TryQuery(query))
+                    foreach (RemoteWebElement rawElement in rawElements)
                     {
-                        result.Add(candidate);
+                        var element = new WebElement(rawElement, frameScreenX, frameScreenY);
+                        if (element.Type == "iframe")
+                        {
+                            frameScreenX = element.Bounds.X;
+                            frameScreenY = element.Bounds.Y;
+                            this.Driver.SwitchTo().Frame(rawElement);
+                            break; // TODO: handle page with multiple frames.
+                        }
+                        if (element.TryQuery(query))
+                        {
+                            result.Add(element);
+                        }
                     }
                 }
             }
+            this.Driver.SwitchTo().DefaultContent();
             return result;
         }
 

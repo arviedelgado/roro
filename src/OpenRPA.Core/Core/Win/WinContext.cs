@@ -65,7 +65,6 @@ namespace OpenRPA.Core
                 var candidatePath = candidate.Path;
                 if (targetPath.StartsWith(candidatePath))
                 {
-                    Console.WriteLine(candidatePath);
                     if (targetPath.Equals(candidatePath))
                     {
                         if (candidate.TryQuery(query))

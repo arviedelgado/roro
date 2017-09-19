@@ -33,7 +33,7 @@ namespace OpenRPA.Core
 {
     public sealed class WebElement : Element
     {
-        private readonly RemoteWebElement rawElement;
+        internal readonly RemoteWebElement rawElement;
 
         internal WebElement(RemoteWebElement rawElement, int offsetX, int offsetY)
         {

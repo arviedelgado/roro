@@ -65,7 +65,7 @@ namespace OpenRPA.Core
                 var frameScreenX = this.Offset.X;
                 var frameScreenY = this.Offset.Y;
                 this.Driver.SwitchTo().DefaultContent();
-                while(true)
+                while (true)
                 {
                     if (this.ExecuteScript(script, screenX - frameScreenX, screenY - frameScreenY) is RemoteWebElement rawElement)
                     {
@@ -88,35 +88,47 @@ namespace OpenRPA.Core
 
         public override IReadOnlyList<Element> GetElementsFromQuery(Query query)
         {
-            var result = new List<Element>();
-            var fullPath = query.First(x => x.Name == "Path").Value.ToString();
-            var subPaths = fullPath.Substring(1).Replace('/', '>').Replace(">iframe>", ">iframe#").Split('#');
+            var path = query.First(x => x.Name == "Path").Value.ToString()
+                        .Substring(1).Replace('/', '>').Replace(">iframe>", ">iframe#");
 
-            var frameScreenX = this.Offset.X;
-            var frameScreenY = this.Offset.Y;
-            this.Driver.SwitchTo().DefaultContent();
-            foreach (var subPath in subPaths)
+            return GetElementsFromFrame(null, this.Offset.X, this.Offset.Y, path).Where(x => x.TryQuery(query)).ToList();
+        }
+
+
+        private IReadOnlyList<WebElement> GetElementsFromFrame(WebElement frame, int frameScreenX, int frameScreenY, string path)
+        {
+            var pathPrefix = path.Split('#').First();
+            var pathSuffix = String.Join(string.Empty, path.Split('#').Skip(1));
+
+            var result = new List<WebElement>();
+
+            if (frame == null)
             {
-                if (this.ExecuteScript("return document.querySelectorAll(arguments[0])", subPath) is IEnumerable<object> rawElements)
+                this.Driver.SwitchTo().DefaultContent();
+            }
+            else
+            {
+                this.Driver.SwitchTo().Frame(frame.rawElement);
+            }
+
+            if (this.ExecuteScript("return document.querySelectorAll(arguments[0])", pathPrefix) is IEnumerable<object> rawElements)
+            {
+                foreach (RemoteWebElement rawElement in rawElements)
                 {
-                    foreach (RemoteWebElement rawElement in rawElements)
+                    var element = new WebElement(rawElement, frameScreenX, frameScreenY);
+                    if (element.Type == "iframe")
                     {
-                        var element = new WebElement(rawElement, frameScreenX, frameScreenY);
-                        if (element.Type == "iframe")
-                        {
-                            frameScreenX = element.Bounds.X;
-                            frameScreenY = element.Bounds.Y;
-                            this.Driver.SwitchTo().Frame(rawElement);
-                            break; // TODO: handle page with multiple frames.
-                        }
-                        if (element.TryQuery(query))
-                        {
-                            result.Add(element);
-                        }
+                        result.AddRange(GetElementsFromFrame(element, element.Bounds.X, element.Bounds.Y, pathSuffix));
+                    }
+                    else
+                    {
+                        result.Add(element);
                     }
                 }
             }
-            this.Driver.SwitchTo().DefaultContent();
+
+            this.Driver.SwitchTo().ParentFrame();
+
             return result;
         }
 

@@ -34,7 +34,7 @@ namespace OpenRPA.Core
 {
     public sealed class SapContext : Context
     {
-        private XObject engine;
+        private XObject Application;
 
         public static readonly SapContext Shared = new SapContext();
 
@@ -45,14 +45,16 @@ namespace OpenRPA.Core
 
         public override Element GetElementFromFocus() =>
             this.Ensure()
-            && this.engine.Get("ActiveSession") is XObject session
+            && this.Application.Get("ActiveSession") is XObject session
             && session.Get("ActiveWindow").Get("GuiFocus") is XObject rawElement
             ? new SapElement(rawElement) : null;
 
         public override Element GetElementFromPoint(int screenX, int screenY) =>
             this.Ensure()
-            && this.engine.Get("ActiveSession") is XObject session
-            && session.Invoke("FindByPosition", screenX, screenY, false) is XObject rawElement
+            && this.Application.Get("ActiveSession") is XObject session
+            && session.Invoke("FindByPosition", screenX, screenY, false) is XObject rawElementInfo
+            && rawElementInfo.Invoke<string>("Item", 0) is string rawElementId
+            && session.Invoke("FindById", rawElementId, false) is XObject rawElement
             ? new SapElement(rawElement) : null;
 
         public override IReadOnlyList<Element> GetElementsFromQuery(Query query)
@@ -61,7 +63,17 @@ namespace OpenRPA.Core
             var candidates = new Queue<SapElement>();
             var targetPath = query.First(x => x.Name == "Path").Value.ToString();
 
-            candidates.Enqueue(new SapElement(this.engine));
+            var connections = this.Application.Get("Connections");
+            for (var c = 0; c < connections.Get<int>("Count"); c++)
+            {
+                var sessions = connections.Invoke("Item", c).Get("Sessions");
+                for (var s = 0; s < sessions.Get<int>("Count"); s++)
+                {
+                    var session = sessions.Invoke("Item", s);
+                    candidates.Enqueue(new SapElement(session));
+                }
+            }
+
             while (candidates.Count > 0)
             {
                 var candidate = candidates.Dequeue();
@@ -101,13 +113,13 @@ namespace OpenRPA.Core
                 && ROTEntry.Invoke("GetScriptingEngine") is XObject engine
                 && Process.GetProcessesByName("saplogon").FirstOrDefault() is Process saplogon)
             {
-                this.engine = engine;
+                this.Application = engine;
                 this.ProcessId = saplogon.Id;
                 return true;
             }
             else
             {
-                this.engine = null;
+                this.Application = null;
                 this.ProcessId = 0;
                 return false;
             }

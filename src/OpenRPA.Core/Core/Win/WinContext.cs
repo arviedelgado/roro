@@ -52,7 +52,7 @@ namespace OpenRPA.Core
             return WinContext.Target = WinElement.GetFromPoint(screenX, screenY);
         }
 
-        public override IReadOnlyList<Element> GetElementsFromQuery(Query query)
+        public override IEnumerable<Element> GetElementsFromQuery(Query query)
         {
             var result = new List<WinElement>();
             var candidates = new Queue<WinElement>();

@@ -86,7 +86,7 @@ namespace OpenRPA.Core
             return null;
         }
 
-        public override IReadOnlyList<Element> GetElementsFromQuery(Query query)
+        public override IEnumerable<Element> GetElementsFromQuery(Query query)
         {
             var path = query.First(x => x.Name == "Path").Value.ToString()
                         .Substring(1).Replace('/', '>').Replace(">iframe>", ">iframe#");
@@ -95,7 +95,7 @@ namespace OpenRPA.Core
         }
 
 
-        private IReadOnlyList<WebElement> GetElementsFromFrame(WebElement frame, int frameScreenX, int frameScreenY, string path)
+        private IEnumerable<WebElement> GetElementsFromFrame(WebElement frame, int frameScreenX, int frameScreenY, string path)
         {
             var pathPrefix = path.Split('#').First();
             var pathSuffix = String.Join(string.Empty, path.Split('#').Skip(1));

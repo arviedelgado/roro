@@ -34,7 +34,7 @@ namespace OpenRPA.Core
 {
     public sealed class SapContext : Context
     {
-        private XObject Application;
+        private XObject appObject;
 
         public static readonly SapContext Shared = new SapContext();
 
@@ -45,13 +45,13 @@ namespace OpenRPA.Core
 
         public override Element GetElementFromFocus() =>
             this.Ensure()
-            && this.Application.Get("ActiveSession") is XObject session
+            && this.appObject.Get("ActiveSession") is XObject session
             && session.Get("ActiveWindow").Get("GuiFocus") is XObject rawElement
             ? new SapElement(rawElement) : null;
 
         public override Element GetElementFromPoint(int screenX, int screenY) =>
             this.Ensure()
-            && this.Application.Get("ActiveSession") is XObject session
+            && this.appObject.Get("ActiveSession") is XObject session
             && session.Invoke("FindByPosition", screenX, screenY, false) is XObject rawElementInfo
             && rawElementInfo.Invoke<string>("Item", 0) is string rawElementId
             && session.Invoke("FindById", rawElementId, false) is XObject rawElement
@@ -63,13 +63,10 @@ namespace OpenRPA.Core
             var candidates = new Queue<SapElement>();
             var targetPath = query.First(x => x.Name == "Path").Value.ToString();
 
-            var connections = this.Application.Get("Connections");
-            for (var c = 0; c < connections.Get<int>("Count"); c++)
+            foreach (var connection in this.appObject.Get("Connections"))
             {
-                var sessions = connections.Invoke("Item", c).Get("Sessions");
-                for (var s = 0; s < sessions.Get<int>("Count"); s++)
+                foreach (var session in connection.Get("Sessions"))
                 {
-                    var session = sessions.Invoke("Item", s);
                     candidates.Enqueue(new SapElement(session));
                 }
             }
@@ -110,16 +107,16 @@ namespace OpenRPA.Core
             if (Type.GetTypeFromProgID("SapROTWr.SapROTWrapper") is Type type
                 && new XObject(Activator.CreateInstance(type)) is XObject ROTWrapper
                 && ROTWrapper.Invoke("GetROTEntry", "SAPGUI") is XObject ROTEntry
-                && ROTEntry.Invoke("GetScriptingEngine") is XObject engine
+                && ROTEntry.Invoke("GetScriptingEngine") is XObject appObject
                 && Process.GetProcessesByName("saplogon").FirstOrDefault() is Process saplogon)
             {
-                this.Application = engine;
+                this.appObject = appObject;
                 this.ProcessId = saplogon.Id;
                 return true;
             }
             else
             {
-                this.Application = null;
+                this.appObject = null;
                 this.ProcessId = 0;
                 return false;
             }

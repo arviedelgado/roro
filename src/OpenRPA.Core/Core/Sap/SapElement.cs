@@ -65,12 +65,9 @@ namespace OpenRPA.Core
             {
                 var children = new List<SapElement>();
                 var rawChildren = this.rawElement.Get("Children");
-                if (rawChildren != null)
+                foreach (var rawChild in rawChildren)
                 {
-                    for (int index = 0, count = rawChildren.Invoke<int>("Count"); index < count; index++)
-                    {
-                        children.Add(new SapElement(rawChildren.Invoke("Item", index)));
-                    }
+                    children.Add(new SapElement(rawChild));
                 }
                 return children;
             }

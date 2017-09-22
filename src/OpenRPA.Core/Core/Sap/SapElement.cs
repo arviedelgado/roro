@@ -57,14 +57,14 @@ namespace OpenRPA.Core
             this.rawElement.Get<int>("Width"),
             this.rawElement.Get<int>("Height"));
 
-        public SapElement Parent => this.Type == "session" ? null : new SapElement(this.rawElement.Get("Parent"));
+        public SapElement Parent => this.rawElement.Get("Parent") is XObject rawParent ? new SapElement(rawParent) : null;
 
         public IEnumerable<SapElement> Children
         {
             get
             {
                 var children = new List<SapElement>();
-                var rawChildren = rawElement.Get("Children");
+                var rawChildren = this.rawElement.Get("Children");
                 if (rawChildren != null)
                 {
                     for (int index = 0, count = rawChildren.Invoke<int>("Count"); index < count; index++)

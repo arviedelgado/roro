@@ -57,7 +57,7 @@ namespace OpenRPA.Core
             && session.Invoke("FindById", rawElementId, false) is XObject rawElement
             ? new SapElement(rawElement) : null;
 
-        public override IReadOnlyList<Element> GetElementsFromQuery(Query query)
+        public override IEnumerable<Element> GetElementsFromQuery(Query query)
         {
             var result = new List<SapElement>();
             var candidates = new Queue<SapElement>();

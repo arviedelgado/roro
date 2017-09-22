@@ -40,6 +40,6 @@ namespace OpenRPA.Queries
 
         public abstract Element GetElementFromPoint(int screenX, int screenY);
 
-        public abstract IReadOnlyList<Element> GetElementsFromQuery(Query query);
+        public abstract IEnumerable<Element> GetElementsFromQuery(Query query);
     }
 }

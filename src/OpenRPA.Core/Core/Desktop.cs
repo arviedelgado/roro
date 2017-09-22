@@ -130,7 +130,7 @@ namespace OpenRPA.Core
 
                 var sw = Stopwatch.StartNew();
                 var elements = context.GetElementsFromQuery(query);
-                Console.WriteLine("Matches: {0} in {1} seconds", elements.Count, sw.ElapsedMilliseconds / 1000.0);
+                Console.WriteLine("Matches: {0} in {1} seconds", elements.Count(), sw.ElapsedMilliseconds / 1000.0);
 
                 if (elements.FirstOrDefault() is Element el)
                 {

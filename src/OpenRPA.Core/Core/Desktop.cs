@@ -51,6 +51,7 @@ namespace OpenRPA.Core
         {
             this.highligter = new Highligher();
             this.contexts = new List<Context>();
+            this.contexts.Add(SapContext.Shared);
             this.focusTimer = new Timer(GetElementFromFocus, null, Timeout.Infinite, Timeout.Infinite);
             this.pointTimer = new Timer(GetElementFromPoint, null, Timeout.Infinite, Timeout.Infinite);
 

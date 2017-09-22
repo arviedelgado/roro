@@ -24,6 +24,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenRPA.Queries;
 using System;
 using System.Collections.Generic;
 
@@ -31,99 +32,47 @@ namespace OpenRPA.Core
 {
     public sealed class SapElement : Element
     {
-        private SapContext.SapObject rawElement;
+        private XObject rawElement;
 
-        internal SapElement(SapContext.SapObject rawElement)
+        internal SapElement(XObject rawElement)
         {
             this.rawElement = rawElement;
-            var rawParent = this.rawElement.Get("Parent");
-            if (rawParent != null)
-            {
-                this.Parent = new SapElement(rawParent);
-                if (this.Parent.Type == "session")
-                {
-                    this.Parent = null;
-                }
-            }
         }
 
-        internal SapElement(SapContext.SapObject rawElement, SapElement parent)
-        {
-            this.rawElement = rawElement;
-            this.Parent = parent;
-        }
+        [BotProperty]
+        public string Id => this.rawElement.Get<string>("Id");
 
-        public string Id
-        {
-            get
-            {
-                return this.rawElement.Get("Id").Object.ToString();
-            }
-        }
+        [BotProperty]
+        public string Name => this.rawElement.Get<string>("Name");
 
-        public string Name
-        {
-            get
-            {
-                return this.rawElement.Get("Name").Object.ToString();
-            }
-        }
+        [BotProperty]
+        public string Type => (this.rawElement.Get<SapElementType>("TypeAsNumber")).ToString().ToLower();
 
-        public string Class
-        {
-            get
-            {
-                return string.Empty; // Not supported.
-            }
-        }
+        [BotProperty]
+        public override string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
 
-        public string Type
-        {
-            get
-            {
-                return ((SapElementType)this.rawElement.Get("TypeAsNumber").Object).ToString().ToLower();
-            }
-        }
+        public override Rect Bounds => new Rect(
+            this.rawElement.Get<int>("ScreenLeft"),
+            this.rawElement.Get<int>("ScreenTop"),
+            this.rawElement.Get<int>("Width"),
+            this.rawElement.Get<int>("Height"));
 
-        public string Path
-        {
-            get
-            {
-                return string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
-            }
-        }
-
-        public Rect Bounds
-        {
-            get
-            {
-                return new Rect(
-                    (int)this.rawElement.Get("ScreenLeft").Object,
-                    (int)this.rawElement.Get("ScreenTop").Object,
-                    (int)this.rawElement.Get("Width").Object,
-                    (int)this.rawElement.Get("Height").Object);
-            }
-        }
-
-        public SapElement Parent
-        {
-            get;
-        }
+        public SapElement Parent => this.Type == "session" ? null : new SapElement(this.rawElement.Get("Parent"));
 
         public IEnumerable<SapElement> Children
         {
             get
             {
-                List<SapElement> children = new List<SapElement>();
+                var children = new List<SapElement>();
                 var rawChildren = rawElement.Get("Children");
                 if (rawChildren != null)
                 {
-                    for (int index = 0, count = rawChildren.Count; index < count; index++)
+                    for (int index = 0, count = rawChildren.Invoke<int>("Count"); index < count; index++)
                     {
-                        children.Add(new SapElement(rawChildren[index], this));
+                        children.Add(new SapElement(rawChildren.Invoke("Item", index)));
                     }
                 }
-                return children.ToArray();
+                return children;
             }
         }
     }

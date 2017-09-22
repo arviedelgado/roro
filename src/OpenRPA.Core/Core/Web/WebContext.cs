@@ -43,7 +43,7 @@ namespace OpenRPA.Core
 
         public override Element GetElementFromFocus()
         {
-            if (WinContext.CurrentElement is WinElement target && this.UpdateViewportOffset(target))
+            if (WinContext.Target is WinElement target && this.UpdateViewportOffset(target))
             {
                 if (this.ExecuteScript("return document.activeElement") is RemoteWebElement rawElement)
                 {
@@ -55,7 +55,7 @@ namespace OpenRPA.Core
 
         public override Element GetElementFromPoint(int screenX, int screenY)
         {
-            if (WinContext.CurrentElement is WinElement target && this.UpdateViewportOffset(target))
+            if (WinContext.Target is WinElement target && this.UpdateViewportOffset(target))
             {
                 var script = @"
                     var x = arguments[0];

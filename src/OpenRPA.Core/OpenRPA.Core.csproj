@@ -50,6 +50,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\XObject.cs" />
+    <Compile Include="Core\Sap\SapContext.cs" />
+    <Compile Include="Core\Sap\SapElement.cs" />
+    <Compile Include="Core\Sap\SapElementType.cs" />
     <Compile Include="Core\Web\EdgeContext.cs" />
     <Compile Include="Core\Web\InternetExplorerContext.cs" />
     <Compile Include="Core\Web\ChromeContext.cs" />

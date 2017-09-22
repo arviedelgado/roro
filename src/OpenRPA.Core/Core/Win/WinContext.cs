@@ -35,7 +35,7 @@ namespace OpenRPA.Core
     {
         public static readonly WinContext Shared = new WinContext();
 
-        public static WinElement CurrentElement { get; private set; }
+        public static WinElement Target { get; private set; }
 
         private WinContext()
         {
@@ -44,12 +44,12 @@ namespace OpenRPA.Core
 
         public override Element GetElementFromFocus()
         {
-            return WinContext.CurrentElement = WinElement.GetFromFocus();
+            return WinContext.Target = WinElement.GetFromFocus();
         }
 
         public override Element GetElementFromPoint(int screenX, int screenY)
         {
-            return WinContext.CurrentElement = WinElement.GetFromPoint(screenX, screenY);
+            return WinContext.Target = WinElement.GetFromPoint(screenX, screenY);
         }
 
         public override IReadOnlyList<Element> GetElementsFromQuery(Query query)

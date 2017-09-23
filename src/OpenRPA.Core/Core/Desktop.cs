@@ -82,9 +82,11 @@ namespace OpenRPA.Core
             var result = new List<Element>();
             foreach (var context in this.contexts)
             {
-                if (context.GetElementsFromQuery(query) is IEnumerable<Element> elements)
+                var elements = context.GetElementsFromQuery(query);
+                if (elements.Count() > 0)
                 {
                     result.AddRange(elements);
+                    break;
                 }
             }
 

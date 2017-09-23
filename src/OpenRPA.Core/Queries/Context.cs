@@ -32,7 +32,7 @@ namespace OpenRPA.Queries
 {
     public abstract class Context
     {
-        public virtual Rect Offset { get; protected set; }
+        public virtual Rect Viewport { get; protected set; }
 
         public virtual int ProcessId { get; protected set; }
 

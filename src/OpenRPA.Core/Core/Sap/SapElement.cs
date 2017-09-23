@@ -32,7 +32,7 @@ namespace OpenRPA.Core
 {
     public sealed class SapElement : Element
     {
-        private XObject rawElement;
+        private readonly XObject rawElement;
 
         internal SapElement(XObject rawElement)
         {

@@ -55,14 +55,14 @@ namespace OpenRPA.Core
             this.ProcessId = this.GetProcessIdFromSession(session);
         }
 
-        protected override bool UpdateViewportOffset(WinElement winElement)
+        protected override bool UpdateViewport(WinElement winElement)
         {
-            this.Offset = default(Rect);
+            this.Viewport = default(Rect);
             if (winElement != null && winElement.MainWindow is WinElement target && target.ProcessId == this.ProcessId)
             {
                 if (target.GetElement(x => x.Class == "Internet Explorer_Server" || x.Class == "NewTabWnd") is WinElement viewport)
                 {
-                    this.Offset = viewport.Bounds;
+                    this.Viewport = viewport.Bounds;
                     return true;
                 }
             }

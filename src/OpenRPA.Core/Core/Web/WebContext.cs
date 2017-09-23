@@ -39,15 +39,15 @@ namespace OpenRPA.Core
 
         protected RemoteWebDriver Driver { get; set; }
 
-        protected abstract bool UpdateViewportOffset(WinElement target);
+        protected abstract bool UpdateViewport(WinElement target);
 
         public override Element GetElementFromFocus()
         {
-            if (WinContext.Target is WinElement target && this.UpdateViewportOffset(target))
+            if (WinContext.Target is WinElement target && this.UpdateViewport(target))
             {
                 if (this.ExecuteScript("return document.activeElement") is RemoteWebElement rawElement)
                 {
-                    return new WebElement(rawElement, this.Offset.X, this.Offset.Y);
+                    return new WebElement(rawElement, this.Viewport.X, this.Viewport.Y);
                 }
             }
             return null;
@@ -55,15 +55,15 @@ namespace OpenRPA.Core
 
         public override Element GetElementFromPoint(int screenX, int screenY)
         {
-            if (WinContext.Target is WinElement target && this.UpdateViewportOffset(target))
+            if (WinContext.Target is WinElement target && this.UpdateViewport(target))
             {
                 var script = @"
                     var x = arguments[0];
                     var y = arguments[1];
                     return document.elementFromPoint(x, y);
                 ";
-                var frameScreenX = this.Offset.X;
-                var frameScreenY = this.Offset.Y;
+                var frameScreenX = this.Viewport.X;
+                var frameScreenY = this.Viewport.Y;
                 this.Driver.SwitchTo().DefaultContent();
                 while (true)
                 {
@@ -91,7 +91,7 @@ namespace OpenRPA.Core
             var path = query.First(x => x.Name == "Path").Value.ToString()
                         .Substring(1).Replace('/', '>').Replace(">iframe>", ">iframe#");
 
-            return GetElementsFromFrame(null, this.Offset.X, this.Offset.Y, path).Where(x => x.TryQuery(query)).ToList();
+            return GetElementsFromFrame(null, this.Viewport.X, this.Viewport.Y, path).Where(x => x.TryQuery(query)).ToList();
         }
 
 

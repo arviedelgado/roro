@@ -41,78 +41,101 @@ namespace OpenRPA.Core
 
         private readonly IList<Context> contexts;
 
-        private readonly Timer focusTimer;
+        private InputEventArgs pointEvent;
 
         private readonly Timer pointTimer;
 
-        private InputEventArgs pointEvent;
+        private bool hasPending = false;
+
+        private bool isBusy = false;
 
         public Desktop()
         {
             this.highligter = new Highligher();
             this.contexts = new List<Context>();
+            this.contexts.Add(WinContext.Shared);
             this.contexts.Add(SapContext.Shared);
-            this.focusTimer = new Timer(GetElementFromFocus, null, Timeout.Infinite, Timeout.Infinite);
             this.pointTimer = new Timer(GetElementFromPoint, null, Timeout.Infinite, Timeout.Infinite);
 
+            Console.WindowHeight = Convert.ToInt32(Console.LargestWindowHeight * 0.8);
+        }
+
+        private Query Result = new Query();
+
+        public Query Inspect()
+        {
+            this.Result = null;
             Input.OnMouseMove += Input_OnMouseMove;
-            Input.OnMouseUp += Input_OnMouseUp;
             Input.OnKeyUp += Input_OnKeyUp;
+            while (this.Result == null) { }
+            return this.Result;
         }
 
-        private void Input_OnMouseMove(InputEventArgs e)
+        public IEnumerable<Element> Query(Query query)
         {
-            this.pointEvent = e;
-            this.pointTimer.Change(500, Timeout.Infinite);
-        }
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("GET_ELEMENTS_FROM_QUERY");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine();
 
-        private void Input_OnMouseUp(InputEventArgs e)
-        {
-            this.pointTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            this.focusTimer.Change(0, Timeout.Infinite);
+            var result = new List<Element>();
+            foreach (var context in this.contexts)
+            {
+                if (context.GetElementsFromQuery(query) is IEnumerable<Element> elements)
+                {
+                    result.AddRange(elements);
+                }
+            }
+
+            return result;
         }
 
         private void Input_OnKeyUp(InputEventArgs e)
         {
-            this.pointTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            this.focusTimer.Change(0, Timeout.Infinite);
+            if (e.Key == KeyboardKey.LeftCtrl || e.Key == KeyboardKey.RightCtrl)
+            {
+                Input.OnMouseMove -= Input_OnMouseMove;
+                Input.OnKeyUp -= Input_OnKeyUp;
+                this.pointEvent = e;
+                this.pointTimer.Change(0, Timeout.Infinite);
+            }
         }
 
-        private void GetElementFromFocus(object state)
+        private void Input_OnMouseMove(InputEventArgs e)
         {
-            //            try
-            //            {
-            //                WinElement winElement = WinElement.GetFromFocus();
-
-            //                //WebElement webElement = this.webContext.GetElementFromFocus(winElement);
-
-            //                //Element element = webElement ?? winElement as Element;
-
-            //                //Console.WriteLine("FOCUS: {0}", element.Path);
-
-            //                this.highligter.Invoke(winElement.Bounds);
-            ////                Console.Write(winElement.Serialize());
-            //            }
-            //            catch (Exception ex)
-            //            {
-            //                Console.WriteLine("ERROR: {0}", ex);
-            //            }
+            this.hasPending = true;
+            this.pointEvent = e;
+            this.pointTimer.Change(500, Timeout.Infinite);
         }
 
         private void GetElementFromPoint(object state)
         {
+            if (this.isBusy)
+            {
+                return;
+            }
+
+            this.isBusy = true;
+            this.hasPending = false;
+
             try
             {
+                var e = this.pointEvent;
+
                 Console.Clear();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("GET_QUERY_FROM_ELEMENT_FROM_POINT {0} {1}", e.X, e.Y);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine();
 
-                var e = pointEvent;
-
-                Context context = WinContext.Shared;
+                Context context = this.contexts.First();
                 Element element = context.GetElementFromPoint(e.X, e.Y);
 
                 this.highligter.Invoke(element.Bounds, Color.Red);
 
-                foreach (var ctx in this.contexts)
+                foreach (var ctx in this.contexts.Skip(1))
                 {
                     if (ctx.GetElementFromPoint(e.X, e.Y) is Element elem)
                     {
@@ -125,22 +148,27 @@ namespace OpenRPA.Core
                 var query = element.GetQuery();
 
                 Console.WriteLine(query);
-                Console.Title = element.Path;
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Press the CTRL key to get the elements using the query.");
                 Console.WriteLine();
 
-                var sw = Stopwatch.StartNew();
-                var elements = context.GetElementsFromQuery(query);
-                Console.WriteLine("Matches: {0} in {1} seconds", elements.Count(), sw.ElapsedMilliseconds / 1000.0);
-
-                if (elements.FirstOrDefault() is Element el)
+                if (e.Type == InputEventType.KeyUp)
                 {
-                    this.highligter.Invoke(el.Bounds, Color.Blue);
-                    Console.WriteLine(el.Bounds);
+                    this.Result = query;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("ERROR: {0}", ex);
+            }
+            finally
+            {
+                this.isBusy = false;
+                if (this.hasPending)
+                {
+                    this.pointTimer.Change(0, Timeout.Infinite);
+                }
             }
         }
 
@@ -162,18 +190,20 @@ namespace OpenRPA.Core
             return ctx;
         }
 
-        public void LaunchInternetExplorer(string url = null)
+        public WebContext LaunchInternetExplorer(string url = null)
         {
             var ctx = new InternetExplorerContext();
             this.contexts.Add(ctx);
             ctx.GoToUrl(url);
+            return ctx;
         }
 
-        public void LaunchEdge(string url = null)
+        public WebContext LaunchEdge(string url = null)
         {
             var ctx = new EdgeContext();
             this.contexts.Add(ctx);
             ctx.GoToUrl(url);
+            return ctx;
         }
 
     }

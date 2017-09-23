@@ -52,9 +52,9 @@ namespace OpenRPA.Core
             this.ProcessId = this.GetProcessIdFromSession(session);
         }
 
-        protected override bool UpdateViewportOffset(WinElement winElement)
+        protected override bool UpdateViewport(WinElement winElement)
         {
-            this.Offset = default(Rect);
+            this.Viewport = default(Rect);
             if (winElement != null && winElement.MainWindow is WinElement mainWindow
                 && mainWindow.Class == "ApplicationFrameWindow"
                 && mainWindow.Children.FirstOrDefault(x => x.Type == "window" && x.Name == "Microsoft Edge" && x.Class == "Windows.UI.Core.CoreWindow") is WinElement target
@@ -62,7 +62,7 @@ namespace OpenRPA.Core
             {
                 if (target.GetElement(x => x.Class == "Internet Explorer_Server" || x.Class == "NewTabPage") is WinElement viewport)
                 {
-                    this.Offset = viewport.Bounds;
+                    this.Viewport = viewport.Bounds;
                     return true;
                 }
             }

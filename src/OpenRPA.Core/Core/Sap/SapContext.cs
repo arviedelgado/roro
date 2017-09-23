@@ -40,17 +40,17 @@ namespace OpenRPA.Core
 
         private SapContext()
         {
-            this.Ensure();
+            this.IsAlive();
         }
 
         public override Element GetElementFromFocus() =>
-            this.Ensure()
+            this.IsAlive()
             && this.appObject.Get("ActiveSession") is XObject session
             && session.Get("ActiveWindow").Get("GuiFocus") is XObject rawElement
             ? new SapElement(rawElement) : null;
 
         public override Element GetElementFromPoint(int screenX, int screenY) =>
-            this.Ensure()
+            this.IsAlive()
             && this.appObject.Get("ActiveSession") is XObject session
             && session.Invoke("FindByPosition", screenX, screenY, false) is XObject rawElementInfo
             && rawElementInfo.Invoke<string>("Item", 0) is string rawElementId
@@ -62,6 +62,11 @@ namespace OpenRPA.Core
             var result = new List<SapElement>();
             var candidates = new Queue<SapElement>();
             var targetPath = query.First(x => x.Name == "Path").Value.ToString();
+
+            if (!this.IsAlive())
+            {
+                return result;
+            }
 
             foreach (var connection in this.appObject.Get("Connections"))
             {
@@ -97,7 +102,7 @@ namespace OpenRPA.Core
         }
 
 
-        private bool Ensure()
+        private bool IsAlive()
         {
             if (this.ProcessId > 0 && Process.GetProcessById(this.ProcessId) is Process proc)
             {

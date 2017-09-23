@@ -2,15 +2,15 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs
-/src/.vs
+.vs
 
-/src/OpenRPA.Core/bin
-/src/OpenRPA.Core/obj
+src/*
+!src/OpenRPA.Core
+!src/OpenRPA.Test
+src/*/obj
+src/*/bin
+src/*/Properties
 
-/src/OpenRPA.Test/bin
-/src/OpenRPA.Test/obj
-
-/bin/*.*
-!/bin/*.exe
-!/bin/*.dll
+bin/*
+!bin/*.exe
+!bin/*.dll

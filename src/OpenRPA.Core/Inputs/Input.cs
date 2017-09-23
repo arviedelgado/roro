@@ -113,7 +113,7 @@ namespace OpenRPA.Inputs
                 { KeyboardKey.RightWin, false }
             };
             foreach (KeyboardKey key in keys)
-            {
+            { 
                 Input.KeyDown(key);
                 if (modKeys.ContainsKey(key))
                 {

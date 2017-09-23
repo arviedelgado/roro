@@ -53,17 +53,14 @@ namespace OpenRPA.Inputs
 
         private static void InputEventHandler(InputEventArgs e)
         {
-            new Thread(() =>
+            switch (e.Type)
             {
-                switch (e.Type)
-                {
-                    case InputEventType.KeyUp: OnKeyUp.Invoke(e); break;
-                    case InputEventType.KeyDown: OnKeyDown.Invoke(e); break;
-                    case InputEventType.MouseUp: OnMouseUp.Invoke(e); break;
-                    case InputEventType.MouseDown: OnMouseDown.Invoke(e); break;
-                    case InputEventType.MouseMove: OnMouseMove.Invoke(e); break;
-                }
-            }).Start();
+                case InputEventType.KeyUp: OnKeyUp.Invoke(e); break;
+                case InputEventType.KeyDown: OnKeyDown.Invoke(e); break;
+                case InputEventType.MouseUp: OnMouseUp.Invoke(e); break;
+                case InputEventType.MouseDown: OnMouseDown.Invoke(e); break;
+                case InputEventType.MouseMove: OnMouseMove.Invoke(e); break;
+            }
         }
 
         static Input()

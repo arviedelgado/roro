@@ -184,29 +184,35 @@ namespace OpenRPA.Core
             }
         }
 
+        private WebContext LaunchWeb<T>(string url) where T: WebContext, new()
+        {
+            WebContext context;
+            try
+            {
+                context = new T();
+            }
+            catch
+            {
+                context = new InternetExplorerContext();
+            }
+            context.GoToUrl(url);
+            this.contexts.Add(context);
+            return context;
+        }
+
         public WebContext LaunchChrome(string url = null)
         {
-            var ctx = new ChromeContext();
-            this.contexts.Add(ctx);
-            ctx.GoToUrl(url);
-            return ctx;
+            return this.LaunchWeb<ChromeContext>(url);
         }
 
         public WebContext LaunchInternetExplorer(string url = null)
         {
-            var ctx = new InternetExplorerContext();
-            this.contexts.Add(ctx);
-            ctx.GoToUrl(url);
-            return ctx;
+            return this.LaunchWeb<InternetExplorerContext>(url);
         }
 
         public WebContext LaunchEdge(string url = null)
         {
-            var ctx = new EdgeContext();
-            this.contexts.Add(ctx);
-            ctx.GoToUrl(url);
-            return ctx;
+            return this.LaunchWeb<EdgeContext>(url);
         }
-
     }
 }

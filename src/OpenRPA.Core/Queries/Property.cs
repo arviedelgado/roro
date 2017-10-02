@@ -24,6 +24,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 
 namespace OpenRPA.Queries
@@ -38,6 +39,22 @@ namespace OpenRPA.Queries
         {
             this.Name = name;
             this.Value = value;
+        }
+
+        public bool Compare(object otherValue, Type otherType)
+        {
+            var value = this.Value;
+            if (otherType == typeof(string))
+            {
+                return LikeOperator.LikeString(
+                    value.ToString(),
+                    otherValue.ToString().Replace("[", "[[]").Replace("#", "[#]").Replace("?", "[?]"),
+                    Microsoft.VisualBasic.CompareMethod.Binary);
+            }
+            else
+            {
+                return otherValue.Equals(value);
+            }
         }
     }
 }

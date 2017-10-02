@@ -27,7 +27,6 @@
 using OpenRPA.Core;
 using System;
 using System.Linq;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace OpenRPA.Queries
 {
@@ -50,25 +49,12 @@ namespace OpenRPA.Queries
 
         public bool TryQuery(Query query)
         {
-            foreach (var prop in query)
+            foreach (var otherProp in query)
             {
-                var myProp = this.GetType().GetProperty(prop.Name);
-                var myPropValue = myProp.GetValue(this);
-                if (myProp.PropertyType == typeof(string))
+                var prop = this.GetType().GetProperty(otherProp.Name);
+                if (otherProp.Compare(prop.GetValue(this), prop.PropertyType))
                 {
-                    if (myPropValue.Equals(prop.Value))
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    if (LikeOperator.LikeString(myPropValue.ToString(),
-                        prop.Value.ToString().Replace("[", "[[]").Replace("#", "[#]").Replace("?", "[?]"),
-                        Microsoft.VisualBasic.CompareMethod.Binary))
-                    {
-                        continue;
-                    }
+                    continue;
                 }
                 return false;
             }

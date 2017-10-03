@@ -42,11 +42,6 @@ namespace OpenRPA.Core
             this.ProcessId = WinElement.GetRoot().ProcessId;
         }
 
-        public override Element GetElementFromFocus()
-        {
-            return WinContext.Target = WinElement.GetFromFocus();
-        }
-
         public override Element GetElementFromPoint(int screenX, int screenY)
         {
             return WinContext.Target = WinElement.GetFromPoint(screenX, screenY);

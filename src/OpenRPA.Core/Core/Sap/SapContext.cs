@@ -43,12 +43,6 @@ namespace OpenRPA.Core
             this.IsAlive();
         }
 
-        public override Element GetElementFromFocus() =>
-            this.IsAlive()
-            && this.appObject.Get("ActiveSession") is XObject session
-            && session.Get("ActiveWindow").Get("GuiFocus") is XObject rawElement
-            ? new SapElement(rawElement) : null;
-
         public override Element GetElementFromPoint(int screenX, int screenY) =>
             this.IsAlive()
             && this.appObject.Get("ActiveSession") is XObject session

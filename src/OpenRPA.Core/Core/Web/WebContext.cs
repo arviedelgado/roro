@@ -41,18 +41,6 @@ namespace OpenRPA.Core
 
         protected abstract bool UpdateViewport(WinElement target);
 
-        public override Element GetElementFromFocus()
-        {
-            if (WinContext.Target is WinElement target && this.UpdateViewport(target))
-            {
-                if (this.ExecuteScript("return document.activeElement") is RemoteWebElement rawElement)
-                {
-                    return new WebElement(rawElement, this.Viewport.X, this.Viewport.Y);
-                }
-            }
-            return null;
-        }
-
         public override Element GetElementFromPoint(int screenX, int screenY)
         {
             if (WinContext.Target is WinElement target && this.UpdateViewport(target))

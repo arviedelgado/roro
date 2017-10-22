@@ -1,0 +1,19 @@
+<WebDrivers>
+  <WebDriver Id="WebDriver" Get="https://www.nuget.org/packages/Selenium.WebDriver">
+    <Name>WebDriver.dll</Name>
+    <CurrentVersion>3.6.0</CurrentVersion>
+  </WebDriver>
+  <WebDriver Id="IE" Get="https://selenium-release.storage.googleapis.com/">
+    <Name>IEDriverServer.exe</Name>
+    <CurrentVersion>3.6.0</CurrentVersion>
+  </WebDriver>
+  <WebDriver Id="Edge" Get="https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/">
+    <Name>MicrosoftWebDriver.exe</Name>
+    <CurrentVersion>3.14393</CurrentVersion>
+    <LatestVersion>5.16299</LatestVersion>
+  </WebDriver>
+  <WebDriver Id="Chrome" Get="https://sites.google.com/a/chromium.org/chromedriver/downloads">
+    <Name>chromedriver.exe</Name>
+    <CurrentVersion>2.33</CurrentVersion>
+  </WebDriver>
+</WebDrivers>

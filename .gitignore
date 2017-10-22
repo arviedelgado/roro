@@ -4,13 +4,12 @@
 
 .vs
 
-src/*
-!src/OpenRPA.Core
-!src/OpenRPA.Test
 src/*/obj
 src/*/bin
 src/*/Properties
+src/packages
 
 bin/*
 !bin/*.exe
 !bin/*.dll
+!bin/*.xml

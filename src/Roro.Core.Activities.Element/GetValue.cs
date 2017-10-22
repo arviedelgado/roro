@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Roro.Core.Activities.Element
+{
+    public sealed class GetValue : Activity
+    {
+        public InArgument<bool> Element { get; set; }
+
+        public OutArgument<string> Value { get; set; }
+
+        public override void Execute(ActivityContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Workflow", "Roro.Workflow\Roro.Workflow.csproj", "{DFA7C399-51B9-4391-8805-2731658965C6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Workflow.Test", "Roro.Workflow.Test\Roro.Workflow.Test.csproj", "{253610C1-BC3B-4E9A-A09A-AEB50DDE5747}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
+		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B} = {98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}
+		{DFA7C399-51B9-4391-8805-2731658965C6} = {DFA7C399-51B9-4391-8805-2731658965C6}
+		{DB4188B9-7008-4FB9-BC27-6BCA69482801} = {DB4188B9-7008-4FB9-BC27-6BCA69482801}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Core", "Roro.Core\Roro.Core.csproj", "{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Core.Activities", "Roro.Core.Activities\Roro.Core.Activities.csproj", "{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Core.Activities.Element", "Roro.Core.Activities.Element\Roro.Core.Activities.Element.csproj", "{DB4188B9-7008-4FB9-BC27-6BCA69482801}"
+	ProjectSection(ProjectDependencies) = postProject
+		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B} = {98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFA7C399-51B9-4391-8805-2731658965C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA7C399-51B9-4391-8805-2731658965C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA7C399-51B9-4391-8805-2731658965C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA7C399-51B9-4391-8805-2731658965C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{253610C1-BC3B-4E9A-A09A-AEB50DDE5747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253610C1-BC3B-4E9A-A09A-AEB50DDE5747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253610C1-BC3B-4E9A-A09A-AEB50DDE5747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253610C1-BC3B-4E9A-A09A-AEB50DDE5747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

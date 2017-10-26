@@ -1,4 +1,4 @@
-﻿using Roro.Core.Activities;
+﻿using Roro.Activities;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace Roro.Workflow
     {
         public override List<InArgument> Inputs => new List<InArgument>();
 
-        public override void Execute(ActivityContext context)
+        public override void Execute(Context context)
         {
             throw new NotImplementedException();
         }

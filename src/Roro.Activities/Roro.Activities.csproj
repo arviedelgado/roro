@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DFA7C399-51B9-4391-8805-2731658965C6}</ProjectGuid>
+    <ProjectGuid>{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roro.Workflow</RootNamespace>
-    <AssemblyName>Roro.Workflow</AssemblyName>
+    <RootNamespace>Roro.Activities</RootNamespace>
+    <AssemblyName>Roro.Activities</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,6 +35,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,25 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Document.cs" />
-    <Compile Include="PageSerializer.cs" />
-    <Compile Include="ProcessNode.cs" />
-    <Compile Include="DecisionNode.cs" />
-    <Compile Include="EndNode.cs" />
-    <Compile Include="EndNodeActivity.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="Page.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="Argument.cs" />
+    <Compile Include="Activity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StartNode.cs" />
-    <Compile Include="StartNodeActivity.cs" />
-    <Compile Include="Variable.cs" />
-    <Compile Include="VariableCollection.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
-      <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
-      <Name>Roro.Activities</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

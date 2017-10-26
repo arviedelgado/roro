@@ -123,7 +123,7 @@ namespace Roro
             {
                 var e = this.pointEvent;
 
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("GET_QUERY_FROM_ELEMENT_FROM_POINT {0} {1}", e.X, e.Y);
@@ -147,7 +147,7 @@ namespace Roro
 
                 var query = element.GetQuery();
 
-                Console.WriteLine(query);
+                //Console.WriteLine(query);
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Press the CTRL key to get the elements using the query.");

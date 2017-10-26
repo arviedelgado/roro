@@ -34,6 +34,8 @@ namespace Roro
 {
     public abstract class WebContext : Context
     {
+        protected readonly TimeSpan Timeout = TimeSpan.FromSeconds(5);
+
         protected const string DefaultUrl = "about:blank";
 
         protected RemoteWebDriver Driver { get; set; }

@@ -47,7 +47,7 @@ namespace Roro
             options.AddArgument(session.ToString());
 
             // driver
-            this.Driver = new ChromeDriver(service, options);
+            this.Driver = new ChromeDriver(service, options, this.Timeout);
 
             // process
             this.ProcessId = this.GetProcessIdFromSession(session);

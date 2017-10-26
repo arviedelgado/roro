@@ -47,7 +47,7 @@ namespace Roro
             var options = new EdgeOptions();
 
             // driver
-            this.Driver = new EdgeDriver(service, options);
+            this.Driver = new EdgeDriver(service, options, this.Timeout);
 
             // process
             this.ProcessId = this.GetProcessIdFromSession(session);

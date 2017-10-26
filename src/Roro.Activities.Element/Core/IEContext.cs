@@ -50,7 +50,7 @@ namespace Roro
             options.InitialBrowserUrl = string.Format("{0}:{1}", WebContext.DefaultUrl, session);
 
             // driver
-            this.Driver = new InternetExplorerDriver(service, options);
+            this.Driver = new InternetExplorerDriver(service, options, this.Timeout);
 
             // process
             this.ProcessId = this.GetProcessIdFromSession(session);

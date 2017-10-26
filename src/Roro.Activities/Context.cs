@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Roro.Activities
+{
+    public abstract class Context
+    {
+        public abstract T Get<T>(InArgument<T> input);
+
+        public abstract void Set<T>(OutArgument<T> output, T value);
+    }
+}

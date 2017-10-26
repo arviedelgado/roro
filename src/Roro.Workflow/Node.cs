@@ -1,4 +1,4 @@
-﻿using Roro.Core.Activities;
+﻿using Roro.Activities;
 using System;
 using System.Drawing;
 using System.Runtime.Serialization;

@@ -50,17 +50,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roro.Core.Activities.Element\Roro.Core.Activities.Element.csproj">
+    <ProjectReference Include="..\Roro.Activities.AI\Roro.Activities.AI.csproj">
+      <Project>{0f6d4df4-90f5-4a5b-81aa-1bdb7fb93c58}</Project>
+      <Name>Roro.Activities.AI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roro.Activities.Element\Roro.Activities.Element.csproj">
       <Project>{db4188b9-7008-4fb9-bc27-6bca69482801}</Project>
-      <Name>Roro.Core.Activities.Element</Name>
+      <Name>Roro.Activities.Element</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Roro.Core.Activities\Roro.Core.Activities.csproj">
+    <ProjectReference Include="..\Roro.Activities.Excel\Roro.Activities.Excel.csproj">
+      <Project>{1ba8b7ca-6bcb-434e-b7a8-4268962d35dd}</Project>
+      <Name>Roro.Activities.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roro.Activities.Outlook\Roro.Activities.Outlook.csproj">
+      <Project>{db7d445b-33fc-42ad-b9a0-d920aba02f82}</Project>
+      <Name>Roro.Activities.Outlook</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
       <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
-      <Name>Roro.Core.Activities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roro.Core\Roro.Core.csproj">
-      <Project>{98ecd238-1fdd-40de-a44b-8eb5ff45d16b}</Project>
-      <Name>Roro.Core</Name>
+      <Name>Roro.Activities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Roro.Workflow\Roro.Workflow.csproj">
       <Project>{dfa7c399-51b9-4391-8805-2731658965c6}</Project>

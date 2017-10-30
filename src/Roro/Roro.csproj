@@ -46,7 +46,9 @@
     <Compile Include="InputEventType.cs" />
     <Compile Include="KeyboardKey.cs" />
     <Compile Include="MouseButton.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

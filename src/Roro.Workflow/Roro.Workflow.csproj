@@ -51,7 +51,6 @@
     <Compile Include="EndNodeActivity.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Page.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartNode.cs" />
     <Compile Include="StartNodeActivity.cs" />
     <Compile Include="Variable.cs" />
@@ -62,6 +61,9 @@
       <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
       <Name>Roro.Activities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

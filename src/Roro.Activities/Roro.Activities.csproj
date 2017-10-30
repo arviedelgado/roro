@@ -47,7 +47,9 @@
     <Compile Include="Context.cs" />
     <Compile Include="Argument.cs" />
     <Compile Include="Activity.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

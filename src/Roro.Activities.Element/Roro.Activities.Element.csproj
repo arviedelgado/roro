@@ -73,7 +73,6 @@
     <Compile Include="Click.cs" />
     <Compile Include="SetValue.cs" />
     <Compile Include="FromPoint.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
@@ -87,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

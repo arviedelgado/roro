@@ -5,19 +5,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Roro.Workflow.Test
+namespace Roro.Workflow.UI
 {
-    public class Program
+    public class Test
     {
-        public static void Main()
-        {
-                        TestWorkflowSerialization();
-
-            Console.WriteLine("Press any key to run Element Inspector . . . ");
-            Console.ReadKey();
-            TestElementActivities();
-
-        }
 
         public static void TestElementActivities()
         {
@@ -42,33 +33,21 @@ namespace Roro.Workflow.Test
 
         public static void TestWorkflowSerialization()
         {
-            var page = new Page();
-            page.Add<StartNode>();
-            page.Add<ProcessNode>();
-            page.Add<DecisionNode>();
-            page.Add<ProcessNode>();
-            page.Add<ProcessNode>();
-            page.Add<EndNode>();
-            Console.WriteLine("Page run started.");
-            var next = page.Execute();
-            while (next != Guid.Empty)
-            {
-                next = page.GetNodeById(next).Execute();
-                Console.WriteLine("Next: {0}", next);
-                Console.ReadLine();
-            }
-            Console.WriteLine("Page run ended.");
-            Console.WriteLine();
+            var doc = new Document();
+            var page = doc.Pages.First();
+            page.Nodes.Add(new DecisionNode());
+            page.Nodes.Add(new ProcessNode());
+            page.Nodes.Add(new EndNode());
 
             Console.Clear();
             Console.WriteLine("Serializing Object to XML . . .");
             Console.WriteLine();
-            var a = PageSerializer.ToString(page);
+            var a = DataContractSerializerHelper.ToString(doc);
             Console.WriteLine(a);
             Console.WriteLine();
             Console.WriteLine("Serializing Object to XML completed.");
             Console.WriteLine("Deserializing XML to Object . . .");
-            var b = PageSerializer.ToString(PageSerializer.ToObject<Page>(a));
+            var b = DataContractSerializerHelper.ToString(DataContractSerializerHelper.ToObject<Document>(a));
             Console.WriteLine("Deserializing XML to Object completed.");
             Console.WriteLine("Matched: {0}", a == b);
             Console.WriteLine();

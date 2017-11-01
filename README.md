@@ -1,28 +1,34 @@
-# Roro (Cognitive RPA)
+## Roro - Free RPA Software
 
-Roro is a free open-source Cognitive <A HREF="https://en.wikipedia.org/wiki/Robotic_process_automation">Robotic Process Automation</A> software (or RPA).
+Roro is a free open-source [Robotic Process Automation](https://en.wikipedia.org/wiki/Robotic_process_automation) software.
 
-See Roro/src folder for the C# source files.<BR>
-See Roro/bin folder for the compiled binaries.<BR>
+This repository houses the newer `business-users-friendly` version of the app.
 
-# Platforms
-+ Windows 10
+The older `developer-friendly` version is now discontinued - http://roroscript.com
 
-# Automation
-+ Windows apps
-+ Web browsers (IE, Edge, Chrome)
-+ SAP application
+See `src` folder for the C# source files.
 
-# Cognitive Services (by October)
-+ Image to Text - OCR
-+ Speech to Text
-+ Text to Speech
-+ Face Detection
+See `bin` folder for the compiled binaries.
 
-# Remote Automation (by December)
-+ Add remote desktop automation capability
-+ Add control room + runtime clients
-
-# Roadmap
-+ Add support to MainFrame via HLLAPI
-+ Add support to other web browsers
+## Platforms
+- [x] Windows 10
+- [ ] Windows Server
+## UI Automation
+- [x] Windows apps - Win32, .NET
+- [ ] Windows apps - UWP
+- [ ] Windows apps - Qt
+- [x] Web browsers - IE, Edge, Chrome
+- [x] Business app - SAP + NetWeaver
+- [ ] Business app - MainFrame
+- [ ] Business app - Excel
+- [ ] Business app - Outlook
+## AI Services
+- [ ] Image to Text - OCR
+- [ ] Speech to Text
+- [ ] Text to Speech
+- [ ] Face Detection
+- [ ] Natural Language Processing
+## Roro Studio
+- [ ] Bot Creator - `PRIORITY`
+- [ ] Remote - Cotrol Room
+- [ ] Remote - Bot Runners

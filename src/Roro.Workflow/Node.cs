@@ -1,6 +1,7 @@
 ﻿using Roro.Activities;
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
 
 namespace Roro.Workflow
@@ -20,22 +21,21 @@ namespace Roro.Workflow
         [DataMember]
         public Activity Activity { get; set; }
 
-        public abstract void SetNext(Guid id);
+        public abstract void SetNextTo(Guid id);
 
         public abstract Guid Execute();
 
         public Node()
         {
             this.Id = Guid.NewGuid();
-            this.Name = string.Format("{0}-{1}", this.GetType().Name, DateTime.Now.Ticks);
-            if (this.GetType() == typeof(StartNode))
-            {
-                this.Activity = new StartNodeActivity();
-            }
-            else if (this.GetType() == typeof(EndNode))
-            {
-                this.Activity = new EndNodeActivity();
-            }
+            this.Name = string.Format("My{0}_{1}", this.GetType().Name, DateTime.Now.Ticks);
+            this.Bounds = new Rectangle(
+                PageRenderOptions.GridSize * Helper.Between(0, 20),
+                PageRenderOptions.GridSize * Helper.Between(0, 20),
+                PageRenderOptions.GridSize * 6,
+                PageRenderOptions.GridSize * 4);
         }
+
+        public abstract GraphicsPath Render(Graphics g, Rectangle r, DefaultNodeStyle o);
     }
 }

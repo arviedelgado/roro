@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
@@ -12,9 +14,20 @@ namespace Roro.Workflow
             return this.Next;
         }
 
-        public override void SetNext(Guid id)
+        public override void SetNextTo(Guid id)
         {
             this.Next = id;
+        }
+
+        public override GraphicsPath Render(Graphics g, Rectangle r, DefaultNodeStyle o)
+        {
+            //g.DrawRectangle(o.BorderPen, r);
+            g.FillRectangle(o.BackgroundBrush, r);
+
+            // return path.
+            var path = new GraphicsPath();
+            path.AddRectangle(r);
+            return path;
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Roro.Workflow
 
         public override string ToString()
         {
-            return string.Format("[At Row={0}, Col={1}]", this.Row, this.Col);
+            return string.Format("[CellLocation Row={0}, Col={1}]", this.Row, this.Col);
         }
 
         public int GetRowEffort(CellLocation other)

@@ -7,31 +7,38 @@ namespace Roro.Workflow
 {
     public class PathFinder
     {
-        private Cell[,] Table;
-
         private Graphics Graphics;
 
-        private int Session = 0;
+        private Cell[,] Table;
+
+        private int RowCount;
+
+        private int ColCount;
+
+        private int NotWalkable = 0;
 
         public PathFinder(Graphics g, List<Node> nodes)
         {
             this.Graphics = g;
-            this.Table = PathFinder.CreateTable(g, nodes);
+            this.CreateTable(g, nodes);
         }
 
         public Point[] FindPath(Point start, Point end)
         {
-            this.Session++;
+            this.NotWalkable++; // increment every FindPath session.
 
             var startLoc = new CellLocation(start).Scale(-PageRenderOptions.GridSize).Offset(+2, 0);
-            var endLoc = new CellLocation(end).Scale(-PageRenderOptions.GridSize).Offset(-2, 0);
+            var endLoc = new CellLocation(end).Scale(-PageRenderOptions.GridSize).Offset(-3, 0);
 
+            var traceCell = this.Table[endLoc.Row + 1, endLoc.Col];
             var startCell = this.Table[startLoc.Row, startLoc.Col];
             var endCell = this.Table[endLoc.Row, endLoc.Col];
 
-            startCell.Walkable = true;
-            endCell.Walkable = true;
+            traceCell.Walkable = 0;
+            startCell.Walkable = 0;
+            endCell.Walkable = 0;
 
+            traceCell.Parent = endCell;
             endCell.Parent = startCell; // if no path is found, just connect the start and end points.
 
             var cellQueue = new PriorityQueue<Cell>();
@@ -47,7 +54,7 @@ namespace Roro.Workflow
                 {
                     break;
                 }
-                if (currentCell.Walkable)
+                if (currentCell.Walkable < this.NotWalkable)
                 {
                     // to remove
                     if (step < 100)
@@ -56,15 +63,14 @@ namespace Roro.Workflow
                         step++;
                     }
                     // --
-                    currentCell.Walkable = false;
-                    foreach (var nextCell in PathFinder.GetNextCells(this.Table, currentCell, endCell))
+                    currentCell.Walkable = this.NotWalkable;
+                    foreach (var nextCell in this.GetNextCells(currentCell, endCell))
                     {
                         cellQueue.Enqueue(nextCell, nextCell.Priority);
                     }
                 }
             }
 
-            var traceCell = endCell;
             var cellPoints = new List<Point>();
             while (traceCell != null)
             {
@@ -78,7 +84,7 @@ namespace Roro.Workflow
             return cellPoints.ToArray();
         }
 
-        private static Cell[] GetNextCells(Cell[,] table, Cell currentCell, Cell endCell)
+        private Cell[] GetNextCells(Cell currentCell, Cell endCell)
         {
             var nextCells = new List<Cell>();
             foreach (var nextCellOffset in Cell.All)
@@ -87,10 +93,10 @@ namespace Roro.Workflow
                 var nextCol = currentCell.Location.Col + nextCellOffset.Col;
                 if (nextRow < 0) continue;
                 if (nextCol < 0) continue;
-                if (nextRow >= table.GetLength(0)) continue;
-                if (nextCol >= table.GetLength(1)) continue;
-                var nextCell = table[nextRow, nextCol];
-                if (nextCell.Walkable)
+                if (nextRow >= this.RowCount) continue;
+                if (nextCol >= this.ColCount) continue;
+                var nextCell = this.Table[nextRow, nextCol];
+                if (nextCell.Walkable < this.NotWalkable)
                 {
                     nextCell.Priority = 0;
                     nextCell.Direction = nextCellOffset;
@@ -98,7 +104,7 @@ namespace Roro.Workflow
                     nextCell.ColEffort = nextCell.Location.GetColEffort(endCell.Location);
                     if (nextCell.Direction == currentCell.Direction)
                     {
-                        if (nextCell.Direction == Cell.Up || nextCell.Direction == Cell.Down)
+                        if (nextCell.Direction == Cell.MoveUp || nextCell.Direction == Cell.MoveDown)
                         {
                             if (nextCell.RowEffort > currentCell.RowEffort) // we walked too much
                             {
@@ -109,18 +115,15 @@ namespace Roro.Workflow
                                 nextCell.Priority = nextCell.RowEffort;
                             }
                         }
-                        if (nextCell.Direction == Cell.Left || nextCell.Direction == Cell.Right)
+                        if (nextCell.Direction == Cell.MoveLeft || nextCell.Direction == Cell.MoveRight)
                         {
-                            if (nextCell.ColEffort > currentCell.ColEffort)
+                            if (nextCell.ColEffort > currentCell.ColEffort) // we walked too much
                             {
-                                nextCell.Priority = nextCell.RowEffort + nextCell.ColEffort;
+                                nextCell.Priority = nextCell.ColEffort + nextCell.RowEffort;
                             }
-                            // The endCell is always on top of the end-node rectangle.
-                            // Therefore, do not prioritize the cells directly under it.
-                            // The value '3' is half the end-node rectangle width -- should not be hard coded.
                             else if (nextCell.ColEffort == 3)
                             {
-                                nextCell.Priority = nextCell.RowEffort + nextCell.ColEffort;
+                                nextCell.Priority = nextCell.ColEffort + nextCell.RowEffort;
                             }
                             else
                             {
@@ -139,21 +142,21 @@ namespace Roro.Workflow
             return nextCells.OrderBy(node => node.Priority).ToArray();
         }
 
-        private static Cell[,] CreateTable(Graphics g, IEnumerable<Node> nodes)
+        private void CreateTable(Graphics g, IEnumerable<Node> nodes)
         {
-            var maxRow = 0;
-            var maxCol = 0;
+            this.RowCount = 0;
+            this.ColCount = 0;
             foreach (var node in nodes)
             {
-                maxRow = Math.Max(maxRow, node.Bounds.Bottom);
-                maxCol = Math.Max(maxCol, node.Bounds.Right);
+                this.RowCount = Math.Max(this.RowCount, node.Bounds.Bottom);
+                this.ColCount = Math.Max(this.ColCount, node.Bounds.Right);
             }
-            var table = new Cell[maxRow, maxCol];
-            for (var row = 0; row < maxRow; row++)
+            this.Table = new Cell[this.RowCount, this.ColCount];
+            for (var row = 0; row < this.RowCount; row++)
             {
-                for (var col = 0; col < maxCol; col++)
+                for (var col = 0; col < this.ColCount; col++)
                 {
-                    table[row, col] = new Cell(row, col);
+                    this.Table[row, col] = new Cell(row, col);
                 }
             }
             foreach (var node in nodes)
@@ -162,16 +165,18 @@ namespace Roro.Workflow
                 {
                     for (var col = node.Bounds.X; col <= node.Bounds.Right; col += PageRenderOptions.GridSize)
                     {
-                        if (row < 0 || col < 0 || row > table.GetUpperBound(0) || col > table.GetUpperBound(1))
+                        if (row < 0 || col < 0 || row > this.RowCount || col > this.ColCount)
                         {
                             continue;
                         }
-                        table[row / PageRenderOptions.GridSize, col / PageRenderOptions.GridSize].Walkable = false;
+
+                        this.Table[row / PageRenderOptions.GridSize,
+                                   col / PageRenderOptions.GridSize].Walkable = int.MaxValue; // Never.
+
                         if (g != null) g.DrawRectangle(Pens.Purple, col, row, 4, 4);
                     }
                 }
             }
-            return table;
         }
     }
 }

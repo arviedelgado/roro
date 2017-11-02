@@ -7,15 +7,15 @@ namespace Roro.Workflow
 {
     public class Cell
     {
-        public static readonly CellLocation Up = new CellLocation(-1, 0);
+        public static readonly CellLocation MoveUp = new CellLocation(-1, 0);
 
-        public static readonly CellLocation Down = new CellLocation(+1, 0);
+        public static readonly CellLocation MoveDown = new CellLocation(+1, 0);
 
-        public static readonly CellLocation Left = new CellLocation(0, -1);
+        public static readonly CellLocation MoveLeft = new CellLocation(0, -1);
 
-        public static readonly CellLocation Right = new CellLocation(0, +1);
+        public static readonly CellLocation MoveRight = new CellLocation(0, +1);
 
-        public static readonly CellLocation[] All = new CellLocation[] { Up, Down, Left, Right };
+        public static readonly CellLocation[] All = new CellLocation[] { MoveUp, MoveDown, MoveLeft, MoveRight };
 
         public CellLocation Location { get; set; }
 
@@ -29,19 +29,19 @@ namespace Roro.Workflow
 
         public int ColEffort { get; set; }
 
-        public bool Walkable { get; set; }
+        public int Walkable { get; set; }
 
         public Cell(int row, int col)
         {
             this.Location = new CellLocation(row, col);
             this.RowEffort = int.MaxValue;
             this.ColEffort = int.MaxValue;
-            this.Walkable = true;
+            this.Walkable = 0; // Yes
         }
 
         public override string ToString()
         {
-            return string.Format("[Tile Row={0}, Col={1}, Walkable={2}]", this.Location.Row, this.Location.Col, this.Walkable);
+            return string.Format("[Cell Row={0}, Col={1}, Walkable={2}]", this.Location.Row, this.Location.Col, this.Walkable);
         }
     }
 }

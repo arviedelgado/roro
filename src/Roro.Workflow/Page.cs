@@ -141,7 +141,7 @@ namespace Roro.Workflow
             var g = e.Graphics;
             var o = new DefaultLineStyle();
             var x = new DefaultNodeStyle();
-            g.DrawLines(o.LinePenWithArrow, new PathFinder(g, this.Nodes).FindPath());
+            g.DrawLines(o.LinePenWithArrow, new PathFinder(g, this.Nodes).FindPath(g));
         }
 
         public GraphicsPath FindPath(Point a, Point z)

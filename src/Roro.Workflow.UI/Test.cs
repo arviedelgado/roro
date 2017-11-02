@@ -34,9 +34,6 @@ namespace Roro.Workflow.UI
             page.Nodes.Add(new ProcessNode());
             page.Nodes.Add(new ProcessNode());
             page.Nodes.Add(new ProcessNode());
-            page.Nodes.Add(new ProcessNode());
-            page.Nodes.Add(new ProcessNode());
-            page.Nodes.Add(new ProcessNode());
             page.Nodes.Add(new EndNode());
 
             Console.Clear();

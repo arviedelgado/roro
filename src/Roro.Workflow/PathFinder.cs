@@ -35,8 +35,10 @@ namespace Roro.Workflow
                 end.At
             };
 
-            var q = new Queue<Tile>(new[] { this.start });
+            var q = new PriorityQueue<Tile>();
+            q.Enqueue(this.start, 0);
 
+            int step = 0;
             while (q.Count > 0)
             {
                 var tile = q.Dequeue();
@@ -54,10 +56,15 @@ namespace Roro.Workflow
                 }
                 if (tile.Walkable)
                 {
+                    if (step < 100)
+                    {
+                        g.DrawString(step.ToString(), new Font("Consolas", 8), Brushes.Blue, tile.At.Col * PageRenderOptions.GridSize, tile.At.Row * PageRenderOptions.GridSize);
+                        step++;
+                    }
                     tile.Walkable = false;
                     foreach (var next in tile.GetNexts(map, this.start, this.end))
                     {
-                        q.Enqueue(next);
+                        q.Enqueue(next, next.Priority);
                     }
                 }
             }
@@ -69,7 +76,7 @@ namespace Roro.Workflow
                 pts.Add(new Point(at.Col, at.Row));
             }
 
-            DrawMap(g);
+            //DrawMap(g);
 
             return pts.ToArray();
         }
@@ -151,47 +158,57 @@ namespace Roro.Workflow
                 return string.Format("[At Row={0}, Col={1}]", this.Row, this.Col);
             }
 
-
-            public int GetEffort(At other)
+            public int GetRowEffort(At other)
             {
-                var rowEffort = (int)Math.Sqrt(Math.Pow(this.Row - other.Row, 2));
-                var colEffort = (int)Math.Sqrt(Math.Pow(this.Col - other.Col, 2));
-                if (rowEffort == 0 || colEffort == 0)
-                    return 0;
-                return rowEffort + colEffort;
+                return (int)Math.Sqrt(Math.Pow(this.Row - other.Row, 2));
+            }
+
+            public int GetColEffort(At other)
+            {
+                return (int)Math.Sqrt(Math.Pow(this.Col - other.Col, 2));
             }
         }
 
+        public static class Move
+        {
+            public static readonly At Up = new At(-1, 0);
+            public static readonly At Down = new At(+1, 0);
+            public static readonly At Left = new At(0, -1);
+            public static readonly At Right = new At(0, +1);
+            public static readonly At[] All = new At[] { Up, Down, Left, Right };
+        };
+
         public class Tile
         {
-            private static At[] moves = new At[] {
-                new At(0, +1), // right
-                new At(+1, 0), // down
-                new At(-1, 0), // up
-                new At(0, -1), // left
-            };
-
             public At At { get; private set; }
 
-            public int Effort { get; private set; }
+            public At Direction { get; private set; }
 
             public Tile Parent { get; private set; }
 
+            public int Priority { get; private set; }
+
+            public int RowEffort { get; private set; }
+
+            public int ColEffort { get; private set; }
+            
             public bool Walkable { get; set; }
 
             public Tile(int row, int col)
             {
                 this.At = new At(row, col);
+                this.RowEffort = int.MaxValue;
+                this.ColEffort = int.MaxValue;
                 this.Walkable = true;
             }
 
             public Tile[] GetNexts(Tile[,] map, Tile start, Tile end)
             {
                 var nexts = new List<Tile>();
-                foreach (var move in moves)
+                foreach (var dir in Move.All)
                 {
-                    var nextRow = this.At.Row + move.Row;
-                    var nextCol = this.At.Col + move.Col;
+                    var nextRow = this.At.Row + dir.Row;
+                    var nextCol = this.At.Col + dir.Col;
                     if (nextRow < 0) continue;
                     if (nextCol < 0) continue;
                     if (nextRow >= map.GetLength(0)) continue;
@@ -199,13 +216,49 @@ namespace Roro.Workflow
                     var next = map[nextRow, nextCol];
                     if (next.Walkable)
                     {
-                        next.Effort = next.At.GetEffort(start.At) + next.At.GetEffort(end.At);
+                        next.Priority = 0;
+                        next.Direction = dir;
+                        next.RowEffort = next.At.GetRowEffort(end.At);
+                        next.ColEffort = next.At.GetColEffort(end.At);
+                        if (next.Direction == this.Direction)
+                        {
+                            if (next.Direction == Move.Up || next.Direction == Move.Down)
+                            {
+                                if (next.RowEffort > this.RowEffort) // we walked too much
+                                {
+                                    next.Priority = next.RowEffort + next.ColEffort;
+                                }
+                                else
+                                {
+                                    next.Priority = next.RowEffort;
+                                }
+                            }
+                            if (next.Direction == Move.Left || next.Direction == Move.Right)
+                            {
+                                if (next.ColEffort > this.ColEffort)
+                                {
+                                    next.Priority = next.RowEffort + next.ColEffort;
+                                }
+                                else if (next.ColEffort == 3)
+                                {
+                                    next.Priority = next.RowEffort + next.ColEffort;
+                                }
+                                else
+                                {
+                                    next.Priority = next.ColEffort;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            next.Priority = next.RowEffort + next.ColEffort;
+                        }
                         next.Parent = this;
                         nexts.Add(next);
                     }
                 }
 
-                nexts = nexts.OrderBy(node => node.Effort).ToList();
+                nexts = nexts.OrderBy(node => node.Priority).ToList();
                 return nexts.ToArray();
             }
 
@@ -238,6 +291,8 @@ namespace Roro.Workflow
                 {
                     for (var col = node.Bounds.X; col <= node.Bounds.Right; col += PageRenderOptions.GridSize)
                     {
+                        if (row < 0 || col < 0 || row > this.map.GetUpperBound(0) || col > this.map.GetUpperBound(1))
+                            continue;
                         this.map[row / PageRenderOptions.GridSize, col / PageRenderOptions.GridSize].Walkable = false;
                         g.DrawRectangle(Pens.Purple, col, row, 4, 4);
                     }

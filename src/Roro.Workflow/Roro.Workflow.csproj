@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PriorityQueue.cs" />
     <Compile Include="PathFinder.cs" />
     <Compile Include="RenderOptions.cs" />
     <Compile Include="Page.cs" />

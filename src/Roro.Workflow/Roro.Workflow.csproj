@@ -44,8 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PathFinder\CellLocation.cs" />
+    <Compile Include="PathFinder\Cell.cs" />
     <Compile Include="PriorityQueue.cs" />
-    <Compile Include="PathFinder.cs" />
+    <Compile Include="PathFinder\PathFinder.cs" />
     <Compile Include="RenderOptions.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="Document.cs" />

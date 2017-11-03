@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
@@ -20,18 +21,18 @@ namespace Roro.Workflow
 
         public PathFinder(Graphics g, List<Node> nodes)
         {
-            var sw = Stopwatch.StartNew();
             this.Graphics = g;
             this.CreateTable(g, nodes);
-            Console.WriteLine("CreateTable\t{0}", sw.ElapsedMilliseconds / 1000.0);
         }
 
-        public Point[] FindPath(Point start, Point end)
+        public GraphicsPath FindPath(Point start, Point end)
         {
             this.NotWalkable++; // increment every FindPath session.
 
-            var startLoc = new CellLocation(start).Scale(-PageRenderOptions.GridSize).Offset(+2, 0);
-            var endLoc = new CellLocation(end).Scale(-PageRenderOptions.GridSize).Offset(-2, 0);
+            var cellQueue = new PriorityQueue<Cell>();
+
+            var startLoc = new CellLocation(start).Multiply(1.0 / PageRenderOptions.GridSize).Offset(+2, 0);
+            var endLoc = new CellLocation(end).Multiply(1.0 / PageRenderOptions.GridSize).Offset(-2, 0);
 
             var startCell = this.Table[startLoc.Row, startLoc.Col];
             var endCell = this.Table[endLoc.Row, endLoc.Col];
@@ -39,67 +40,147 @@ namespace Roro.Workflow
             startCell.Walkable = 0;
             endCell.Walkable = 0;
 
-            endCell.Parent = startCell; // if no path is found, just connect the start and end points.
-
-            var cellQueue = new PriorityQueue<Cell>();
-
-            cellQueue.Enqueue(startCell, startCell.Priority);
-
-            int step = 0; // to remove
+            var offsetStartCell = this.GetNextCells(startCell, endCell).FirstOrDefault();
+            var offsetEndCell = this.GetNextCells(endCell, endCell).FirstOrDefault();
+            if (offsetStartCell == null || offsetEndCell == null)
+            {
+                endCell.Parent = startCell;
+            }
+            else
+            {
+                startCell.Walkable = this.NotWalkable;
+                endCell.Walkable = this.NotWalkable;
+                endCell.Direction = offsetEndCell.Direction.Multiply(-1);
+                endCell.Parent = offsetEndCell;
+                offsetStartCell.Parent = startCell;
+                cellQueue.Enqueue(offsetStartCell, offsetStartCell.Priority);
+            }
 
             var sw = Stopwatch.StartNew();
-
             while (sw.ElapsedMilliseconds < 10 && cellQueue.Count > 0)
             {
                 var currentCell = cellQueue.Dequeue();
-                if (currentCell.Location == endCell.Location)
+                if (currentCell.Location == offsetEndCell.Location)
                 {
                     break;
                 }
                 if (currentCell.Walkable < this.NotWalkable)
                 {
-                    // to remove
-                    //this.Graphics.DrawString(step.ToString(), new Font("Consolas", 8), Brushes.Blue, currentCell.Location.Col * PageRenderOptions.GridSize, currentCell.Location.Row * PageRenderOptions.GridSize);
-                    step++;
-                    // --
                     currentCell.Walkable = this.NotWalkable;
-                    foreach (var nextCell in this.GetNextCells(currentCell, endCell))
+                    foreach (var nextCell in this.GetNextCells(currentCell, offsetEndCell))
                     {
                         cellQueue.Enqueue(nextCell, nextCell.Priority);
                     }
                 }
             }
 
-            var cellPoints = new List<Point>();
-            var traceCell = endCell;
-            while (traceCell != null)
+            var path = new GraphicsPath();
+            bool bending = false; // bend the knee, Jon Snow.
+            var a = endCell;
+            while (a != null && a.Parent is Cell b)
             {
-                var traceCellLoc = traceCell.Location;
-                traceCellLoc.Scale(PageRenderOptions.GridSize);
-                cellPoints.Add(new Point(traceCellLoc.Col, traceCellLoc.Row));
-                traceCell = traceCell.Parent;
-            }
-            cellPoints.Reverse();
-
-            Console.WriteLine("FindPath\t{1}\t{0} steps", cellPoints.Count, sw.ElapsedMilliseconds / 1000.0);
-
-            //DrawTable();
-
-            return cellPoints.ToArray();
-        }
-
-        private void DrawTable()
-        {
-            foreach (var cell in this.Table)
-            {
-                if (cell != null)
+                var aLoc = a.Location.Multiply(PageRenderOptions.GridSize);
+                var bLoc = b.Location.Multiply(PageRenderOptions.GridSize);
+                if (a.Direction == b.Direction)
                 {
-                    this.Graphics.DrawRectangle(
-                        cell.Walkable == 0 ? Pens.Green : Pens.Red,
-                        cell.Location.Col * PageRenderOptions.GridSize,
-                        cell.Location.Row * PageRenderOptions.GridSize, 4, 4);
+                    if (bending)
+                    {
+                        bending = false;
+                    }
+                    else
+                    {
+                        path.AddLine(new Point(aLoc.Col, aLoc.Row), new Point(bLoc.Col, bLoc.Row));
+                    }
                 }
+                else
+                {
+                    if (a.Direction == Cell.MoveUp && b.Direction == Cell.MoveLeft)
+                    {
+                        // a
+                        // b z
+                        path.AddArc(
+                            bLoc.Col,
+                            bLoc.Row - PageRenderOptions.GridSize,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 180, -90);
+                    }
+                    if (a.Direction == Cell.MoveUp && b.Direction == Cell.MoveRight)
+                    {
+                        //   a
+                        // z b
+                        path.AddArc(
+                            bLoc.Col - PageRenderOptions.GridSize,
+                            bLoc.Row - PageRenderOptions.GridSize,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 0, 90);
+                    }
+                    if (a.Direction == Cell.MoveDown && b.Direction == Cell.MoveLeft)
+                    {
+                        // b z
+                        // a
+                        path.AddArc(
+                            bLoc.Col,
+                            bLoc.Row,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 180, 90);
+                    }
+                    if (a.Direction == Cell.MoveDown && b.Direction == Cell.MoveRight)
+                    {
+                        // z b
+                        //   a
+                        path.AddArc(
+                            bLoc.Col - PageRenderOptions.GridSize,
+                            bLoc.Row,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 0, -90);
+                    }
+                    if (a.Direction == Cell.MoveLeft && b.Direction == Cell.MoveUp)
+                    {
+                        // a b 
+                        //   z
+                        path.AddArc(
+                            bLoc.Col - PageRenderOptions.GridSize,
+                            bLoc.Row,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, -90, 90);
+                    }
+                    if (a.Direction == Cell.MoveLeft && b.Direction == Cell.MoveDown)
+                    {
+                        //   z
+                        // a b 
+                        path.AddArc(
+                            bLoc.Col - PageRenderOptions.GridSize,
+                            bLoc.Row - PageRenderOptions.GridSize,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 90, -90);
+                    }
+                    if (a.Direction == Cell.MoveRight && b.Direction == Cell.MoveUp)
+                    {
+                        // b a
+                        // z
+                        path.AddArc(
+                            bLoc.Col,
+                            bLoc.Row,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, -90, -90);
+                    }
+                    if (a.Direction == Cell.MoveRight && b.Direction == Cell.MoveDown)
+                    {
+                        // z
+                        // b a
+                        path.AddArc(
+                            bLoc.Col,
+                            bLoc.Row - PageRenderOptions.GridSize,
+                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 90, 90);
+                    }
+                    bending = true;
+                }
+                a = a.Parent;
             }
+            path.AddLine(path.GetLastPoint(), new Point(
+                startLoc.Col * PageRenderOptions.GridSize,
+                startLoc.Row * PageRenderOptions.GridSize));
+            path.Reverse();
+            path.AddLine(path.GetLastPoint(), new Point(
+                endLoc.Col * PageRenderOptions.GridSize,
+                endLoc.Row * PageRenderOptions.GridSize));
+
+            Console.WriteLine("FindPath\t{0}", sw.ElapsedMilliseconds / 1000.0);
+
+            return path;
         }
 
         private IEnumerable<Cell> GetNextCells(Cell currentCell, Cell endCell)
@@ -175,8 +256,6 @@ namespace Roro.Workflow
                 this.ColCount = Math.Max(this.ColCount, node.Bounds.Right);
             }
             this.Table = new Cell[this.RowCount, this.ColCount];
-            Console.WriteLine("CreateTable\t{0}\tRowCount, ColCount", sw.ElapsedMilliseconds / 1000.0);
-            sw.Restart();
             foreach (var node in nodes)
             {
                 for (var row = node.Bounds.Y; row <= node.Bounds.Bottom; row += PageRenderOptions.GridSize)
@@ -197,7 +276,7 @@ namespace Roro.Workflow
                     }
                 }
             }
-            Console.WriteLine("CreateTable\t{0}\tTable[row, col].Walkable = Never", sw.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("CreateTable\t{0}", sw.ElapsedMilliseconds / 1000.0);
         }
     }
 }

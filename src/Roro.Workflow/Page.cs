@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -113,9 +114,17 @@ namespace Roro.Workflow
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
+            var total = Stopwatch.StartNew();
+            var sw = Stopwatch.StartNew();
             this.RenderBackground(e);
+            Console.WriteLine("RenderBack\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            sw.Restart();
             this.RenderNodes(e);
+            Console.WriteLine("RenderNodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            sw.Restart();
             this.RenderLines(e);
+            Console.WriteLine("RenderLines\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Render Time\t{0}", total.ElapsedMilliseconds / 1000.0);
         }
 
         private void RenderBackground(PaintEventArgs e)
@@ -151,149 +160,6 @@ namespace Roro.Workflow
                 }
                 prev = node;
             }
-        }
-
-        public GraphicsPath FindPath(Point a, Point z)
-        {
-            var map = new GraphicsPath();
-            foreach (var p in this.Paths.Values)
-            {
-                map.AddPath(p, false);
-            }
-            var mapRect = map.GetBounds();
-
-            var A = new Point(a.X, a.Y + PageRenderOptions.GridSize * 3);
-            var Z = new Point(z.X, z.Y - PageRenderOptions.GridSize * 3);
-
-            var path = new GraphicsPath();
-            var points = new List<Point>();
-
-            var P = A;
-            points.Add(P);
-
-            Console.Clear();
-            Console.WriteLine(A);
-            var findPath = true;
-            while (findPath)
-            {
-                findPath = false;
-                if (P.Y < Z.Y)
-                {
-                    var oldY = P.Y;
-                    var newY = GoDown(map, P.X, P.Y, Z.Y);
-                    if (oldY != newY)
-                    {
-                        P.Y = newY;
-                        findPath = true;
-                        Console.WriteLine(P);
-                        points.Add(P);
-                    }
-
-                }
-                if (P.Y != Z.Y || P.X != Z.X)
-                {
-                    var oldX = P.X;
-                    var newX = P.X > Z.X ? GoLeft(map, P.X, P.Y, Z.X) : GoRight(map, P.X, P.Y, Z.X);
-                    if (oldX != newX)
-                    {
-                        P.X = newX;
-                        findPath = true;
-                        points.Add(P);
-                        Console.WriteLine(P);
-                    }
-                }
-            }
-            Console.WriteLine(Z);
-
-            path.AddLines(points.ToArray());
-            path.AddRectangle(mapRect);
-            
-            return path;
-        }
-
-        public int GoDown(GraphicsPath map, int X, int Y, int targetY)
-        {
-            Console.WriteLine("GoDown");
-            var result = Y;
-            while (Y <= targetY)
-            {
-                if (Y == targetY)
-                {
-                    return Y;
-                }
-                else if (map.IsVisible(X, Y)) // cannot go down.
-                {
-                    break;
-                }
-                else if (map.IsVisible(X + PageRenderOptions.GridSize, Y)) // can go down, cannot go right.
-                {
-                    ;
-                }
-                else // can go down, can go right.
-                {
-                    result = Y;
-                }
-                Y = Y + PageRenderOptions.GridSize;
-            }
-            return result;
-        }
-
-        public int GoRight(GraphicsPath map, int X, int Y, int targetX)
-        {
-            Console.WriteLine("GoRight");
-            var result = X;
-            var limitX = map.GetBounds().Right;
-            while (X <= limitX)
-            {
-                if (X == limitX)
-                {
-                    result = X;
-                }
-                else if (map.IsVisible(X, Y)) // cannot go right.
-                {
-                    break;
-                }
-                else if (map.IsVisible(X, Y + PageRenderOptions.GridSize)) // can go right, cannot go down.
-                {
-                    ;
-                }
-                else // can go right, can go down.
-                {
-                    result = X;
-                    limitX = targetX;
-                }
-                X = X + PageRenderOptions.GridSize;
-            }
-            return result;
-        }
-
-        public int GoLeft(GraphicsPath map, int X, int Y, int targetX)
-        {
-            Console.WriteLine("GoLeft");
-            var result = X;
-            var limitX = map.GetBounds().Left;
-            while (X >= limitX)
-            {
-                if (X == limitX)
-                {
-                    result = X;
-                }
-                else if (map.IsVisible(X, Y)) // cannot go right.
-                {
-                    break;
-                }
-                else if (map.IsVisible(X, Y - PageRenderOptions.GridSize)) // can go right, cannot go down.
-                {
-                    ;
-                }
-                else // can go right, can go down.
-                {
-                    result = X;
-                    limitX = targetX;
-                }
-                X = X - PageRenderOptions.GridSize;
-            }
-            return result;
         }
 
         private void RenderNodes(PaintEventArgs e)

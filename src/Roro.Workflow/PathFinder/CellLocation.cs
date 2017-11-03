@@ -30,18 +30,10 @@ namespace Roro.Workflow
             return this;
         }
 
-        public CellLocation Scale(int scale)
+        public CellLocation Multiply(double scale)
         {
-            if (scale > 0)
-            {
-                this.Row *= scale;
-                this.Col *= scale;
-            }
-            else
-            {
-                this.Row /= -scale;
-                this.Col /= -scale;
-            }
+            this.Row = (int)(this.Row * scale);
+            this.Col = (int)(this.Col * scale);
             return this;
         }
 

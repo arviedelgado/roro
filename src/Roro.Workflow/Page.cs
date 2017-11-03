@@ -114,6 +114,7 @@ namespace Roro.Workflow
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
+            Console.Clear();
             var total = Stopwatch.StartNew();
             var sw = Stopwatch.StartNew();
             this.RenderBackground(e);
@@ -156,7 +157,7 @@ namespace Roro.Workflow
             {
                 if (prev != null)
                 {
-                    g.DrawLines(o.LinePenWithArrow, pathFinder.FindPath(prev.Bounds.Center(), node.Bounds.Center()));
+                    g.DrawPath(o.LinePenWithArrow, pathFinder.FindPath(prev.Bounds.Center(), node.Bounds.Center()));
                 }
                 prev = node;
             }

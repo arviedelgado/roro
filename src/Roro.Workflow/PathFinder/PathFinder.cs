@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Roro.Workflow
 {
@@ -19,8 +20,10 @@ namespace Roro.Workflow
 
         public PathFinder(Graphics g, List<Node> nodes)
         {
+            var sw = Stopwatch.StartNew();
             this.Graphics = g;
             this.CreateTable(g, nodes);
+            Console.WriteLine("CreateTable\t{0}", sw.ElapsedMilliseconds / 1000.0);
         }
 
         public Point[] FindPath(Point start, Point end)
@@ -28,26 +31,25 @@ namespace Roro.Workflow
             this.NotWalkable++; // increment every FindPath session.
 
             var startLoc = new CellLocation(start).Scale(-PageRenderOptions.GridSize).Offset(+2, 0);
-            var endLoc = new CellLocation(end).Scale(-PageRenderOptions.GridSize).Offset(-3, 0);
+            var endLoc = new CellLocation(end).Scale(-PageRenderOptions.GridSize).Offset(-2, 0);
 
-            var traceCell = this.Table[endLoc.Row + 1, endLoc.Col];
             var startCell = this.Table[startLoc.Row, startLoc.Col];
             var endCell = this.Table[endLoc.Row, endLoc.Col];
 
-            traceCell.Walkable = 0;
             startCell.Walkable = 0;
             endCell.Walkable = 0;
 
-            traceCell.Parent = endCell;
             endCell.Parent = startCell; // if no path is found, just connect the start and end points.
 
             var cellQueue = new PriorityQueue<Cell>();
 
-            cellQueue.Enqueue(startCell, 0);
+            cellQueue.Enqueue(startCell, startCell.Priority);
 
             int step = 0; // to remove
 
-            while (cellQueue.Count > 0)
+            var sw = Stopwatch.StartNew();
+
+            while (sw.ElapsedMilliseconds < 10 && cellQueue.Count > 0)
             {
                 var currentCell = cellQueue.Dequeue();
                 if (currentCell.Location == endCell.Location)
@@ -57,11 +59,8 @@ namespace Roro.Workflow
                 if (currentCell.Walkable < this.NotWalkable)
                 {
                     // to remove
-                    if (step < 100)
-                    {
-                        this.Graphics.DrawString(step.ToString(), new Font("Consolas", 8), Brushes.Blue, currentCell.Location.Col * PageRenderOptions.GridSize, currentCell.Location.Row * PageRenderOptions.GridSize);
-                        step++;
-                    }
+                    //this.Graphics.DrawString(step.ToString(), new Font("Consolas", 8), Brushes.Blue, currentCell.Location.Col * PageRenderOptions.GridSize, currentCell.Location.Row * PageRenderOptions.GridSize);
+                    step++;
                     // --
                     currentCell.Walkable = this.NotWalkable;
                     foreach (var nextCell in this.GetNextCells(currentCell, endCell))
@@ -72,6 +71,7 @@ namespace Roro.Workflow
             }
 
             var cellPoints = new List<Point>();
+            var traceCell = endCell;
             while (traceCell != null)
             {
                 var traceCellLoc = traceCell.Location;
@@ -81,10 +81,28 @@ namespace Roro.Workflow
             }
             cellPoints.Reverse();
 
+            Console.WriteLine("FindPath\t{1}\t{0} steps", cellPoints.Count, sw.ElapsedMilliseconds / 1000.0);
+
+            //DrawTable();
+
             return cellPoints.ToArray();
         }
 
-        private Cell[] GetNextCells(Cell currentCell, Cell endCell)
+        private void DrawTable()
+        {
+            foreach (var cell in this.Table)
+            {
+                if (cell != null)
+                {
+                    this.Graphics.DrawRectangle(
+                        cell.Walkable == 0 ? Pens.Green : Pens.Red,
+                        cell.Location.Col * PageRenderOptions.GridSize,
+                        cell.Location.Row * PageRenderOptions.GridSize, 4, 4);
+                }
+            }
+        }
+
+        private IEnumerable<Cell> GetNextCells(Cell currentCell, Cell endCell)
         {
             var nextCells = new List<Cell>();
             foreach (var nextCellOffset in Cell.All)
@@ -95,9 +113,14 @@ namespace Roro.Workflow
                 if (nextCol < 0) continue;
                 if (nextRow >= this.RowCount) continue;
                 if (nextCol >= this.ColCount) continue;
+                if (this.Table[nextRow, nextCol] == null)
+                {
+                    this.Table[nextRow, nextCol] = new Cell(nextRow, nextCol);
+                }
                 var nextCell = this.Table[nextRow, nextCol];
                 if (nextCell.Walkable < this.NotWalkable)
                 {
+                    nextCell.Parent = currentCell;
                     nextCell.Priority = 0;
                     nextCell.Direction = nextCellOffset;
                     nextCell.RowEffort = nextCell.Location.GetRowEffort(endCell.Location);
@@ -135,15 +158,15 @@ namespace Roro.Workflow
                     {
                         nextCell.Priority = nextCell.RowEffort + nextCell.ColEffort;
                     }
-                    nextCell.Parent = currentCell;
                     nextCells.Add(nextCell);
                 }
             }
-            return nextCells.OrderBy(node => node.Priority).ToArray();
+            return nextCells.OrderBy(node => node.Priority);
         }
 
         private void CreateTable(Graphics g, IEnumerable<Node> nodes)
         {
+            var sw = Stopwatch.StartNew();
             this.RowCount = 0;
             this.ColCount = 0;
             foreach (var node in nodes)
@@ -152,31 +175,29 @@ namespace Roro.Workflow
                 this.ColCount = Math.Max(this.ColCount, node.Bounds.Right);
             }
             this.Table = new Cell[this.RowCount, this.ColCount];
-            for (var row = 0; row < this.RowCount; row++)
-            {
-                for (var col = 0; col < this.ColCount; col++)
-                {
-                    this.Table[row, col] = new Cell(row, col);
-                }
-            }
+            Console.WriteLine("CreateTable\t{0}\tRowCount, ColCount", sw.ElapsedMilliseconds / 1000.0);
+            sw.Restart();
             foreach (var node in nodes)
             {
                 for (var row = node.Bounds.Y; row <= node.Bounds.Bottom; row += PageRenderOptions.GridSize)
                 {
                     for (var col = node.Bounds.X; col <= node.Bounds.Right; col += PageRenderOptions.GridSize)
                     {
-                        if (row < 0 || col < 0 || row > this.RowCount || col > this.ColCount)
+                        var r = row / PageRenderOptions.GridSize;
+                        var c = col / PageRenderOptions.GridSize;
+                        if (r < 0 || c < 0 || r > this.RowCount || c > this.ColCount)
                         {
                             continue;
                         }
 
-                        this.Table[row / PageRenderOptions.GridSize,
-                                   col / PageRenderOptions.GridSize].Walkable = int.MaxValue; // Never.
+                        var cell = this.Table[r, c] = new Cell(r, c);
+                        cell.Walkable = int.MaxValue; // Never.
 
-                        if (g != null) g.DrawRectangle(Pens.Purple, col, row, 4, 4);
+                        //if (g != null) g.DrawRectangle(Pens.Purple, col, row, 4, 4);
                     }
                 }
             }
+            Console.WriteLine("CreateTable\t{0}\tTable[row, col].Walkable = Never", sw.ElapsedMilliseconds / 1000.0);
         }
     }
 }

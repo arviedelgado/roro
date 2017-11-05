@@ -97,9 +97,6 @@ namespace Roro.Workflow
 
         private GraphicsPath GetPath(Cell startCell, Cell endCell)
         {
-            var steps = 0;
-            var font = new Font("Consolas", 8);
-
             if (startCell == null || endCell == null)
             {
                 return new GraphicsPath();
@@ -117,11 +114,6 @@ namespace Roro.Workflow
                 }
                 if (currentCell.IsOpen)
                 {
-                    steps++;
-                    this.Graphics.DrawString(steps.ToString(), font, Brushes.Orange,
-                        currentCell.Location.Col * PageRenderOptions.GridSize,
-                        currentCell.Location.Row * PageRenderOptions.GridSize);
-
                     currentCell.IsOpen = false;
                     foreach (var nextCell in this.GetNextCells(currentCell, endCell))
                     {

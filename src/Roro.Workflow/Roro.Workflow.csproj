@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Page_NodeDragSelectEvent.cs" />
+    <Compile Include="Page_NodeSelectEvent.cs" />
+    <Compile Include="Page_NodeDragEvent.cs" />
     <Compile Include="PathFinder\CellLocation.cs" />
     <Compile Include="PathFinder\Cell.cs" />
     <Compile Include="PriorityQueue.cs" />

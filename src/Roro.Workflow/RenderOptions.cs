@@ -41,7 +41,7 @@ namespace Roro.Workflow
     {
         public SelectedNodeStyle()
         {
-            this.BorderPen = new Pen(Color.FromArgb(30, 250, 30), 2);
+            this.BorderPen = new Pen(Color.FromArgb(250, 30, 30), 2);
         }
     }
 

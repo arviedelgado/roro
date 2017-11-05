@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Roro.Workflow
 {
     [DataContract]
-    public class Page
+    public partial class Page
     {
         [DataMember]
         public Guid Id { get; private set; }
@@ -19,11 +19,11 @@ namespace Roro.Workflow
         public string Name { get; set; }
 
         [DataMember]
-        public List<Node> Nodes { get; private set;  }
+        public List<Node> Nodes { get; private set; }
 
         internal Dictionary<Guid, GraphicsPath> Paths { get; }
 
-        internal Guid activeNode { get; private set; }
+        internal List<Guid> SelectedNodes { get; private set; }
 
         public Page()
         {
@@ -32,9 +32,10 @@ namespace Roro.Workflow
             this.Nodes = new List<Node>();
             this.Nodes.Add(new StartNode());
             this.Paths = new Dictionary<Guid, GraphicsPath>();
+            this.SelectedNodes = new List<Guid>();
         }
 
-        private Guid GetNodeFromPoint(int pX, int pY)
+        private Guid GetNodeIdFromPoint(int pX, int pY)
         {
             if (this.Paths.FirstOrDefault(x => x.Value.IsVisible(pX, pY)) is KeyValuePair<Guid, GraphicsPath> item &&
                 this.GetNodeById(item.Key) is Node node)
@@ -48,69 +49,19 @@ namespace Roro.Workflow
         {
             return this.Nodes.FirstOrDefault(n => n.Id.Equals(id));
         }
-        
+
         #region Events
 
         public void AttachEvents(Control control)
         {
             this.control = control;
             this.control.Paint += OnPaint;
-            this.control.MouseDown += OnDragNodeStart;
-            //this.control.MouseMove += OnDraggingNode;
-            this.control.MouseUp += OnDragNodeEnd;
+            this.control.MouseDown += NodeDragRequest;
+            this.control.MouseDown += NodeSelectRequest;
+            this.control.MouseDown += NodeDragSelectRequest;
         }
 
         private Control control;
-
-        private bool isDraggingNode;
-
-        private Point dragStartPoint;
-
-        internal Point dragOffsetPoint;
-
-        private void OnDragNodeStart(object sender, MouseEventArgs e)
-        {
-            var node = this.GetNodeFromPoint(e.X, e.Y);
-            this.activeNode = node;
-            if (node == Guid.Empty)
-            {
-                this.isDraggingNode = false;
-            }
-            else
-            {
-                this.isDraggingNode = true;
-                this.dragStartPoint = e.Location;
-                this.dragOffsetPoint = default(Point);
-            }
-            this.control.Invalidate();
-        }
-
-        private void OnDraggingNode(object sender, MouseEventArgs e)
-        {
-            if (this.isDraggingNode)
-            {
-                var dX = (int)Math.Round((double)(e.X - this.dragStartPoint.X) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
-                var dY = (int)Math.Round((double)(e.Y - this.dragStartPoint.Y) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
-                this.dragOffsetPoint = new Point(dX, dY);
-                this.control.Invalidate();
-            }
-        }
-
-        private void OnDragNodeEnd(object sender, MouseEventArgs e)
-        {
-            if (this.isDraggingNode)
-            {
-                var dX = (int)Math.Round((double)(e.X - this.dragStartPoint.X) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
-                var dY = (int)Math.Round((double)(e.Y - this.dragStartPoint.Y) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
-                var node = this.GetNodeById(this.activeNode);
-                var rect = node.Bounds;
-                rect.Offset(dX, dY);
-                node.Bounds = rect;
-                this.dragOffsetPoint = default(Point);
-                this.isDraggingNode = false;
-            }
-            this.control.Invalidate();
-        }
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
@@ -135,7 +86,7 @@ namespace Roro.Workflow
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             g.Clear(PageRenderOptions.BackColor);
-       
+
             for (var y = 0; y < r.Height; y += PageRenderOptions.GridSize)
             {
                 g.DrawLine(PageRenderOptions.GridPen, 0, y, r.Width, y);
@@ -171,16 +122,16 @@ namespace Roro.Workflow
             {
                 var r = node.Bounds;
                 var o = new DefaultNodeStyle();
-                if (node.Id.Equals(this.activeNode))
+                if (this.SelectedNodes.Contains(node.Id))
                 {
-                    if (this.isDraggingNode)
-                    {
-                        r.Inflate(2, 2);
-                        r.Offset(this.dragOffsetPoint);
-                        o = new SelectedNodeStyle();
-                    }
+                    o = new SelectedNodeStyle();
+                    r.Offset(this.NodeDragOffsetPoint);
                 }
                 this.Paths.Add(node.Id, node.Render(g, r, o));
+            }
+            if (this.NodeDragSelectRectangle != Rectangle.Empty)
+            {
+                g.DrawRectangle(Pens.Purple, this.NodeDragSelectRectangle);
             }
         }
 

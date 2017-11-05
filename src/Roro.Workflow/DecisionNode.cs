@@ -30,11 +30,13 @@ namespace Roro.Workflow
                 new Point(r.Right, r.CenterY()),
                 new Point(r.CenterX(), r.Bottom)
             };
-            g.DrawPolygon(o.BorderPen, points);
-
-            // return path.
             var path = new GraphicsPath();
+            path.StartFigure();
             path.AddPolygon(points);
+            path.CloseFigure();
+            //
+            g.FillPath(o.BackBrush, path);
+            g.DrawPath(o.BorderPen, path);
             return path;
         }
     }

@@ -21,11 +21,13 @@ namespace Roro.Workflow
 
         public override GraphicsPath Render(Graphics g, Rectangle r, DefaultNodeStyle o)
         {
-            g.DrawRectangle(o.BorderPen, r);
-            
-            // return path.
             var path = new GraphicsPath();
+            path.StartFigure();
             path.AddRectangle(r);
+            path.CloseFigure();
+            //
+            g.FillPath(o.BackBrush, path);
+            g.DrawPath(o.BorderPen, path);
             return path;
         }
     }

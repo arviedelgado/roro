@@ -32,6 +32,7 @@ namespace Roro.Workflow.UI
             var doc = new Document();
             var page = doc.Pages.First();
             page.Nodes.Add(new ProcessNode());
+            page.Nodes.Add(new DecisionNode());
             page.Nodes.Add(new ProcessNode());
             page.Nodes.Add(new EndNode());
 

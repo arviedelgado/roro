@@ -39,15 +39,14 @@ namespace Roro.Workflow
                 r.Y,
                 r.Height,
                 r.Height);
-            g.DrawLine(o.BorderPen, midRect.X, midRect.Y, midRect.Right, midRect.Y);
-            g.DrawLine(o.BorderPen, midRect.X, midRect.Bottom, midRect.Right, midRect.Bottom);
-            g.DrawArc(o.BorderPen, leftRect, 90, 180);
-            g.DrawArc(o.BorderPen, rightRect, 270, 180);
-
-            // return path.
             var path = new GraphicsPath();
+            path.StartFigure();
             path.AddArc(leftRect, 90, 180);
-            path.AddArc(rightRect, 270, 180);
+            path.AddArc(rightRect, -90, 180);
+            path.CloseFigure();
+            //
+            g.FillPath(o.BackBrush, path);
+            g.DrawPath(o.BorderPen, path);
             return path;
         }
     }

@@ -35,9 +35,9 @@ namespace Roro.Workflow
             this.SelectedNodes = new List<Guid>();
         }
 
-        private Guid GetNodeIdFromPoint(int pX, int pY)
+        private Guid GetNodeIdFromPoint(Point pt)
         {
-            if (this.Paths.FirstOrDefault(x => x.Value.IsVisible(pX, pY)) is KeyValuePair<Guid, GraphicsPath> item &&
+            if (this.Paths.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Guid, GraphicsPath> item &&
                 this.GetNodeById(item.Key) is Node node)
             {
                 return node.Id;
@@ -56,9 +56,7 @@ namespace Roro.Workflow
         {
             this.control = control;
             this.control.Paint += OnPaint;
-            this.control.MouseDown += NodeDragRequest;
-            this.control.MouseDown += NodeSelectRequest;
-            this.control.MouseDown += NodeDragSelectRequest;
+            this.control.MouseDown += MouseEvents;
         }
 
         private Control control;
@@ -125,13 +123,13 @@ namespace Roro.Workflow
                 if (this.SelectedNodes.Contains(node.Id))
                 {
                     o = new SelectedNodeStyle();
-                    r.Offset(this.NodeDragOffsetPoint);
+                    r.Offset(this.DragNodeOffsetPoint);
                 }
                 this.Paths.Add(node.Id, node.Render(g, r, o));
             }
-            if (this.NodeDragSelectRectangle != Rectangle.Empty)
+            if (this.SelectNodeRect != Rectangle.Empty)
             {
-                g.DrawRectangle(Pens.Purple, this.NodeDragSelectRectangle);
+                g.FillRectangle(PageRenderOptions.SelectionBackBrush, this.SelectNodeRect);
             }
         }
 

@@ -118,14 +118,14 @@ namespace Roro.Workflow
             var total = Stopwatch.StartNew();
             var sw = Stopwatch.StartNew();
             this.RenderBackground(e);
-            Console.WriteLine("RenderBack\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
             sw.Restart();
             this.RenderNodes(e);
-            Console.WriteLine("RenderNodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
             sw.Restart();
             this.RenderLines(e);
-            Console.WriteLine("RenderLines\t{0}", sw.ElapsedMilliseconds / 1000.0);
-            Console.WriteLine("Render Time\t{0}", total.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
         }
 
         private void RenderBackground(PaintEventArgs e)
@@ -157,7 +157,7 @@ namespace Roro.Workflow
             {
                 if (prev != null)
                 {
-                    g.DrawPath(o.LinePenWithArrow, pathFinder.FindPath(prev.Bounds.Center(), node.Bounds.Center()));
+                    g.DrawPath(o.LinePenWithArrow, pathFinder.GetPath(prev.Bounds.Center(), node.Bounds.Center()));
                 }
                 prev = node;
             }

@@ -15,7 +15,7 @@ namespace Roro.Workflow.UI
         public Form1()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
+            this.DoubleBuffered = true;
         }
 
         Document robot;

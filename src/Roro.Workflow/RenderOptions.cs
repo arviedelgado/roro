@@ -47,14 +47,11 @@ namespace Roro.Workflow
 
     public class DefaultLineStyle
     {
-        public Pen LinePen { get; protected set; }
-
         public Pen LinePenWithArrow { get; protected set; }
 
         public DefaultLineStyle()
         {
-            this.LinePen = new Pen(Color.FromArgb(250, 30, 30), 2);
-            this.LinePenWithArrow = new Pen(Color.FromArgb(250, 30, 30), 2);
+            this.LinePenWithArrow = new Pen(Color.FromArgb(30, 30, 250), 2);
             this.LinePenWithArrow.CustomEndCap = new AdjustableArrowCap(5, 5);
         }
     }

@@ -17,23 +17,10 @@ namespace Roro.Workflow
             this.Col = col;
         }
 
-        public CellLocation(Point pt)
-        {
-            this.Row = pt.Y;
-            this.Col = pt.X;
-        }
-
-        public CellLocation Offset(int row, int col)
+        public CellLocation Translate(int row, int col)
         {
             this.Row += row;
             this.Col += col;
-            return this;
-        }
-
-        public CellLocation Multiply(double scale)
-        {
-            this.Row = (int)(this.Row * scale);
-            this.Col = (int)(this.Col * scale);
             return this;
         }
 
@@ -45,6 +32,13 @@ namespace Roro.Workflow
         public static bool operator !=(CellLocation a, CellLocation z)
         {
             return !a.Equals(z);
+        }
+
+        public CellLocation Scale(double scale)
+        {
+            this.Row = (int)(this.Row * scale);
+            this.Col = (int)(this.Col * scale);
+            return this;
         }
 
         public override bool Equals(object obj)
@@ -64,12 +58,12 @@ namespace Roro.Workflow
 
         public int GetRowEffort(CellLocation other)
         {
-            return (int)Math.Sqrt(Math.Pow(this.Row - other.Row, 2));
+            return Math.Abs(this.Row - other.Row);
         }
 
         public int GetColEffort(CellLocation other)
         {
-            return (int)Math.Sqrt(Math.Pow(this.Col - other.Col, 2));
+            return Math.Abs(this.Col - other.Col);
         }
     }
 }

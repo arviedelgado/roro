@@ -25,23 +25,26 @@ namespace Roro.Workflow
 
         public int Priority { get; set; }
 
+        public int CurrentCost { get; set; }
+
         public int RowEffort { get; set; }
 
         public int ColEffort { get; set; }
 
-        public int Walkable { get; set; }
+        public bool IsWall { get; set; }
+
+        public bool IsOpen { get; set; }
 
         public Cell(int row, int col)
         {
             this.Location = new CellLocation(row, col);
-            this.RowEffort = int.MaxValue;
-            this.ColEffort = int.MaxValue;
-            this.Walkable = 0; // Yes
+            this.IsWall = false;
+            this.IsOpen = true;
         }
 
         public override string ToString()
         {
-            return string.Format("[Cell Row={0}, Col={1}, Walkable={2}]", this.Location.Row, this.Location.Col, this.Walkable);
+            return string.Format("[Cell Row={0}, Col={1}, IsWall={2}, IsOpen={3}]", this.Location.Row, this.Location.Col, this.IsWall, this.IsOpen);
         }
     }
 }

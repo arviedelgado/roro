@@ -31,10 +31,10 @@ namespace Roro.Workflow.UI
         {
             var doc = new Document();
             var page = doc.Pages.First();
-            page.Nodes.Add(new ProcessNode());
-            page.Nodes.Add(new DecisionNode());
-            page.Nodes.Add(new ProcessNode());
-            page.Nodes.Add(new EndNode());
+            page.AddNode<ProcessNode>();
+            page.AddNode<DecisionNode>();
+            page.AddNode<ProcessNode>();
+            page.AddNode<EndNode>();
 
             Console.Clear();
             Console.WriteLine("Serializing Object to XML . . .");

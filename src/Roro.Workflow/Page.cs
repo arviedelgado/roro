@@ -19,25 +19,31 @@ namespace Roro.Workflow
         public string Name { get; set; }
 
         [DataMember]
-        public List<Node> Nodes { get; private set; }
+        private List<Node> Nodes { get; set; }
 
-        internal Dictionary<Guid, GraphicsPath> Paths { get; }
+        [DataMember]
+        private List<Guid> SelectedNodes { get; set; }
 
-        internal List<Guid> SelectedNodes { get; private set; }
+        private Dictionary<Guid, GraphicsPath> RenderedNodes { get; }
 
         public Page()
         {
             this.Id = Guid.NewGuid();
             this.Name = string.Format("My{0}_{1}", this.GetType().Name, DateTime.Now.Ticks);
             this.Nodes = new List<Node>();
-            this.Nodes.Add(new StartNode());
-            this.Paths = new Dictionary<Guid, GraphicsPath>();
+            this.AddNode<StartNode>();
             this.SelectedNodes = new List<Guid>();
+            this.RenderedNodes = new Dictionary<Guid, GraphicsPath>();
+        }
+
+        public void AddNode<T>() where T : Node, new()
+        {
+            this.Nodes.Add(new T());
         }
 
         private Guid GetNodeIdFromPoint(Point pt)
         {
-            if (this.Paths.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Guid, GraphicsPath> item &&
+            if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Guid, GraphicsPath> item &&
                 this.GetNodeById(item.Key) is Node node)
             {
                 return node.Id;
@@ -52,14 +58,14 @@ namespace Roro.Workflow
 
         #region Events
 
+        private Control control;
+
         public void AttachEvents(Control control)
         {
             this.control = control;
             this.control.Paint += OnPaint;
             this.control.MouseDown += MouseEvents;
         }
-
-        private Control control;
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
@@ -69,11 +75,11 @@ namespace Roro.Workflow
             this.RenderBackground(e);
             Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
             sw.Restart();
-            this.RenderNodes(e);
-            Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
-            sw.Restart();
             this.RenderLines(e);
             Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            sw.Restart();
+            this.RenderNodes(e);
+            Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
             Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
         }
 
@@ -114,7 +120,7 @@ namespace Roro.Workflow
 
         private void RenderNodes(PaintEventArgs e)
         {
-            this.Paths.Clear();
+            this.RenderedNodes.Clear();
             var g = e.Graphics;
             foreach (var node in this.Nodes)
             {
@@ -125,7 +131,7 @@ namespace Roro.Workflow
                     o = new SelectedNodeStyle();
                     r.Offset(this.DragNodeOffsetPoint);
                 }
-                this.Paths.Add(node.Id, node.Render(g, r, o));
+                this.RenderedNodes.Add(node.Id, node.Render(g, r, o));
             }
             if (this.SelectNodeRect != Rectangle.Empty)
             {

@@ -167,10 +167,16 @@ namespace Roro.Workflow
             var a = endCell;
             while (a != startCell && a.Parent is Cell b)
             {
-                var aLoc = a.Location.Scale(PageRenderOptions.GridSize);
-                var bLoc = b.Location.Scale(PageRenderOptions.GridSize);
                 var aDir = a.Direction.Scale(-1);
                 var bDir = b.Direction.Scale(-1);
+                var aLoc = a.Location;
+                var bLoc = b.Location;
+                var cLoc = b.Location.Translate(bDir.Row, bDir.Col);
+                var rect = new Rectangle(
+                    PageRenderOptions.GridSize * Math.Min(aLoc.Col, Math.Min(bLoc.Col, cLoc.Col)),
+                    PageRenderOptions.GridSize * Math.Min(aLoc.Row, Math.Min(bLoc.Row, cLoc.Row)),
+                    PageRenderOptions.GridSize * 1,
+                    PageRenderOptions.GridSize * 1);
                 if (aDir == bDir)
                 {
                     if (bending)
@@ -185,73 +191,49 @@ namespace Roro.Workflow
                     {
                         // c b
                         //   a
-                        path.AddArc(
-                            bLoc.Col - PageRenderOptions.GridSize,
-                            bLoc.Row,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 0, -90);
+                        path.AddArc(rect, 0, -90);
                     }
                     else if (aDir == Cell.MoveUp && bDir == Cell.MoveRight)
                     {
                         // b c
                         // a
-                        path.AddArc(
-                            bLoc.Col,
-                            bLoc.Row,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 180, 90);
+                        path.AddArc(rect, 180, 90);
                     }
                     else if (aDir == Cell.MoveDown && bDir == Cell.MoveLeft)
                     {
                         //   a
                         // c b
-                        path.AddArc(
-                            bLoc.Col - PageRenderOptions.GridSize,
-                            bLoc.Row - PageRenderOptions.GridSize,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 0, 90);
+                        path.AddArc(rect, 0, 90);
                     }
                     else if (aDir == Cell.MoveDown && bDir == Cell.MoveRight)
                     {
                         // a
                         // b c
-                        path.AddArc(
-                            bLoc.Col,
-                            bLoc.Row - PageRenderOptions.GridSize,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 180, -90);
+                        path.AddArc(rect, 180, -90);
                     }
                     else if (aDir == Cell.MoveLeft && bDir == Cell.MoveUp)
                     {
                         // c
                         // b a
-                        path.AddArc(
-                            bLoc.Col,
-                            bLoc.Row - PageRenderOptions.GridSize,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 90, 90);
+                        path.AddArc(rect, 90, 90);
                     }
                     else if (aDir == Cell.MoveLeft && bDir == Cell.MoveDown)
                     {
                         // b a
                         // c
-                        path.AddArc(
-                            bLoc.Col,
-                            bLoc.Row,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, -90, -90);
+                        path.AddArc(rect, -90, -90);
                     }
                     else if (aDir == Cell.MoveRight && bDir == Cell.MoveUp)
                     {
                         //   c
                         // a b 
-                        path.AddArc(
-                            bLoc.Col - PageRenderOptions.GridSize,
-                            bLoc.Row - PageRenderOptions.GridSize,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, 90, -90);
+                        path.AddArc(rect, 90, -90);
                     }
                     else if (aDir == Cell.MoveRight && bDir == Cell.MoveDown)
                     {
                         // a b 
                         //   c
-                        path.AddArc(
-                            bLoc.Col - PageRenderOptions.GridSize,
-                            bLoc.Row,
-                            PageRenderOptions.GridSize, PageRenderOptions.GridSize, -90, 90);
+                        path.AddArc(rect, -90, 90);
                     }
                 }
                 a = b;

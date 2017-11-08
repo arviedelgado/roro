@@ -2,33 +2,33 @@
 
 Roro is a free open-source [Robotic Process Automation](https://en.wikipedia.org/wiki/Robotic_process_automation) software.
 
-This repository houses the newer `business-users-friendly` version of the app.
+This repository houses the newer *business-users-friendly* version of the app.
 
-The older `developer-friendly` version is now discontinued - http://roroscript.com
+The older *developer-friendly* version is now discontinued - http://roroscript.com
 
-See `src` folder for the C# source files.
+See [src](src) folder for the C# source files.
 
-See `bin` folder for the compiled binaries.
+See [bin](bin) folder for the compiled binaries.
 
 ## Platforms
 - [x] Windows 10
 - [ ] Windows Server
-## UI Automation
-- [x] Windows apps - Win32, .NET
-- [ ] Windows apps - UWP
-- [ ] Windows apps - Qt
-- [x] Web browsers - IE, Edge, Chrome
-- [x] Business app - SAP + NetWeaver
-- [ ] Business app - MainFrame
-- [ ] Business app - Excel
-- [ ] Business app - Outlook
-## AI Services
-- [ ] Image to Text - OCR
-- [ ] Speech to Text
-- [ ] Text to Speech
+## Automation
+- [x] Windows app - Win32
+- [ ] Windows app - UWP
+- [ ] Windows app - Qt
+- [x] Web browser - IE, Edge, Chrome `using Selenium`
+- [x] Business app - SAP + NetWeaver `using SapGuiScripting`
+- [ ] Business app - MainFrame `using hllapi`
+- [ ] Business app - Excel `using Office Interop`
+- [ ] Business app - Outlook `using Office Interop`
+## AI
+- [ ] Image to Text or OCR
+- [ ] Speech to Text or STT
+- [ ] Text to Speech or TTS
 - [ ] Face Detection
-- [ ] Natural Language Processing
+- [ ] Natural Language Processing `using LUIS`
 ## Roro Studio
-- [ ] Bot Creator - `PRIORITY`
-- [ ] Remote - Cotrol Room
-- [ ] Remote - Bot Runners
+- [ ] Control Room
+- [ ] Bot Creator
+- [ ] Bot Runners

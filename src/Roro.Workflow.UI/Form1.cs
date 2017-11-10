@@ -27,5 +27,11 @@ namespace Roro.Workflow.UI
             robot = Test.TestWorkflowSerialization();
             robot.Pages.First().AttachEvents(this);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Test.TestElementActivities();
+        }
     }
 }

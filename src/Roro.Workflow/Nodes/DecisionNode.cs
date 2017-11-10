@@ -10,6 +10,12 @@ namespace Roro.Workflow
 
         public Guid False { get; set; }
 
+        public DecisionNode()
+        {
+            this.Ports.Add(new TruePort());
+            this.Ports.Add(new FalsePort());
+        }
+
         public override Guid Execute()
         {
             Console.WriteLine("Execute: {0} {1}", this.Id, this.GetType().Name);
@@ -21,7 +27,7 @@ namespace Roro.Workflow
             this.True = id;
         }
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, DefaultNodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
             var points = new Point[]
             {
@@ -32,12 +38,15 @@ namespace Roro.Workflow
             };
             var path = new GraphicsPath();
             path.StartFigure();
-            path.AddPolygon(points);
+            //path.AddPolygon(points);
+            path.AddRectangle(r);
             path.CloseFigure();
             //
             g.FillPath(o.BackBrush, path);
             g.DrawPath(o.BorderPen, path);
             return path;
         }
+
+        public override Size GetSize() => new Size(8, 6);
     }
 }

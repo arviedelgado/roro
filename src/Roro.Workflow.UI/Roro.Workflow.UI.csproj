@@ -82,6 +82,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Roro.Activities.Element\Roro.Activities.Element.csproj">
+      <Project>{db4188b9-7008-4fb9-bc27-6bca69482801}</Project>
+      <Name>Roro.Activities.Element</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Roro.Workflow\Roro.Workflow.csproj">
       <Project>{dfa7c399-51b9-4391-8805-2731658965c6}</Project>
       <Name>Roro.Workflow</Name>

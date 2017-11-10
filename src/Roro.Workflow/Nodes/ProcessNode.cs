@@ -8,6 +8,11 @@ namespace Roro.Workflow
     {
         public Guid Next { get; set; }
 
+        public ProcessNode()
+        {
+            this.Ports.Add(new OutPort());
+        }
+
         public override Guid Execute()
         {
             Console.WriteLine("Execute: {0} {1}", this.Id, this.GetType().Name);
@@ -19,7 +24,7 @@ namespace Roro.Workflow
             this.Next = id;
         }
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, DefaultNodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
             var path = new GraphicsPath();
             path.StartFigure();
@@ -30,5 +35,7 @@ namespace Roro.Workflow
             g.DrawPath(o.BorderPen, path);
             return path;
         }
+
+        public override Size GetSize() => new Size(8, 6);
     }
 }

@@ -6,7 +6,7 @@ namespace Roro.Workflow
 {
     public sealed class PageRenderOptions
     {
-        public static int GridSize = 15;
+        public static int GridSize = 25;
 
         public static Pen GridPen = new Pen(Color.FromArgb(240, 240, 240), 1);
 
@@ -15,7 +15,7 @@ namespace Roro.Workflow
         public static Brush SelectionBackBrush = new SolidBrush(Color.FromArgb(50, 150, 150, 150));
     }
 
-    public class DefaultNodeStyle
+    public class NodeStyle
     {
         public Font Font { get; protected set; }
 
@@ -23,14 +23,19 @@ namespace Roro.Workflow
 
         public Pen BorderPen { get; protected set; }
 
+        public Brush PortBackBrush { get; protected set; }
+
+        public Pen PortBorderPen { get; protected set;  }
+
         public Brush BackBrush { get; protected set; }
 
-        public DefaultNodeStyle()
+        public NodeStyle()
         {
             this.Font = new Font("Verdana", 10);
-            this.FontBrush = new SolidBrush(Color.FromArgb(40, 240, 40));
-            this.BorderPen = new Pen(Color.FromArgb(100, 100, 100), 1);
-            this.BackBrush = new SolidBrush(Color.FromArgb(200, 220, 240));
+            this.BorderPen = new Pen(Color.FromArgb(100, 100, 100), 2);
+            this.BackBrush = new SolidBrush(PageRenderOptions.BackColor);
+            this.PortBackBrush = new SolidBrush(PageRenderOptions.BackColor);
+            this.PortBorderPen = this.BorderPen;
         }
 
         public StringFormat StringFormat = new StringFormat()
@@ -40,11 +45,11 @@ namespace Roro.Workflow
         };
     }
 
-    public class SelectedNodeStyle : DefaultNodeStyle
+    public class SelectedNodeStyle : NodeStyle
     {
         public SelectedNodeStyle()
         {
-            this.BorderPen = new Pen(Color.FromArgb(100, 100, 100), 2);
+            this.BackBrush = new SolidBrush(Color.FromArgb(200, 200, 250));
         }
     }
 
@@ -54,9 +59,29 @@ namespace Roro.Workflow
 
         public DefaultLineStyle()
         {
-            var arrowSize = PageRenderOptions.GridSize / 4f;
-            this.LinePenWithArrow = new Pen(Color.FromArgb(100, 100, 100), 1);
-            this.LinePenWithArrow.CustomEndCap = new AdjustableArrowCap(arrowSize, arrowSize);
+            this.LinePenWithArrow = new Pen(Color.FromArgb(100, 100, 100), 2);
+
+            using (GraphicsPath endCap = new GraphicsPath())
+            {
+                var width = PageRenderOptions.GridSize * 3 / 4 / 2 / this.LinePenWithArrow.Width;
+
+                endCap.AddLine(-width, -width - this.LinePenWithArrow.Width / 2, 0, -this.LinePenWithArrow.Width / 2);
+                endCap.AddLine(+width, -width - this.LinePenWithArrow.Width / 2, 0, -this.LinePenWithArrow.Width / 2);
+                this.LinePenWithArrow.CustomEndCap = new CustomLineCap(null, endCap);
+            }
+
+            //using (GraphicsPath startCap = new GraphicsPath())
+            //{
+            //    var width = PageRenderOptions.GridSize / 4 / this.LinePenWithArrow.Width;
+
+            //    startCap.AddEllipse(-width, -width, width * 2, width * 2);
+            //    this.LinePenWithArrow.CustomStartCap = new CustomLineCap(startCap, null);
+
+            //}
+
+            //var arrowSize = PageRenderOptions.GridSize / 4f;
+            //this.LinePenWithArrow = new Pen(Color.FromArgb(100, 100, 100), 1);
+            //this.LinePenWithArrow.CustomEndCap = new AdjustableArrowCap(arrowSize, arrowSize);
         }
     }
 }

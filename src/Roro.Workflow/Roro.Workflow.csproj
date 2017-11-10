@@ -44,22 +44,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ports\Port.cs" />
     <Compile Include="Page_MouseEvents.cs" />
-    <Compile Include="PathFinder\CellLocation.cs" />
-    <Compile Include="PathFinder\Cell.cs" />
-    <Compile Include="PriorityQueue.cs" />
-    <Compile Include="PathFinder\PathFinder.cs" />
+    <Compile Include="Helper\CellLocation.cs" />
+    <Compile Include="Helper\Cell.cs" />
+    <Compile Include="Helper\PriorityQueue.cs" />
+    <Compile Include="Helper\PathFinder.cs" />
     <Compile Include="RenderOptions.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="Document.cs" />
-    <Compile Include="DataContractSerializerHelper.cs" />
-    <Compile Include="ProcessNode.cs" />
-    <Compile Include="DecisionNode.cs" />
-    <Compile Include="EndNode.cs" />
-    <Compile Include="EndNodeActivity.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="StartNode.cs" />
-    <Compile Include="StartNodeActivity.cs" />
+    <Compile Include="Helper\DataContractSerializerHelper.cs" />
+    <Compile Include="Nodes\ProcessNode.cs" />
+    <Compile Include="Nodes\DecisionNode.cs" />
+    <Compile Include="Nodes\EndNode.cs" />
+    <Compile Include="Activities\EndNodeActivity.cs" />
+    <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\StartNode.cs" />
+    <Compile Include="Activities\StartNodeActivity.cs" />
     <Compile Include="Variable.cs" />
     <Compile Include="VariableCollection.cs" />
   </ItemGroup>

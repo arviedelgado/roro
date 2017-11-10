@@ -26,6 +26,8 @@ namespace Roro.Workflow
 
         private Dictionary<Guid, GraphicsPath> RenderedNodes { get; }
 
+        private Dictionary<Guid, GraphicsPath> RenderedPaths { get; }
+
         public Page()
         {
             this.Id = Guid.NewGuid();
@@ -34,6 +36,7 @@ namespace Roro.Workflow
             this.AddNode<StartNode>();
             this.SelectedNodes = new List<Guid>();
             this.RenderedNodes = new Dictionary<Guid, GraphicsPath>();
+            this.RenderedLines = new List<GraphicsPath>();
         }
 
         public void AddNode<T>() where T : Node, new()
@@ -71,12 +74,15 @@ namespace Roro.Workflow
         {
             Console.Clear();
             var total = Stopwatch.StartNew();
+
             var sw = Stopwatch.StartNew();
             this.RenderBackground(e);
             Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
+
             sw.Restart();
             this.RenderLines(e);
             Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
+
             sw.Restart();
             this.RenderNodes(e);
             Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
@@ -101,11 +107,13 @@ namespace Roro.Workflow
             }
         }
 
+        private List<GraphicsPath> RenderedLines { get; }
+
         private void RenderLines(PaintEventArgs e)
         {
             var g = e.Graphics;
             var o = new DefaultLineStyle();
-            var x = new DefaultNodeStyle();
+            var x = new NodeStyle();
             var pathFinder = new PathFinder(g, this.Nodes);
             Node prev = null;
             foreach (var node in this.Nodes)
@@ -125,13 +133,14 @@ namespace Roro.Workflow
             foreach (var node in this.Nodes)
             {
                 var r = node.Bounds;
-                var o = new DefaultNodeStyle();
+                var o = new NodeStyle();
                 if (this.SelectedNodes.Contains(node.Id))
                 {
                     o = new SelectedNodeStyle();
                     r.Offset(this.DragNodeOffsetPoint);
                 }
                 this.RenderedNodes.Add(node.Id, node.Render(g, r, o));
+                node.RenderPorts(g, r, o);
             }
             if (this.SelectNodeRect != Rectangle.Empty)
             {

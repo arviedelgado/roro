@@ -4,31 +4,29 @@ using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
-    public sealed class EndNode : Node
+    public sealed class StartNode : Node
     {
-        public EndNode()
+        public Guid Next { get; set; }
+
+        public StartNode()
         {
-            this.Activity = new EndNodeActivity();
+            this.Activity = new StartNodeActivity();
+            this.Ports.Add(new OutPort());
         }
 
         public override Guid Execute()
         {
             Console.WriteLine("Execute: {0} {1}", this.Id, this.GetType().Name);
-            return Guid.Empty;
+            return this.Next;
         }
 
         public override void SetNextTo(Guid id)
         {
-            Console.WriteLine("Error: Cannot set next to {0}.", this.GetType().Name);
+            this.Next = id;
         }
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, DefaultNodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
-            var midRect = new Rectangle(
-                r.X + r.Height / 2,
-                r.Y,
-                r.Width - r.Height,
-                r.Height);
             var leftRect = new Rectangle(
                 r.X,
                 r.Y,
@@ -49,5 +47,7 @@ namespace Roro.Workflow
             g.DrawPath(o.BorderPen, path);
             return path;
         }
+
+        public override Size GetSize() => new Size(8, 4);
     }
 }

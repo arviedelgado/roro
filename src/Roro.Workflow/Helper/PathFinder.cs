@@ -72,8 +72,8 @@ namespace Roro.Workflow
         {
             this.ResetTable();
 
-            var startLoc = new CellLocation(startPt.Y, startPt.X).Scale(1.0 / PageRenderOptions.GridSize).Translate(+2, 0);
-            var endLoc = new CellLocation(endPt.Y, endPt.X).Scale(1.0 / PageRenderOptions.GridSize).Translate(-2, 0);
+            var startLoc = new CellLocation(startPt.Y, startPt.X).Scale(1.0 / PageRenderOptions.GridSize).Translate(+1, 0);
+            var endLoc = new CellLocation(endPt.Y, endPt.X).Scale(1.0 / PageRenderOptions.GridSize).Translate(-1, 0);
 
             var startCell = this.Table[startLoc.Row, startLoc.Col];
             var endCell = this.Table[endLoc.Row, endLoc.Col];

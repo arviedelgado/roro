@@ -123,7 +123,7 @@ namespace Roro
             {
                 var e = this.pointEvent;
 
-                //Console.Clear();
+                Console.Clear();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("GET_QUERY_FROM_ELEMENT_FROM_POINT {0} {1}", e.X, e.Y);
@@ -191,7 +191,7 @@ namespace Roro
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR: LaunchWeb - {0}", ex.Message);
+                Console.WriteLine("ERROR: {1} - {0}", ex.Message, typeof(T).Name);
                 context = new IEContext();
             }
             context.GoToUrl(url);

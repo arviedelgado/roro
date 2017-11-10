@@ -8,23 +8,22 @@ namespace Roro.Workflow.UI
 
         public static void TestElementActivities()
         {
-            Console.WriteLine();
             Console.Clear();
 
-            //var desktop = new ElementBot();
-            //desktop.LaunchChrome("https://example.com");
-            //desktop.LaunchEdge("https://example.com");
-            //while (true)
-            //{
-            //    var query = desktop.Inspect();
-            //    var els = desktop.Query(query);
-            //    Console.WriteLine("{0} match found..", els.Count());
-            //    Console.WriteLine();
-            //    foreach (var el in els)
-            //    {
-            //        Console.WriteLine("{0} - {1}", el.Path, el.Bounds);
-            //    }
-            //}
+            var desktop = new ElementBot();
+            desktop.LaunchChrome("https://example.com");
+            desktop.LaunchEdge("https://example.com");
+            while (true)
+            {
+                var query = desktop.Inspect();
+                var els = desktop.Query(query);
+                Console.WriteLine("{0} match found..", els.Count());
+                Console.WriteLine();
+                foreach (var el in els)
+                {
+                    Console.WriteLine("{0} - {1}", el.Path, el.Bounds);
+                }
+            }
         }
 
         public static Document TestWorkflowSerialization()

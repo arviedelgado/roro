@@ -155,10 +155,7 @@ namespace Roro
 
         public object ExecuteScript(string script, params object[] args)
         {
-            Console.WriteLine("Executing script.. {0}", script);
-            var result = this.Driver.ExecuteScript(script, args);
-            Console.WriteLine("Executing script.. completed.");
-            return result;
+            return this.Driver.ExecuteScript(script, args);
         }
 
         #endregion

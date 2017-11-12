@@ -6,28 +6,7 @@ namespace Roro.Workflow
 {
     public sealed class DecisionNode : Node
     {
-        public Guid True { get; set; }
-
-        public Guid False { get; set; }
-
-        public DecisionNode()
-        {
-            this.Ports.Add(new TruePort());
-            this.Ports.Add(new FalsePort());
-        }
-
-        public override Guid Execute()
-        {
-            Console.WriteLine("Execute: {0} {1}", this.Id, this.GetType().Name);
-            return this.True;
-        }
-
-        public override void SetNextTo(Guid id)
-        {
-            this.True = id;
-        }
-
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
         {
             var points = new Point[]
             {
@@ -38,8 +17,7 @@ namespace Roro.Workflow
             };
             var path = new GraphicsPath();
             path.StartFigure();
-            //path.AddPolygon(points);
-            path.AddRectangle(r);
+            path.AddPolygon(points);
             path.CloseFigure();
             //
             g.FillPath(o.BackBrush, path);
@@ -47,6 +25,6 @@ namespace Roro.Workflow
             return path;
         }
 
-        public override Size GetSize() => new Size(8, 6);
+        public override Size GetSize() => new Size(4, 2);
     }
 }

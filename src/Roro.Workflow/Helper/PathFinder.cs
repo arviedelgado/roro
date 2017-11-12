@@ -68,12 +68,12 @@ namespace Roro.Workflow
             }
         }
 
-        public GraphicsPath GetPath(Point startPt, Point endPt)
+        public GraphicsPath GetPath(Rectangle startRect, Rectangle endRect)
         {
             this.ResetTable();
 
-            var startLoc = new CellLocation(startPt.Y, startPt.X).Scale(1.0 / PageRenderOptions.GridSize).Translate(+1, 0);
-            var endLoc = new CellLocation(endPt.Y, endPt.X).Scale(1.0 / PageRenderOptions.GridSize).Translate(-1, 0);
+           var startLoc = new CellLocation(startRect.Bottom, startRect.CenterX()).Scale(1.0 / PageRenderOptions.GridSize);
+            var endLoc = new CellLocation(endRect.Y, endRect.CenterX()).Scale(1.0 / PageRenderOptions.GridSize);
 
             var startCell = this.Table[startLoc.Row, startLoc.Col];
             var endCell = this.Table[endLoc.Row, endLoc.Col];
@@ -86,12 +86,13 @@ namespace Roro.Workflow
             startLoc.Scale(PageRenderOptions.GridSize);
             endLoc.Scale(PageRenderOptions.GridSize);
 
-            startPt = new Point(startLoc.Col, startLoc.Row);
-            endPt = new Point(endLoc.Col, endLoc.Row);
+            var startPt = new Point(startLoc.Col, startLoc.Row);
+            var endPt = new Point(endLoc.Col, endLoc.Row);
 
             path.AddLine(startPt, startPt);
             path.Reverse();
             path.AddLine(endPt, endPt);
+
             return path; 
         }
 

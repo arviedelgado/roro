@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ports\Port.cs" />
     <Compile Include="Page_MouseEvents.cs" />
     <Compile Include="Helper\CellLocation.cs" />
     <Compile Include="Helper\Cell.cs" />

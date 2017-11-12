@@ -1,28 +1,19 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace Roro.Workflow
 {
     public sealed class EndNode : Node
     {
-        public EndNode()
-        {
-            this.Activity = new EndNodeActivity();
-        }
-
-        public override Guid Execute()
-        {
-            Console.WriteLine("Execute: {0} {1}", this.Id, this.GetType().Name);
-            return Guid.Empty;
-        }
-
         public override void SetNextTo(Guid id)
         {
-            Console.WriteLine("Error: Cannot set next to {0}.", this.GetType().Name);
+            var message = string.Format("{0} cannot set next to {1}.", this.GetType().Name, id);
+            MessageBox.Show(message, "Action not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
         {
             var midRect = new Rectangle(
                 r.X + r.Height / 2,
@@ -50,6 +41,6 @@ namespace Roro.Workflow
             return path;
         }
 
-        public override Size GetSize() => new Size(8, 4);
+        public override Size GetSize() => new Size(4, 2);
     }
 }

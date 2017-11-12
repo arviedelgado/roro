@@ -6,26 +6,7 @@ namespace Roro.Workflow
 {
     public sealed class StartNode : Node
     {
-        public Guid Next { get; set; }
-
-        public StartNode()
-        {
-            this.Activity = new StartNodeActivity();
-            this.Ports.Add(new OutPort());
-        }
-
-        public override Guid Execute()
-        {
-            Console.WriteLine("Execute: {0} {1}", this.Id, this.GetType().Name);
-            return this.Next;
-        }
-
-        public override void SetNextTo(Guid id)
-        {
-            this.Next = id;
-        }
-
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
         {
             var leftRect = new Rectangle(
                 r.X,
@@ -48,6 +29,6 @@ namespace Roro.Workflow
             return path;
         }
 
-        public override Size GetSize() => new Size(8, 4);
+        public override Size GetSize() => new Size(4, 2);
     }
 }

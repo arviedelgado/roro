@@ -6,7 +6,7 @@ namespace Roro.Workflow
 {
     public sealed class PageRenderOptions
     {
-        public static int GridSize = 25;
+        public static int GridSize = 20;
 
         public static Pen GridPen = new Pen(Color.FromArgb(240, 240, 240), 1);
 
@@ -31,11 +31,11 @@ namespace Roro.Workflow
 
         public NodeStyle()
         {
-            this.Font = new Font("Verdana", 10);
+            this.Font = new Font("Verdana", 8);
             this.BorderPen = new Pen(Color.FromArgb(100, 100, 100), 2);
             this.BackBrush = new SolidBrush(PageRenderOptions.BackColor);
-            this.PortBackBrush = new SolidBrush(PageRenderOptions.BackColor);
-            this.PortBorderPen = this.BorderPen;
+            this.PortBackBrush = new SolidBrush(Color.FromArgb(150, 50, 150, 250));
+            this.PortBorderPen = new Pen(Color.FromArgb(100, 50, 100, 200), 0);
         }
 
         public StringFormat StringFormat = new StringFormat()
@@ -49,7 +49,7 @@ namespace Roro.Workflow
     {
         public SelectedNodeStyle()
         {
-            this.BackBrush = new SolidBrush(Color.FromArgb(200, 200, 250));
+            this.BackBrush = new SolidBrush(Color.FromArgb(250, 250, 150));
         }
     }
 

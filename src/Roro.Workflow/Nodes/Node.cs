@@ -22,34 +22,44 @@ namespace Roro.Workflow
         [DataMember]
         public Activity Activity { get; set; }
 
-        public List<Port> Ports { get; set; }
+        [DataMember]
+        public Guid Next { get; protected set; }
 
-        public abstract void SetNextTo(Guid id);
+        public virtual void SetNextTo(Guid id)
+        {
+            this.Next = id;
+        }
 
-        public abstract Guid Execute();
+        public virtual Guid Execute()
+        {
+            return this.Next;
+        }
 
         public Node()
         {
             this.Id = Guid.NewGuid();
             this.Name = string.Format("My{0}_{1}", this.GetType().Name, DateTime.Now.Ticks);
             this.Bounds = new Rectangle(
-                PageRenderOptions.GridSize * Helper.Between(3, 30),
-                PageRenderOptions.GridSize * Helper.Between(3, 30),
-                PageRenderOptions.GridSize * 4,
-                PageRenderOptions.GridSize * 2);
-            this.Ports = new List<Port>();
+                PageRenderOptions.GridSize * Helper.Between(4, 30),
+                PageRenderOptions.GridSize * Helper.Between(4, 30),
+                PageRenderOptions.GridSize * this.GetSize().Width,
+                PageRenderOptions.GridSize * this.GetSize().Height);
         }
 
         public abstract Size GetSize();
 
-        public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
+        public abstract GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o);
 
-        public void RenderPorts(Graphics g, Rectangle r, NodeStyle o)
+        public GraphicsPath RenderPort(Graphics g, Rectangle r, NodeStyle o)
         {
-            foreach (var port in this.Ports)
-            {
-                port.Render(g, r, o);
-            }
+            var portPoint = new Point(this.Bounds.CenterX(), this.Bounds.Bottom);
+            portPoint.Offset(-PageRenderOptions.GridSize / 2, -PageRenderOptions.GridSize / 2);
+            var portSize = new Size(PageRenderOptions.GridSize, PageRenderOptions.GridSize);
+            var portRect = new Rectangle(portPoint, portSize);
+            g.FillEllipse(o.PortBackBrush, portRect);
+            var portPath = new GraphicsPath();
+            portPath.AddEllipse(portRect);
+            return portPath;
         }
     }
 }

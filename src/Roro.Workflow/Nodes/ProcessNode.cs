@@ -6,25 +6,7 @@ namespace Roro.Workflow
 {
     public sealed class ProcessNode : Node
     {
-        public Guid Next { get; set; }
-
-        public ProcessNode()
-        {
-            this.Ports.Add(new OutPort());
-        }
-
-        public override Guid Execute()
-        {
-            Console.WriteLine("Execute: {0} {1}", this.Id, this.GetType().Name);
-            return this.Next;
-        }
-
-        public override void SetNextTo(Guid id)
-        {
-            this.Next = id;
-        }
-
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
         {
             var path = new GraphicsPath();
             path.StartFigure();
@@ -36,6 +18,6 @@ namespace Roro.Workflow
             return path;
         }
 
-        public override Size GetSize() => new Size(8, 6);
+        public override Size GetSize() => new Size(4, 2);
     }
 }

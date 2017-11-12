@@ -6,9 +6,13 @@ namespace Roro.Workflow
 {
     public partial class Page
     {
-        private Point DragNodeStartPoint { get; set; }
+        private Node LinkNodeStartPort { get; set; }
 
-        private Point DragNodeOffsetPoint { get; set; }
+        private Point LinkNodeEndPoint { get; set; }
+
+        private Point MoveNodeStartPoint { get; set; }
+
+        private Point MoveNodeOffsetPoint { get; set; }
 
         private Point SelectNodeStartPoint { get; set; }
 
@@ -16,20 +20,28 @@ namespace Roro.Workflow
 
         private void MouseEvents(object sender, MouseEventArgs e)
         {
-            // Select From Point
+            // Pick Node from Point
             this.control.MouseMove += this.SelectNodeFromPointCancel;
             this.control.MouseUp += this.SelectNodeFromPointEnd;
-            if (this.GetNodeById(this.GetNodeIdFromPoint(e.Location)) is Node node)
+            if (this.GetNodeById(this.GetPortIdFromPoint(e.Location)) is Node port)
             {
-                // Drag
-                this.control.MouseMove += this.DragNodeStart;
-                this.control.MouseUp += this.DragNodeCancel;
-                this.DragNodeStartPoint = e.Location;
-                this.DragNodeOffsetPoint = Point.Empty;
+                // Link Nodes
+                this.control.MouseMove += this.LinkNodeStart;
+                this.control.MouseUp += this.LinkNodeCancel;
+                this.LinkNodeStartPort = port;
+                this.LinkNodeEndPoint = Point.Empty;
+            }
+            else if (this.GetNodeById(this.GetNodeIdFromPoint(e.Location)) is Node node)
+            {
+                // Move Nodes
+                this.control.MouseMove += this.MoveNodeStart;
+                this.control.MouseUp += this.MoveNodeCancel;
+                this.MoveNodeStartPoint = e.Location;
+                this.MoveNodeOffsetPoint = Point.Empty;
             }
             else
             {
-                // Select From Rect
+                // Pick Nodes from Rectangle
                 this.control.MouseMove += this.SelectNodesFromRectStart;
                 this.control.MouseUp += this.SelectNodesFromRectCancel;
                 this.SelectNodeStartPoint = e.Location;
@@ -37,23 +49,65 @@ namespace Roro.Workflow
             }
         }
 
-        #region Drag Nodes
-
-        private void DragNodeCancel(object sender, MouseEventArgs e)
+        private void LinkNodeCancel(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.DragNodeStart;
-            this.control.MouseUp -= this.DragNodeCancel;
+            this.control.MouseMove -= this.LinkNodeStart;
+            this.control.MouseUp -= this.LinkNodeCancel;
         }
 
-        private void DragNodeStart(object sender, MouseEventArgs e)
+        private void LinkNodeStart(object sender, MouseEventArgs e)
+        {
+            this.control.MouseMove -= this.LinkNodeStart;
+            this.control.MouseUp -= this.LinkNodeCancel;
+            this.control.MouseMove += this.LinkingNode;
+            this.control.MouseUp += this.LinkNodeEnd;
+        }
+
+        private void LinkingNode(object sender, MouseEventArgs e)
+        {
+            this.LinkNodeEndPoint = e.Location;
+            this.control.Invalidate();
+        }
+
+        private void LinkNodeEnd(object sender, MouseEventArgs e)
+        {
+            this.control.MouseMove -= this.LinkingNode;
+            this.control.MouseUp -= this.LinkNodeEnd;
+            this.LinkNodeEndPoint = Point.Empty;
+            //
+            if (this.GetNodeById(this.GetNodeIdFromPoint(e.Location)) is Node node)
+            {
+                if (this.LinkNodeStartPort.Id != node.Id)
+                {
+                    this.LinkNodeStartPort.SetNextTo(node.Id);
+                }
+            }
+            else
+            {
+                this.LinkNodeStartPort.SetNextTo(Guid.Empty);
+            }
+            this.control.Invalidate();
+        }
+
+
+
+        #region Move Nodes
+
+        private void MoveNodeCancel(object sender, MouseEventArgs e)
+        {
+            this.control.MouseMove -= this.MoveNodeStart;
+            this.control.MouseUp -= this.MoveNodeCancel;
+        }
+
+        private void MoveNodeStart(object sender, MouseEventArgs e)
         {
             this.control.Cursor = Cursors.SizeAll;
-            this.control.MouseMove -= this.DragNodeStart;
-            this.control.MouseUp -= this.DragNodeCancel;
-            this.control.MouseMove += this.DraggingNode;
-            this.control.MouseUp += this.DragNodeEnd;
+            this.control.MouseMove -= this.MoveNodeStart;
+            this.control.MouseUp -= this.MoveNodeCancel;
+            this.control.MouseMove += this.MovingNode;
+            this.control.MouseUp += this.MoveNodeEnd;
             //
-            var nodeId = this.GetNodeIdFromPoint(this.DragNodeStartPoint);
+            var nodeId = this.GetNodeIdFromPoint(this.MoveNodeStartPoint);
             if (this.SelectedNodes.Contains(nodeId))
             {
                 ;
@@ -66,31 +120,31 @@ namespace Roro.Workflow
             this.control.Invalidate();
         }
 
-        private void DraggingNode(object sender, MouseEventArgs e)
+        private void MovingNode(object sender, MouseEventArgs e)
         {
-            var offsetX = e.X - this.DragNodeStartPoint.X;
-            var offsetY = e.Y - this.DragNodeStartPoint.Y;
-            this.DragNodeOffsetPoint = new Point(offsetX, offsetY);
+            var offsetX = e.X - this.MoveNodeStartPoint.X;
+            var offsetY = e.Y - this.MoveNodeStartPoint.Y;
+            this.MoveNodeOffsetPoint = new Point(offsetX, offsetY);
             this.control.Invalidate();
         }
 
-        private void DragNodeEnd(object sender, MouseEventArgs e)
+        private void MoveNodeEnd(object sender, MouseEventArgs e)
         {
             this.control.Cursor = Cursors.Default;
-            this.control.MouseMove -= this.DraggingNode;
-            this.control.MouseUp -= this.DragNodeEnd;
+            this.control.MouseMove -= this.MovingNode;
+            this.control.MouseUp -= this.MoveNodeEnd;
             //
-            var offsetX = (int)Math.Round((double)(e.X - this.DragNodeStartPoint.X) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
-            var offsetY = (int)Math.Round((double)(e.Y - this.DragNodeStartPoint.Y) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
-            this.DragNodeOffsetPoint = new Point(offsetX, offsetY);
+            var offsetX = (int)Math.Round((double)(e.X - this.MoveNodeStartPoint.X) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
+            var offsetY = (int)Math.Round((double)(e.Y - this.MoveNodeStartPoint.Y) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
+            this.MoveNodeOffsetPoint = new Point(offsetX, offsetY);
             foreach (var nodeId in this.SelectedNodes)
             {
                 var node = this.GetNodeById(nodeId);
                 var rect = node.Bounds;
-                rect.Offset(this.DragNodeOffsetPoint);
+                rect.Offset(this.MoveNodeOffsetPoint);
                 node.Bounds = rect;
             }
-            this.DragNodeOffsetPoint = Point.Empty;
+            this.MoveNodeOffsetPoint = Point.Empty;
             this.control.Invalidate();
         }
 

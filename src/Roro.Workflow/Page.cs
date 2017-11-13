@@ -21,10 +21,9 @@ namespace Roro.Workflow
         [DataMember]
         private List<Node> Nodes { get; set; }
 
-        [DataMember]
-        private HashSet<Guid> SelectedNodes { get; set; }
+        private HashSet<Node> SelectedNodes { get; set; }
 
-        private Dictionary<Guid, GraphicsPath> RenderedNodes { get; }
+        private Dictionary<Node, GraphicsPath> RenderedNodes { get; }
 
         public Page()
         {
@@ -32,28 +31,27 @@ namespace Roro.Workflow
             this.Name = string.Format("My{0}_{1}", this.GetType().Name, DateTime.Now.Ticks);
             this.Nodes = new List<Node>();
             this.AddNode<StartNode>();
-            this.SelectedNodes = new HashSet<Guid>();
-            this.RenderedNodes = new Dictionary<Guid, GraphicsPath>();
+            this.SelectedNodes = new HashSet<Node>();
+            this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
+        }
+
+        public Node GetNodeById(Guid id)
+        {
+            return this.Nodes.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Node GetNodeFromPoint(Point pt)
+        {
+            if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Node, GraphicsPath> item)
+            {
+                return item.Key;
+            }
+            return null;
         }
 
         public void AddNode<T>() where T : Node, new()
         {
             this.Nodes.Add(new T());
-        }
-
-        private Guid GetNodeIdFromPoint(Point pt)
-        {
-            if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Guid, GraphicsPath> item &&
-                this.GetNodeById(item.Key) is Node node)
-            {
-                return node.Id;
-            }
-            return Guid.Empty;
-        }
-
-        public Node GetNodeById(Guid id)
-        {
-            return this.Nodes.FirstOrDefault(x => x.Id.Equals(id));
         }
 
         #region Events
@@ -122,7 +120,7 @@ namespace Roro.Workflow
             foreach (var node in this.Nodes)
             {
                 node.RenderedPorts.Clear();
-                var nodePath = this.RenderedNodes[node.Id];
+                var nodePath = this.RenderedNodes[node];
                 nodePath.FillMode = FillMode.Winding;
                 foreach (var port in node.Ports)
                 {
@@ -142,7 +140,6 @@ namespace Roro.Workflow
             {
                 foreach (var port in node.Ports)
                 {
-                    port.Render(g, node.Bounds, o);
                     if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort.Id == port.Id)
                     {
                         g.DrawLine(o.LinePenWithArrow, port.Bounds.Center(), this.LinkNodeEndPoint);
@@ -163,12 +160,12 @@ namespace Roro.Workflow
             {
                 var r = node.Bounds;
                 var o = new NodeStyle();
-                if (this.SelectedNodes.Contains(node.Id))
+                if (this.SelectedNodes.Contains(node))
                 {
                     o = new SelectedNodeStyle();
                     r.Offset(this.MoveNodeOffsetPoint);
                 }
-                this.RenderedNodes.Add(node.Id, node.Render(g, r, o));
+                this.RenderedNodes.Add(node, node.Render(g, r, o));
             }
         }
 

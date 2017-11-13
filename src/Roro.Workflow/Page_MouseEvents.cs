@@ -23,7 +23,7 @@ namespace Roro.Workflow
             // Pick Node from Point
             this.control.MouseMove += this.SelectNodeFromPointCancel;
             this.control.MouseUp += this.SelectNodeFromPointEnd;
-            if (this.GetNodeById(this.GetNodeIdFromPoint(e.Location)) is Node node)
+            if (this.GetNodeFromPoint(e.Location) is Node node)
             {
                 if (node.GetPortFromPoint(e.Location) is Port port)
                 {
@@ -52,6 +52,8 @@ namespace Roro.Workflow
             }
         }
 
+        #region Link Nodes
+        
         private void LinkNodeCancel(object sender, MouseEventArgs e)
         {
             this.control.MouseMove -= this.LinkNodeStart;
@@ -78,7 +80,7 @@ namespace Roro.Workflow
             this.control.MouseUp -= this.LinkNodeEnd;
             this.LinkNodeEndPoint = Point.Empty;
             //
-            if (this.GetNodeById(this.GetNodeIdFromPoint(e.Location)) is Node node)
+            if (this.GetNodeFromPoint(e.Location) is Node node)
             {
                 if (this.LinkNodeStartPort.Id != node.Id)
                 {
@@ -92,7 +94,7 @@ namespace Roro.Workflow
             this.control.Invalidate();
         }
 
-
+        #endregion
 
         #region Move Nodes
 
@@ -110,7 +112,7 @@ namespace Roro.Workflow
             this.control.MouseMove += this.MovingNode;
             this.control.MouseUp += this.MoveNodeEnd;
             //
-            var nodeId = this.GetNodeIdFromPoint(this.MoveNodeStartPoint);
+            var nodeId = this.GetNodeFromPoint(this.MoveNodeStartPoint);
             if (this.SelectedNodes.Contains(nodeId))
             {
                 ;
@@ -140,9 +142,8 @@ namespace Roro.Workflow
             var offsetX = (int)Math.Round((double)(e.X - this.MoveNodeStartPoint.X) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
             var offsetY = (int)Math.Round((double)(e.Y - this.MoveNodeStartPoint.Y) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
             this.MoveNodeOffsetPoint = new Point(offsetX, offsetY);
-            foreach (var nodeId in this.SelectedNodes)
+            foreach (var node in this.SelectedNodes)
             {
-                var node = this.GetNodeById(nodeId);
                 var rect = node.Bounds;
                 rect.Offset(this.MoveNodeOffsetPoint);
                 node.Bounds = rect;
@@ -166,11 +167,11 @@ namespace Roro.Workflow
             this.control.MouseMove -= this.SelectNodeFromPointCancel;
             this.control.MouseUp -= this.SelectNodeFromPointEnd;
             //
-            var nodeId = this.GetNodeIdFromPoint(e.Location);
-            var ctrlDown = Control.ModifierKeys.HasFlag(Keys.Control);
-            if (nodeId == Guid.Empty)
+            var node = this.GetNodeFromPoint(e.Location);
+            var ctrl = Control.ModifierKeys.HasFlag(Keys.Control);
+            if (node == null)
             {
-                if (ctrlDown)
+                if (ctrl)
                 {
                     ;
                 }
@@ -180,11 +181,11 @@ namespace Roro.Workflow
                 }
 
             }
-            else if (this.SelectedNodes.Contains(nodeId))
+            else if (this.SelectedNodes.Contains(node))
             {
-                if (ctrlDown)
+                if (ctrl)
                 {
-                    this.SelectedNodes.Remove(nodeId);
+                    this.SelectedNodes.Remove(node);
                 }
                 else
                 {
@@ -193,7 +194,7 @@ namespace Roro.Workflow
             }
             else
             {
-                if (ctrlDown)
+                if (ctrl)
                 {
                     ;
                 }
@@ -201,7 +202,7 @@ namespace Roro.Workflow
                 {
                     this.SelectedNodes.Clear();
                 }
-                this.SelectedNodes.Add(nodeId);
+                this.SelectedNodes.Add(node);
             }
             this.control.Invalidate();
         }
@@ -251,10 +252,10 @@ namespace Roro.Workflow
             }
             foreach (var node in this.Nodes)
             {
-                if (!this.SelectedNodes.Contains(node.Id) &&
+                if (!this.SelectedNodes.Contains(node) &&
                      this.SelectNodeRect.IntersectsWith(node.Bounds))
                 {
-                    this.SelectedNodes.Add(node.Id);
+                    this.SelectedNodes.Add(node);
                 }
             }
             this.SelectNodeRect = Rectangle.Empty;

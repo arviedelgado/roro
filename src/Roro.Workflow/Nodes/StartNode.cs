@@ -6,7 +6,12 @@ namespace Roro.Workflow
 {
     public sealed class StartNode : Node
     {
-        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
+        public StartNode()
+        {
+            this.Ports.Add(new NextPort());
+        }
+
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
             var leftRect = new Rectangle(r.X, r.Y, r.Height, r.Height);
             var rightRect = new Rectangle(r.Right - r.Height, r.Y, r.Height, r.Height);

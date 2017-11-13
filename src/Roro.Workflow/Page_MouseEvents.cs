@@ -6,7 +6,7 @@ namespace Roro.Workflow
 {
     public partial class Page
     {
-        private Node LinkNodeStartPort { get; set; }
+        private Port LinkNodeStartPort { get; set; }
 
         private Point LinkNodeEndPoint { get; set; }
 
@@ -23,21 +23,24 @@ namespace Roro.Workflow
             // Pick Node from Point
             this.control.MouseMove += this.SelectNodeFromPointCancel;
             this.control.MouseUp += this.SelectNodeFromPointEnd;
-            if (this.GetNodeById(this.GetPortIdFromPoint(e.Location)) is Node port)
+            if (this.GetNodeById(this.GetNodeIdFromPoint(e.Location)) is Node node)
             {
-                // Link Nodes
-                this.control.MouseMove += this.LinkNodeStart;
-                this.control.MouseUp += this.LinkNodeCancel;
-                this.LinkNodeStartPort = port;
-                this.LinkNodeEndPoint = Point.Empty;
-            }
-            else if (this.GetNodeById(this.GetNodeIdFromPoint(e.Location)) is Node node)
-            {
-                // Move Nodes
-                this.control.MouseMove += this.MoveNodeStart;
-                this.control.MouseUp += this.MoveNodeCancel;
-                this.MoveNodeStartPoint = e.Location;
-                this.MoveNodeOffsetPoint = Point.Empty;
+                if (node.GetPortFromPoint(e.Location) is Port port)
+                {
+                    // Link Nodes
+                    this.control.MouseMove += this.LinkNodeStart;
+                    this.control.MouseUp += this.LinkNodeCancel;
+                    this.LinkNodeStartPort = port;
+                    this.LinkNodeEndPoint = Point.Empty;
+                }
+                else
+                {
+                    // Move Nodes
+                    this.control.MouseMove += this.MoveNodeStart;
+                    this.control.MouseUp += this.MoveNodeCancel;
+                    this.MoveNodeStartPoint = e.Location;
+                    this.MoveNodeOffsetPoint = Point.Empty;
+                }
             }
             else
             {
@@ -79,12 +82,12 @@ namespace Roro.Workflow
             {
                 if (this.LinkNodeStartPort.Id != node.Id)
                 {
-                    this.LinkNodeStartPort.SetNextTo(node.Id);
+                    this.LinkNodeStartPort.NextNodeId = node.Id;
                 }
             }
             else
             {
-                this.LinkNodeStartPort.SetNextTo(Guid.Empty);
+                this.LinkNodeStartPort.NextNodeId = Guid.Empty;
             }
             this.control.Invalidate();
         }

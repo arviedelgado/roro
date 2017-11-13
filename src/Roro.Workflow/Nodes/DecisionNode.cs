@@ -6,14 +6,20 @@ namespace Roro.Workflow
 {
     public sealed class DecisionNode : Node
     {
-        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
+        public DecisionNode()
+        {
+            this.Ports.Add(new TruePort());
+            this.Ports.Add(new FalsePort());
+        }
+
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
             var points = new Point[]
             {
-                new Point(r.X, r.CenterY()),
-                new Point(r.CenterX(), r.Y),
-                new Point(r.Right, r.CenterY()),
-                new Point(r.CenterX(), r.Bottom)
+                r.CenterTop(),
+                r.CenterRight(),
+                r.CenterBottom(),
+                r.CenterLeft()
             };
             var path = new GraphicsPath();
             path.StartFigure();

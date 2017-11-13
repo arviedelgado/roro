@@ -26,7 +26,7 @@ namespace Roro.Workflow
         [DataMember]
         public List<Port> Ports { get; }
 
-        public Dictionary<GraphicsPath, Port> RenderedPorts { get; }
+        public Dictionary<Port, GraphicsPath> RenderedPorts { get; }
 
         public Port GetPortById(Guid id)
         {
@@ -35,9 +35,9 @@ namespace Roro.Workflow
 
         public Port GetPortFromPoint(Point pt)
         {
-            if (this.RenderedPorts.FirstOrDefault(x => x.Key.IsVisible(pt)) is KeyValuePair<GraphicsPath, Port> item)
+            if (this.RenderedPorts.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Port, GraphicsPath> item)
             {
-                return item.Value;
+                return item.Key;
             }
             return null;
         }
@@ -57,7 +57,7 @@ namespace Roro.Workflow
                 PageRenderOptions.GridSize * this.GetSize().Width,
                 PageRenderOptions.GridSize * this.GetSize().Height);
             this.Ports = new List<Port>();
-            this.RenderedPorts = new Dictionary<GraphicsPath, Port>();
+            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
         }
 
         public abstract Size GetSize();

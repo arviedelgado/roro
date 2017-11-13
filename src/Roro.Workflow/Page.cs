@@ -127,7 +127,7 @@ namespace Roro.Workflow
                 foreach (var port in node.Ports)
                 {
                     var portPath = port.Render(g, node.Bounds, o);
-                    node.RenderedPorts.Add(portPath, port);
+                    node.RenderedPorts.Add(port, portPath);
                     nodePath.AddPath(portPath, false);
                 }
             }

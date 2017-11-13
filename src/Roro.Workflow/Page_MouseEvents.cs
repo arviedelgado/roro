@@ -82,10 +82,7 @@ namespace Roro.Workflow
             //
             if (this.GetNodeFromPoint(e.Location) is Node node)
             {
-                if (this.LinkNodeStartPort.Id != node.Id)
-                {
-                    this.LinkNodeStartPort.NextNodeId = node.Id;
-                }
+                this.LinkNodeStartPort.NextNodeId = node.Id;
             }
             else
             {

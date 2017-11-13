@@ -17,8 +17,21 @@ namespace Roro.Workflow
         [DataMember]
         public string Name { get; set; }
 
+        private Rectangle bounds;
+
         [DataMember]
-        public Rectangle Bounds { get; set; }
+        public Rectangle Bounds
+        {
+            get
+            {
+                foreach (var port in this.Ports)
+                {
+                    port.UpdateBounds(this.bounds);
+                }
+                return this.bounds;
+            }
+            set => this.bounds = value;
+        }
 
         [DataMember]
         public Activity Activity { get; set; }

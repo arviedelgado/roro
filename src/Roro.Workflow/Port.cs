@@ -21,17 +21,22 @@ namespace Roro.Workflow
             this.Id = Guid.NewGuid();
         }
 
-        public GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        internal void UpdateBounds(Rectangle r)
         {
             var portPoint = this.GetOffset(r);
-            portPoint.Offset(-PageRenderOptions.GridSize / 2, -PageRenderOptions.GridSize / 2);
             var portSize = new Size(PageRenderOptions.GridSize, PageRenderOptions.GridSize);
-            var portRect = new Rectangle(portPoint, portSize);
-            this.Bounds = portRect;
-            g.FillEllipse(this.GetBackBrush(), portRect);
+            portPoint.Offset(-portSize.Width / 2, -portSize.Height / 2);
+            var portBounds = new Rectangle(portPoint, portSize);
+            this.Bounds = portBounds;
+        }
+
+        public GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        {
+            this.UpdateBounds(r);
+            g.FillEllipse(this.GetBackBrush(), this.Bounds);
             var portPath = new GraphicsPath();
             portPath.StartFigure();
-            portPath.AddEllipse(portRect);
+            portPath.AddEllipse(this.Bounds);
             portPath.CloseFigure();
             return portPath;
         }

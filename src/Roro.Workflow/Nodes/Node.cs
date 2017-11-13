@@ -52,7 +52,7 @@ namespace Roro.Workflow
 
         public GraphicsPath RenderPort(Graphics g, Rectangle r, NodeStyle o)
         {
-            var portPoint = new Point(this.Bounds.CenterX(), this.Bounds.Bottom);
+            var portPoint = new Point(r.CenterX(), r.Bottom);
             portPoint.Offset(-PageRenderOptions.GridSize / 2, -PageRenderOptions.GridSize / 2);
             var portSize = new Size(PageRenderOptions.GridSize, PageRenderOptions.GridSize);
             var portRect = new Rectangle(portPoint, portSize);

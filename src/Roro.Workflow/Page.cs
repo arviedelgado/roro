@@ -140,7 +140,7 @@ namespace Roro.Workflow
             {
                 foreach (var port in node.Ports)
                 {
-                    if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort.Id == port.Id)
+                    if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort == port)
                     {
                         g.DrawLine(o.LinePenWithArrow, port.Bounds.Center(), this.LinkNodeEndPoint);
                     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -107,18 +106,5 @@ namespace Roro.Workflow
             }
             return result;
         }
-    }
-
-    public static class Helper
-    {
-        public static Point Center(this Rectangle rect) => new Point(rect.CenterX(), rect.CenterY());
-
-        public static int CenterX(this Rectangle rect) => rect.X + rect.Width / 2;
-
-        public static int CenterY(this Rectangle rect) => rect.Y + rect.Height / 2;
-
-        private static readonly Random Randomizer = new Random();
-
-        public static int Between(int min, int max) => Randomizer.Next(min, max);
     }
 }

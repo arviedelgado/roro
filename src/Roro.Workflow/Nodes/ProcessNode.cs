@@ -6,7 +6,12 @@ namespace Roro.Workflow
 {
     public sealed class ProcessNode : Node
     {
-        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
+        public ProcessNode()
+        {
+            this.Ports.Add(new NextPort());
+        }
+
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
             var path = new GraphicsPath();
             path.StartFigure();

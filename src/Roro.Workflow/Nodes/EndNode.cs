@@ -7,13 +7,7 @@ namespace Roro.Workflow
 {
     public sealed class EndNode : Node
     {
-        public override void SetNextTo(Guid id)
-        {
-            var message = string.Format("{0} cannot set next to {1}.", this.GetType().Name, id);
-            MessageBox.Show(message, "Action not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
             var leftRect = new Rectangle(r.X, r.Y, r.Height, r.Height);
             var rightRect = new Rectangle(r.Right - r.Height, r.Y, r.Height, r.Height);

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Roro.Workflow
@@ -23,16 +24,27 @@ namespace Roro.Workflow
         public Activity Activity { get; set; }
 
         [DataMember]
-        public Guid Next { get; protected set; }
+        public List<Port> Ports { get; }
 
-        public virtual void SetNextTo(Guid id)
+        public Dictionary<GraphicsPath, Port> RenderedPorts { get; }
+
+        public Port GetPortById(Guid id)
         {
-            this.Next = id;
+            return this.Ports.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Port GetPortFromPoint(Point pt)
+        {
+            if (this.RenderedPorts.FirstOrDefault(x => x.Key.IsVisible(pt)) is KeyValuePair<GraphicsPath, Port> item)
+            {
+                return item.Value;
+            }
+            return null;
         }
 
         public virtual Guid Execute()
         {
-            return this.Next;
+            return Guid.Empty;
         }
 
         public Node()
@@ -44,22 +56,12 @@ namespace Roro.Workflow
                 PageRenderOptions.GridSize * Helper.Between(4, 30),
                 PageRenderOptions.GridSize * this.GetSize().Width,
                 PageRenderOptions.GridSize * this.GetSize().Height);
+            this.Ports = new List<Port>();
+            this.RenderedPorts = new Dictionary<GraphicsPath, Port>();
         }
 
         public abstract Size GetSize();
 
-        public abstract GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o);
-
-        public GraphicsPath RenderPort(Graphics g, Rectangle r, NodeStyle o)
-        {
-            var portPoint = new Point(r.CenterX(), r.Bottom);
-            portPoint.Offset(-PageRenderOptions.GridSize / 2, -PageRenderOptions.GridSize / 2);
-            var portSize = new Size(PageRenderOptions.GridSize, PageRenderOptions.GridSize);
-            var portRect = new Rectangle(portPoint, portSize);
-            g.FillEllipse(o.PortBackBrush, portRect);
-            var portPath = new GraphicsPath();
-            portPath.AddEllipse(portRect);
-            return portPath;
-        }
+        public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
     }
 }

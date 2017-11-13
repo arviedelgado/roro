@@ -26,8 +26,6 @@ namespace Roro.Workflow
 
         private Dictionary<Guid, GraphicsPath> RenderedNodes { get; }
 
-        private Dictionary<Guid, GraphicsPath> RenderedPorts { get; }
-
         public Page()
         {
             this.Id = Guid.NewGuid();
@@ -36,7 +34,6 @@ namespace Roro.Workflow
             this.AddNode<StartNode>();
             this.SelectedNodes = new HashSet<Guid>();
             this.RenderedNodes = new Dictionary<Guid, GraphicsPath>();
-            this.RenderedPorts = new Dictionary<Guid, GraphicsPath>();
         }
 
         public void AddNode<T>() where T : Node, new()
@@ -54,19 +51,9 @@ namespace Roro.Workflow
             return Guid.Empty;
         }
 
-        private Guid GetPortIdFromPoint(Point pt)
-        {
-            if (this.RenderedPorts.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Guid, GraphicsPath> item &&
-                this.GetNodeById(item.Key) is Node node)
-            {
-                return node.Id;
-            }
-            return Guid.Empty;
-        }
-
         public Node GetNodeById(Guid id)
         {
-            return this.Nodes.FirstOrDefault(n => n.Id.Equals(id));
+            return this.Nodes.FirstOrDefault(x => x.Id.Equals(id));
         }
 
         #region Events
@@ -90,19 +77,24 @@ namespace Roro.Workflow
             Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
-            this.RenderLines(e);
-            Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
-
-            sw.Restart();
             this.RenderNodes(e);
             Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
+            sw.Restart();
+            this.RenderLines(e);
+            Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            
+            sw.Restart();
+            this.RenderPorts(e);
+            Console.WriteLine("Render Ports\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            
             if (this.SelectNodeRect != Rectangle.Empty)
             {
                 e.Graphics.FillRectangle(PageRenderOptions.SelectionBackBrush, this.SelectNodeRect);
             }
 
             Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
+
         }
 
         private void RenderBackground(PaintEventArgs e)
@@ -123,32 +115,50 @@ namespace Roro.Workflow
             }
         }
 
+        private void RenderPorts(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            var o = new NodeStyle();
+            foreach (var node in this.Nodes)
+            {
+                node.RenderedPorts.Clear();
+                var nodePath = this.RenderedNodes[node.Id];
+                nodePath.FillMode = FillMode.Winding;
+                foreach (var port in node.Ports)
+                {
+                    var portPath = port.Render(g, node.Bounds, o);
+                    node.RenderedPorts.Add(portPath, port);
+                    nodePath.AddPath(portPath, false);
+                }
+            }
+        }
+
         private void RenderLines(PaintEventArgs e)
         {
             var g = e.Graphics;
-            var o = new DefaultLineStyle();
-            var x = new NodeStyle();
-            var pathFinder = new PathFinder(g, this.Nodes);
+            var o = new NodeStyle();
+            var f = new PathFinder(g, this.Nodes);
             foreach (var node in this.Nodes)
             {
-                if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort.Id == node.Id)
+                foreach (var port in node.Ports)
                 {
-                    var nodePoint = new Point(node.Bounds.CenterX(), node.Bounds.Bottom);
-                    g.DrawLine(o.LinePenWithArrow, nodePoint, this.LinkNodeEndPoint);
-                }
-                else if (node.Next != Guid.Empty)
-                {
-                    var nextNode = this.GetNodeById(node.Next);
-                    g.DrawPath(o.LinePenWithArrow, pathFinder.GetPath(node.Bounds, nextNode.Bounds));
+                    port.Render(g, node.Bounds, o);
+                    if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort.Id == port.Id)
+                    {
+                        g.DrawLine(o.LinePenWithArrow, port.Bounds.Center(), this.LinkNodeEndPoint);
+                    }
+                    else if (this.GetNodeById(port.NextNodeId) is Node linkedNode)
+                    {
+                        g.DrawPath(o.LinePenWithArrow, f.GetPath(port.Bounds.Center(), linkedNode.Bounds.CenterTop()));
+                    }
                 }
             }
         }
 
         private void RenderNodes(PaintEventArgs e)
         {
-            this.RenderedNodes.Clear();
-            this.RenderedPorts.Clear();
             var g = e.Graphics;
+            this.RenderedNodes.Clear();
             foreach (var node in this.Nodes)
             {
                 var r = node.Bounds;
@@ -158,11 +168,7 @@ namespace Roro.Workflow
                     o = new SelectedNodeStyle();
                     r.Offset(this.MoveNodeOffsetPoint);
                 }
-                var nodePath = node.RenderNode(g, r, o);
-                var portPath = node.RenderPort(g, r, o);
-                nodePath.AddPath(portPath, false);
-                this.RenderedPorts.Add(node.Id, portPath);
-                this.RenderedNodes.Add(node.Id, nodePath);
+                this.RenderedNodes.Add(node.Id, node.Render(g, r, o));
             }
         }
 

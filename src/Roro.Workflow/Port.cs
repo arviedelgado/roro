@@ -46,20 +46,20 @@ namespace Roro.Workflow
     {
         public override Point GetOffset(Rectangle r) => r.CenterBottom();
 
-        public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(50, Color.Blue));
+        public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(100, Color.Blue));
     }
 
     public sealed class TruePort : Port
     {
         public override Point GetOffset(Rectangle r) => r.CenterBottom();
 
-        public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(50, Color.Green));
+        public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(100, Color.Green));
     }
 
     public sealed class FalsePort : Port
     {
         public override Point GetOffset(Rectangle r) => r.CenterRight();
 
-        public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(50, Color.Red));
+        public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(100, Color.Red));
     }
 }

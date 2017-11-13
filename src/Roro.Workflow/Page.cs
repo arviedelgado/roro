@@ -158,8 +158,11 @@ namespace Roro.Workflow
                     o = new SelectedNodeStyle();
                     r.Offset(this.MoveNodeOffsetPoint);
                 }
-                this.RenderedNodes.Add(node.Id, node.RenderNode(g, r, o));
-                this.RenderedPorts.Add(node.Id, node.RenderPort(g, r, o));
+                var nodePath = node.RenderNode(g, r, o);
+                var portPath = node.RenderPort(g, r, o);
+                nodePath.AddPath(portPath, false);
+                this.RenderedPorts.Add(node.Id, portPath);
+                this.RenderedNodes.Add(node.Id, nodePath);
             }
         }
 

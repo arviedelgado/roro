@@ -8,16 +8,8 @@ namespace Roro.Workflow
     {
         public override GraphicsPath RenderNode(Graphics g, Rectangle r, NodeStyle o)
         {
-            var leftRect = new Rectangle(
-                r.X,
-                r.Y,
-                r.Height,
-                r.Height);
-            var rightRect = new Rectangle(
-                r.Right - r.Height,
-                r.Y,
-                r.Height,
-                r.Height);
+            var leftRect = new Rectangle(r.X, r.Y, r.Height, r.Height);
+            var rightRect = new Rectangle(r.Right - r.Height, r.Y, r.Height, r.Height);
             var path = new GraphicsPath();
             path.StartFigure();
             path.AddArc(leftRect, 90, 180);

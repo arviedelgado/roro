@@ -143,7 +143,7 @@ namespace Roro.Workflow
             {
                 var rect = node.Bounds;
                 rect.Offset(this.MoveNodeOffsetPoint);
-                node.Bounds = rect;
+                node.SetBounds(rect);
             }
             this.MoveNodeOffsetPoint = Point.Empty;
             this.control.Invalidate();

@@ -59,13 +59,19 @@ namespace Roro.Workflow
 
         private SKControl control;
 
-        public void AttachEvents(Control parent)
+        private PropertyGrid propGrid;
+
+        public void AttachEvents(Control parent, PropertyGrid propGrid)
         {
             this.control = new SKControl();
+            this.control.Dock = DockStyle.Fill;
+            this.propGrid = propGrid;
+            this.propGrid.PropertyValueChanged += (s, e) => this.control.Invalidate();
+
             this.control.PaintSurface += OnPaintSurface;
             this.control.MouseDown += MouseEvents;
+   
             parent.Controls.Add(this.control);
-            this.control.Dock = DockStyle.Fill;
         }
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
@@ -101,6 +107,8 @@ namespace Roro.Workflow
             Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
             Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);
 
+            // Update Property Grid
+            this.propGrid.SelectedObject = this.SelectedNodes.Count == 1 ? this.SelectedNodes.First() : null;
         }
 
         private void RenderBackground(SKPaintSurfaceEventArgs e)
@@ -148,13 +156,13 @@ namespace Roro.Workflow
             using (var p = new SKPaint() { IsAntialias = true })
             {
                 p.IsStroke = true;
-                p.StrokeWidth = o.LinePenWithArrow.Width;
+                p.StrokeWidth = o.LinePen.Width;
 
                 foreach (var node in this.Nodes)
                 {
                     foreach (var port in node.Ports)
                     {
-                        p.Color = new Pen(port.GetBackBrush()).Color.ToSKColor();
+                        p.Color = new Pen(port.GetBackBrush()).Color.ToSKColor().WithAlpha(255);
                         if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort == port)
                         {
                             g.DrawLine(port.Bounds.Center().X, port.Bounds.Center().Y, this.LinkNodeEndPoint.X, this.LinkNodeEndPoint.Y, p);
@@ -182,10 +190,10 @@ namespace Roro.Workflow
                     r.Offset(this.MoveNodeOffsetPoint);
                 }
                 this.RenderedNodes.Add(node, node.Render(g, r, o));
+                node.RenderText(g, r, o);
             }
         }
 
         #endregion
-
     }
 }

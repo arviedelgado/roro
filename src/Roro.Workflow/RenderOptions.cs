@@ -27,24 +27,15 @@ namespace Roro.Workflow
 
         public Brush BackBrush { get; protected set; }
 
-        public Pen LinePenWithArrow { get; protected set; }
+        public Pen LinePen { get; protected set; }
 
 
         public NodeStyle()
         {
-            this.Font = new Font("Verdana", 8);
-            this.BorderPen = new Pen(Color.FromArgb(100, 100, 100), 2);
+            this.BorderPen = new Pen(Color.FromArgb(100, 100, 100), 1);
             this.BackBrush = new SolidBrush(PageRenderOptions.BackColor);
             this.PortBackBrush = new SolidBrush(Color.FromArgb(150, 50, 150, 250));
-            this.LinePenWithArrow = new Pen(Color.FromArgb(100, 100, 100), 2);
-            using (GraphicsPath endCap = new GraphicsPath())
-            {
-                var width = PageRenderOptions.GridSize * 3 / 4 / 2 / this.LinePenWithArrow.Width;
-
-                endCap.AddLine(-width, -width - this.LinePenWithArrow.Width / 2, 0, -this.LinePenWithArrow.Width / 2);
-                endCap.AddLine(+width, -width - this.LinePenWithArrow.Width / 2, 0, -this.LinePenWithArrow.Width / 2);
-                this.LinePenWithArrow.CustomEndCap = new CustomLineCap(null, endCap);
-            }
+            this.LinePen = new Pen(Color.FromArgb(100, 100, 100), 1);
         }
 
         public StringFormat StringFormat = new StringFormat()

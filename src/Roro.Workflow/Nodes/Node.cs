@@ -1,4 +1,5 @@
 ﻿using Roro.Activities;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -35,7 +36,7 @@ namespace Roro.Workflow
         [DataMember]
         public List<Port> Ports { get; }
 
-        public Dictionary<Port, GraphicsPath> RenderedPorts { get; }
+        public Dictionary<Port, SKPath> RenderedPorts { get; }
 
         public Port GetPortById(Guid id)
         {
@@ -44,7 +45,7 @@ namespace Roro.Workflow
 
         public Port GetPortFromPoint(Point pt)
         {
-            if (this.RenderedPorts.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Port, GraphicsPath> item)
+            if (this.RenderedPorts.FirstOrDefault(x => x.Value.Contains(pt.X, pt.Y)) is KeyValuePair<Port, SKPath> item)
             {
                 return item.Key;
             }
@@ -66,11 +67,11 @@ namespace Roro.Workflow
                 PageRenderOptions.GridSize * this.GetSize().Width,
                 PageRenderOptions.GridSize * this.GetSize().Height);
             this.Ports = new List<Port>();
-            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
+            this.RenderedPorts = new Dictionary<Port, SKPath>();
         }
 
         public abstract Size GetSize();
 
-        public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
+        public abstract SKPath Render(SKCanvas g, Rectangle r, NodeStyle o);
     }
 }

@@ -28,7 +28,11 @@ See [bin](bin) folder for the compiled binaries.
 - [ ] Text to Speech or TTS
 - [ ] Face Detection
 - [ ] Natural Language Processing `using LUIS`
-## Roro Studio
+## Studio
 - [ ] Control Room
 - [ ] Bot Creator
 - [ ] Bot Runners
+
+## Roro uses the following open source projects
+- [Selenium](https://github.com/SeleniumHQ/selenium) for web browser automation
+- [SkiaSharp](https://github.com/mono/SkiaSharp) for fast graphics rendering

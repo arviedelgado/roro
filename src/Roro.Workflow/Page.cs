@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
@@ -23,7 +24,7 @@ namespace Roro.Workflow
 
         private HashSet<Node> SelectedNodes { get; set; }
 
-        private Dictionary<Node, GraphicsPath> RenderedNodes { get; }
+        private Dictionary<Node, SKPath> RenderedNodes { get; }
 
         public Page()
         {
@@ -32,7 +33,7 @@ namespace Roro.Workflow
             this.Nodes = new List<Node>();
             this.AddNode<StartNode>();
             this.SelectedNodes = new HashSet<Node>();
-            this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
+            this.RenderedNodes = new Dictionary<Node, SKPath>();
         }
 
         public Node GetNodeById(Guid id)
@@ -42,7 +43,7 @@ namespace Roro.Workflow
 
         public Node GetNodeFromPoint(Point pt)
         {
-            if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt)) is KeyValuePair<Node, GraphicsPath> item)
+            if (this.RenderedNodes.FirstOrDefault(x => x.Value.Contains(pt.X, pt.Y)) is KeyValuePair<Node, SKPath> item)
             {
                 return item.Key;
             }
@@ -56,16 +57,18 @@ namespace Roro.Workflow
 
         #region Events
 
-        private Control control;
+        private SKControl control;
 
-        public void AttachEvents(Control control)
+        public void AttachEvents(Control parent)
         {
-            this.control = control;
-            this.control.Paint += OnPaint;
+            this.control = new SKControl();
+            this.control.PaintSurface += OnPaintSurface;
             this.control.MouseDown += MouseEvents;
+            parent.Controls.Add(this.control);
+            this.control.Dock = DockStyle.Fill;
         }
 
-        private void OnPaint(object sender, PaintEventArgs e)
+        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             Console.Clear();
             var total = Stopwatch.StartNew();
@@ -81,81 +84,93 @@ namespace Roro.Workflow
             sw.Restart();
             this.RenderLines(e);
             Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
-            
+
             sw.Restart();
             this.RenderPorts(e);
             Console.WriteLine("Render Ports\t{0}", sw.ElapsedMilliseconds / 1000.0);
-            
+
             if (this.SelectNodeRect != Rectangle.Empty)
             {
-                e.Graphics.FillRectangle(PageRenderOptions.SelectionBackBrush, this.SelectNodeRect);
+                using (var p = new SKPaint() { IsAntialias = true })
+                {
+                    p.Color = new Pen(PageRenderOptions.SelectionBackBrush).Color.ToSKColor();
+                    e.Surface.Canvas.DrawRect(this.SelectNodeRect.ToSKRect(), p);
+                }
             }
 
             Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);
 
         }
 
-        private void RenderBackground(PaintEventArgs e)
+        private void RenderBackground(SKPaintSurfaceEventArgs e)
         {
-            var g = e.Graphics;
-            var r = e.ClipRectangle;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            g.Clear(PageRenderOptions.BackColor);
-
-            for (var y = 0; y < r.Height; y += PageRenderOptions.GridSize)
+            var r = e.Info.Rect;
+            var g = e.Surface.Canvas;
+            using (var p = new SKPaint())
             {
-                g.DrawLine(PageRenderOptions.GridPen, 0, y, r.Width, y);
-            }
-            for (var x = 0; x < r.Width; x += PageRenderOptions.GridSize)
-            {
-                g.DrawLine(PageRenderOptions.GridPen, x, 0, x, r.Height);
+                g.Clear(PageRenderOptions.BackColor.ToSKColor());
+                p.Color = PageRenderOptions.GridPen.Color.ToSKColor();
+                p.StrokeWidth = PageRenderOptions.GridPen.Width;
+                for (var y = 0; y < r.Height; y += PageRenderOptions.GridSize)
+                {
+                    g.DrawLine(0, y, r.Width, y, p);
+                }
+                for (var x = 0; x < r.Width; x += PageRenderOptions.GridSize)
+                {
+                    g.DrawLine(x, 0, x, r.Height, p);
+                }
             }
         }
 
-        private void RenderPorts(PaintEventArgs e)
+        private void RenderPorts(SKPaintSurfaceEventArgs e)
         {
-            var g = e.Graphics;
+            var g = e.Surface.Canvas;
             var o = new NodeStyle();
             foreach (var node in this.Nodes)
             {
                 node.RenderedPorts.Clear();
                 var nodePath = this.RenderedNodes[node];
-                nodePath.FillMode = FillMode.Winding;
                 foreach (var port in node.Ports)
                 {
                     var portPath = port.Render(g, node.Bounds, o);
                     node.RenderedPorts.Add(port, portPath);
-                    nodePath.AddPath(portPath, false);
+                    nodePath.AddPath(portPath, SKPathAddMode.Append);
                 }
             }
         }
 
-        private void RenderLines(PaintEventArgs e)
+        private void RenderLines(SKPaintSurfaceEventArgs e)
         {
-            var g = e.Graphics;
+            var g = e.Surface.Canvas;
             var o = new NodeStyle();
-            var f = new PathFinder(g, this.Nodes);
-            foreach (var node in this.Nodes)
+            var f = new PathFinder(this.Nodes);
+            using (var p = new SKPaint() { IsAntialias = true })
             {
-                foreach (var port in node.Ports)
+                p.IsStroke = true;
+                p.StrokeWidth = o.LinePenWithArrow.Width;
+
+                foreach (var node in this.Nodes)
                 {
-                    o.LinePenWithArrow.Color = new Pen(port.GetBackBrush()).Color;
-                    if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort == port)
+                    foreach (var port in node.Ports)
                     {
-                        g.DrawLine(o.LinePenWithArrow, port.Bounds.Center(), this.LinkNodeEndPoint);
-                    }
-                    else if (this.GetNodeById(port.NextNodeId) is Node linkedNode)
-                    {
-                        g.DrawPath(o.LinePenWithArrow, f.GetPath(port.Bounds.Center(), linkedNode.Bounds.CenterTop()));
+                        p.Color = new Pen(port.GetBackBrush()).Color.ToSKColor();
+                        if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort == port)
+                        {
+                            g.DrawLine(port.Bounds.Center().X, port.Bounds.Center().Y, this.LinkNodeEndPoint.X, this.LinkNodeEndPoint.Y, p);
+                        }
+                        else if (this.GetNodeById(port.NextNodeId) is Node linkedNode)
+                        {
+                            g.DrawPath(f.GetPath(port.Bounds.Center(), linkedNode.Bounds.CenterTop()), p);
+                        }
                     }
                 }
             }
         }
 
-        private void RenderNodes(PaintEventArgs e)
+        private void RenderNodes(SKPaintSurfaceEventArgs e)
         {
-            var g = e.Graphics;
+            var g = e.Surface.Canvas;
             this.RenderedNodes.Clear();
             foreach (var node in this.Nodes)
             {

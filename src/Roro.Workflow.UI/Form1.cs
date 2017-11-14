@@ -18,13 +18,23 @@ namespace Roro.Workflow.UI
             this.Width = 800;
             this.Height = 600;
             robot = Test.TestWorkflowSerialization();
-            robot.Pages.First().AttachEvents(this.panel1);
+            robot.Pages.First().AttachEvents(this.panel1, this.propertyGrid1);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             this.Hide();
             Test.TestElementActivities();
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace Roro.Workflow
 {
@@ -12,23 +15,27 @@ namespace Roro.Workflow
             this.Ports.Add(new FalsePort());
         }
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override SKPath Render(SKCanvas g, Rectangle r, NodeStyle o)
         {
-            var points = new Point[]
+            var skPath = new SKPath();
+            var skPoints = new SKPoint[]
             {
-                r.CenterTop(),
-                r.CenterRight(),
-                r.CenterBottom(),
-                r.CenterLeft()
+                r.CenterTop().ToSKPoint(),
+                r.CenterRight().ToSKPoint(),
+                r.CenterBottom().ToSKPoint(),
+                r.CenterLeft().ToSKPoint()
             };
-            var path = new GraphicsPath();
-            path.StartFigure();
-            path.AddPolygon(points);
-            path.CloseFigure();
-            //
-            g.FillPath(o.BackBrush, path);
-            g.DrawPath(o.BorderPen, path);
-            return path;
+            skPath.AddPoly(skPoints);
+            using (var p = new SKPaint() { IsAntialias = true })
+            {
+                p.Color = new Pen(o.BackBrush).Color.ToSKColor();
+                g.DrawPath(skPath, p);
+                p.IsStroke = true;
+                p.Color = o.BorderPen.Color.ToSKColor();
+                p.StrokeWidth = o.BorderPen.Width;
+                g.DrawPath(skPath, p);
+            }
+            return skPath;
         }
 
         public override Size GetSize() => new Size(4, 2);

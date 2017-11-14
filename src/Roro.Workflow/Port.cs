@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -30,15 +32,17 @@ namespace Roro.Workflow
             this.Bounds = portBounds;
         }
 
-        public GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public SKPath Render(SKCanvas g, Rectangle r, NodeStyle o)
         {
             this.UpdateBounds(r);
-            g.FillEllipse(this.GetBackBrush(), this.Bounds);
-            var portPath = new GraphicsPath();
-            portPath.StartFigure();
-            portPath.AddEllipse(this.Bounds);
-            portPath.CloseFigure();
-            return portPath;
+            var skPath = new SKPath();
+            skPath.AddCircle(this.Bounds.Center().X, this.Bounds.Center().Y, this.Bounds.Center().Y - this.Bounds.Y);
+            using (var p = new SKPaint() { IsAntialias = true })
+            {
+                p.Color = new Pen(this.GetBackBrush()).Color.ToSKColor();
+                g.DrawPath(skPath, p);
+                return skPath;
+            }
         }
     }
 

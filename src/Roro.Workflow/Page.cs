@@ -57,21 +57,26 @@ namespace Roro.Workflow
 
         #region Events
 
-        private SKControl control;
+        private SKControl skWorkspace;
 
         private PropertyGrid propGrid;
 
-        public void AttachEvents(Control parent, PropertyGrid propGrid)
+        public void AttachEvents(Panel skWorkspaceParent, Panel propGridParent)
         {
-            this.control = new SKControl();
-            this.control.Dock = DockStyle.Fill;
-            this.propGrid = propGrid;
-            this.propGrid.PropertyValueChanged += (s, e) => this.control.Invalidate();
-
-            this.control.PaintSurface += OnPaintSurface;
-            this.control.MouseDown += MouseEvents;
-   
-            parent.Controls.Add(this.control);
+            //
+            this.skWorkspace = new SKControl();
+            this.skWorkspace.Dock = DockStyle.Fill;
+            this.skWorkspace.PaintSurface += OnPaintSurface;
+            this.skWorkspace.MouseDown += MouseEvents;
+            skWorkspaceParent.Controls.Add(this.skWorkspace);
+            //
+            this.propGrid = new PropertyGrid();
+            this.propGrid.Dock = DockStyle.Fill;
+            this.propGrid.PropertyValueChanged += (s, e) => this.skWorkspace.Invalidate();
+            this.propGrid.PropertySort = PropertySort.CategorizedAlphabetical;
+            this.propGrid.ToolbarVisible = false;
+            this.propGrid.LineColor = Color.FromArgb(230, 230, 230);
+            propGridParent.Controls.Add(this.propGrid);
         }
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
@@ -108,7 +113,7 @@ namespace Roro.Workflow
             Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);
 
             // Update Property Grid
-            this.propGrid.SelectedObject = this.SelectedNodes.Count == 1 ? this.SelectedNodes.First() : null;
+            this.propGrid.SelectedObject = this.SelectedNodes.Count == 1 ? this.SelectedNodes.First().Activity : null;
         }
 
         private void RenderBackground(SKPaintSurfaceEventArgs e)
@@ -157,7 +162,6 @@ namespace Roro.Workflow
             {
                 p.IsStroke = true;
                 p.StrokeWidth = o.LinePen.Width;
-
                 foreach (var node in this.Nodes)
                 {
                     foreach (var port in node.Ports)

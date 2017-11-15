@@ -1,9 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Drawing.Design;
 using System.Runtime.Serialization;
 
 namespace Roro.Activities
 {
     [DataContract]
+    [TypeConverter(typeof(ArgumentTypeConverter))]
+    [Editor(typeof(ArgumentTypeEditor), typeof(UITypeEditor))]
     public abstract class Argument : ICloneable
     {
         [DataMember]
@@ -41,6 +45,6 @@ namespace Roro.Activities
 
     public sealed class OutArgument<T> : OutArgument
     {
- 
+
     }
 }

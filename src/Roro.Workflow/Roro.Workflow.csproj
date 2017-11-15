@@ -77,6 +77,10 @@
     <Compile Include="VariableCollection.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Roro.Activities.Excel\Roro.Activities.Excel.csproj">
+      <Project>{1ba8b7ca-6bcb-434e-b7a8-4268962d35dd}</Project>
+      <Name>Roro.Activities.Excel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
       <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
       <Name>Roro.Activities</Name>

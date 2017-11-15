@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Roro.Activities
 {
     [DataContract]
+    [TypeConverter(typeof(ActivityTypeConverter))]
     public abstract class Activity
     {
         [DataMember]

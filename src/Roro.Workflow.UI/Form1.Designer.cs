@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.skWorkspaceParent = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.propGridParent = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,16 +47,15 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // panel1
+            // skWorkspaceParent
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(504, 57);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(548, 319);
-            this.panel1.TabIndex = 1;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            this.skWorkspaceParent.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.skWorkspaceParent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skWorkspaceParent.Location = new System.Drawing.Point(504, 57);
+            this.skWorkspaceParent.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.skWorkspaceParent.Name = "skWorkspaceParent";
+            this.skWorkspaceParent.Size = new System.Drawing.Size(548, 319);
+            this.skWorkspaceParent.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
@@ -66,8 +65,8 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Controls.Add(this.button1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.propertyGrid1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.skWorkspaceParent, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.propGridParent, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -77,17 +76,14 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1056, 379);
             this.tableLayoutPanel1.TabIndex = 2;
-            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
-            // propertyGrid1
+            // propGridParent
             // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.propertyGrid1.Location = new System.Drawing.Point(4, 57);
-            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(492, 319);
-            this.propertyGrid1.TabIndex = 2;
+            this.propGridParent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propGridParent.Location = new System.Drawing.Point(3, 57);
+            this.propGridParent.Name = "propGridParent";
+            this.propGridParent.Size = new System.Drawing.Size(494, 319);
+            this.propGridParent.TabIndex = 2;
             // 
             // Form1
             // 
@@ -108,9 +104,9 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel skWorkspaceParent;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.Panel propGridParent;
     }
 }
 

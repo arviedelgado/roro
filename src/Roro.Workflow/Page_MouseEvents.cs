@@ -21,23 +21,23 @@ namespace Roro.Workflow
         private void MouseEvents(object sender, MouseEventArgs e)
         {
             // Pick Node from Point
-            this.control.MouseMove += this.SelectNodeFromPointCancel;
-            this.control.MouseUp += this.SelectNodeFromPointEnd;
+            this.skWorkspace.MouseMove += this.SelectNodeFromPointCancel;
+            this.skWorkspace.MouseUp += this.SelectNodeFromPointEnd;
             if (this.GetNodeFromPoint(e.Location) is Node node)
             {
                 if (node.GetPortFromPoint(e.Location) is Port port)
                 {
                     // Link Nodes
-                    this.control.MouseMove += this.LinkNodeStart;
-                    this.control.MouseUp += this.LinkNodeCancel;
+                    this.skWorkspace.MouseMove += this.LinkNodeStart;
+                    this.skWorkspace.MouseUp += this.LinkNodeCancel;
                     this.LinkNodeStartPort = port;
                     this.LinkNodeEndPoint = Point.Empty;
                 }
                 else
                 {
                     // Move Nodes
-                    this.control.MouseMove += this.MoveNodeStart;
-                    this.control.MouseUp += this.MoveNodeCancel;
+                    this.skWorkspace.MouseMove += this.MoveNodeStart;
+                    this.skWorkspace.MouseUp += this.MoveNodeCancel;
                     this.MoveNodeStartPoint = e.Location;
                     this.MoveNodeOffsetPoint = Point.Empty;
                 }
@@ -45,8 +45,8 @@ namespace Roro.Workflow
             else
             {
                 // Pick Nodes from Rectangle
-                this.control.MouseMove += this.SelectNodesFromRectStart;
-                this.control.MouseUp += this.SelectNodesFromRectCancel;
+                this.skWorkspace.MouseMove += this.SelectNodesFromRectStart;
+                this.skWorkspace.MouseUp += this.SelectNodesFromRectCancel;
                 this.SelectNodeStartPoint = e.Location;
                 this.SelectNodeRect = Rectangle.Empty;
             }
@@ -56,28 +56,28 @@ namespace Roro.Workflow
         
         private void LinkNodeCancel(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.LinkNodeStart;
-            this.control.MouseUp -= this.LinkNodeCancel;
+            this.skWorkspace.MouseMove -= this.LinkNodeStart;
+            this.skWorkspace.MouseUp -= this.LinkNodeCancel;
         }
 
         private void LinkNodeStart(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.LinkNodeStart;
-            this.control.MouseUp -= this.LinkNodeCancel;
-            this.control.MouseMove += this.LinkingNode;
-            this.control.MouseUp += this.LinkNodeEnd;
+            this.skWorkspace.MouseMove -= this.LinkNodeStart;
+            this.skWorkspace.MouseUp -= this.LinkNodeCancel;
+            this.skWorkspace.MouseMove += this.LinkingNode;
+            this.skWorkspace.MouseUp += this.LinkNodeEnd;
         }
 
         private void LinkingNode(object sender, MouseEventArgs e)
         {
             this.LinkNodeEndPoint = e.Location;
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         private void LinkNodeEnd(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.LinkingNode;
-            this.control.MouseUp -= this.LinkNodeEnd;
+            this.skWorkspace.MouseMove -= this.LinkingNode;
+            this.skWorkspace.MouseUp -= this.LinkNodeEnd;
             this.LinkNodeEndPoint = Point.Empty;
             //
             if (this.GetNodeFromPoint(e.Location) is Node node)
@@ -88,7 +88,7 @@ namespace Roro.Workflow
             {
                 this.LinkNodeStartPort.NextNodeId = Guid.Empty;
             }
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         #endregion
@@ -97,17 +97,17 @@ namespace Roro.Workflow
 
         private void MoveNodeCancel(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.MoveNodeStart;
-            this.control.MouseUp -= this.MoveNodeCancel;
+            this.skWorkspace.MouseMove -= this.MoveNodeStart;
+            this.skWorkspace.MouseUp -= this.MoveNodeCancel;
         }
 
         private void MoveNodeStart(object sender, MouseEventArgs e)
         {
-            this.control.Cursor = Cursors.SizeAll;
-            this.control.MouseMove -= this.MoveNodeStart;
-            this.control.MouseUp -= this.MoveNodeCancel;
-            this.control.MouseMove += this.MovingNode;
-            this.control.MouseUp += this.MoveNodeEnd;
+            this.skWorkspace.Cursor = Cursors.SizeAll;
+            this.skWorkspace.MouseMove -= this.MoveNodeStart;
+            this.skWorkspace.MouseUp -= this.MoveNodeCancel;
+            this.skWorkspace.MouseMove += this.MovingNode;
+            this.skWorkspace.MouseUp += this.MoveNodeEnd;
             //
             var nodeId = this.GetNodeFromPoint(this.MoveNodeStartPoint);
             if (this.SelectedNodes.Contains(nodeId))
@@ -119,7 +119,7 @@ namespace Roro.Workflow
                 this.SelectedNodes.Clear();
                 this.SelectedNodes.Add(nodeId);
             }
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         private void MovingNode(object sender, MouseEventArgs e)
@@ -127,14 +127,14 @@ namespace Roro.Workflow
             var offsetX = e.X - this.MoveNodeStartPoint.X;
             var offsetY = e.Y - this.MoveNodeStartPoint.Y;
             this.MoveNodeOffsetPoint = new Point(offsetX, offsetY);
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         private void MoveNodeEnd(object sender, MouseEventArgs e)
         {
-            this.control.Cursor = Cursors.Default;
-            this.control.MouseMove -= this.MovingNode;
-            this.control.MouseUp -= this.MoveNodeEnd;
+            this.skWorkspace.Cursor = Cursors.Default;
+            this.skWorkspace.MouseMove -= this.MovingNode;
+            this.skWorkspace.MouseUp -= this.MoveNodeEnd;
             //
             var offsetX = (int)Math.Round((double)(e.X - this.MoveNodeStartPoint.X) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
             var offsetY = (int)Math.Round((double)(e.Y - this.MoveNodeStartPoint.Y) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
@@ -146,7 +146,7 @@ namespace Roro.Workflow
                 node.SetBounds(rect);
             }
             this.MoveNodeOffsetPoint = Point.Empty;
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         #endregion
@@ -155,14 +155,14 @@ namespace Roro.Workflow
 
         private void SelectNodeFromPointCancel(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.SelectNodeFromPointCancel;
-            this.control.MouseUp -= this.SelectNodeFromPointEnd;
+            this.skWorkspace.MouseMove -= this.SelectNodeFromPointCancel;
+            this.skWorkspace.MouseUp -= this.SelectNodeFromPointEnd;
         }
 
         private void SelectNodeFromPointEnd(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.SelectNodeFromPointCancel;
-            this.control.MouseUp -= this.SelectNodeFromPointEnd;
+            this.skWorkspace.MouseMove -= this.SelectNodeFromPointCancel;
+            this.skWorkspace.MouseUp -= this.SelectNodeFromPointEnd;
             //
             var node = this.GetNodeFromPoint(e.Location);
             var ctrl = Control.ModifierKeys.HasFlag(Keys.Control);
@@ -201,7 +201,7 @@ namespace Roro.Workflow
                 }
                 this.SelectedNodes.Add(node);
             }
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         #endregion
@@ -210,21 +210,21 @@ namespace Roro.Workflow
 
         private void SelectNodesFromRectCancel(object sender, MouseEventArgs e)
         {
-            this.control.MouseMove -= this.SelectNodesFromRectStart;
-            this.control.MouseUp -= this.SelectNodesFromRectCancel;
+            this.skWorkspace.MouseMove -= this.SelectNodesFromRectStart;
+            this.skWorkspace.MouseUp -= this.SelectNodesFromRectCancel;
         }
 
         private void SelectNodesFromRectStart(object sender, MouseEventArgs e)
         {
-            this.control.Cursor = Cursors.Cross;
-            this.control.MouseMove -= this.SelectNodesFromRectStart;
-            this.control.MouseUp -= this.SelectNodesFromRectCancel;
-            this.control.MouseMove += this.SelectingNodesFromRect;
-            this.control.MouseUp += this.SelectNodesFromRectEnd;
+            this.skWorkspace.Cursor = Cursors.Cross;
+            this.skWorkspace.MouseMove -= this.SelectNodesFromRectStart;
+            this.skWorkspace.MouseUp -= this.SelectNodesFromRectCancel;
+            this.skWorkspace.MouseMove += this.SelectingNodesFromRect;
+            this.skWorkspace.MouseUp += this.SelectNodesFromRectEnd;
             //
             this.SelectNodeStartPoint = e.Location;
             this.SelectNodeRect = Rectangle.Empty;
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         private void SelectingNodesFromRect(object sender, MouseEventArgs e)
@@ -234,14 +234,14 @@ namespace Roro.Workflow
             var w = Math.Abs(this.SelectNodeStartPoint.X - e.X);
             var h = Math.Abs(this.SelectNodeStartPoint.Y - e.Y);
             this.SelectNodeRect = new Rectangle(x, y, w, h);
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         private void SelectNodesFromRectEnd(object sender, MouseEventArgs e)
         {
-            this.control.Cursor = Cursors.Default;
-            this.control.MouseMove -= this.SelectingNodesFromRect;
-            this.control.MouseUp -= this.SelectNodesFromRectEnd;
+            this.skWorkspace.Cursor = Cursors.Default;
+            this.skWorkspace.MouseMove -= this.SelectingNodesFromRect;
+            this.skWorkspace.MouseUp -= this.SelectNodesFromRectEnd;
             //
             if (!Control.ModifierKeys.HasFlag(Keys.Control))
             {
@@ -256,7 +256,7 @@ namespace Roro.Workflow
                 }
             }
             this.SelectNodeRect = Rectangle.Empty;
-            this.control.Invalidate();
+            this.skWorkspace.Invalidate();
         }
 
         #endregion

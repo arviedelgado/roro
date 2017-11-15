@@ -1,4 +1,5 @@
 ﻿using Roro.Activities;
+using Roro.Activities.Excel;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System;
@@ -71,6 +72,7 @@ namespace Roro.Workflow
                 PageRenderOptions.GridSize * this.GetSize().Height);
             this.Ports = new List<Port>();
             this.RenderedPorts = new Dictionary<Port, SKPath>();
+            this.Activity = new GetCellValue();
         }
 
         public abstract Size GetSize();

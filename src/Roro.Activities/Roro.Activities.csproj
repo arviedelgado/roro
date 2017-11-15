@@ -44,6 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgumentTypeEditorUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArgumentTypeEditor.cs" />
+    <Compile Include="ActivityTypeConverter.cs" />
+    <Compile Include="ArgumentTypeConverter.cs" />
+    <Compile Include="WriteablePropertyDescriptor.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Argument.cs" />
     <Compile Include="Activity.cs" />

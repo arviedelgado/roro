@@ -1,5 +1,6 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using System;
+using System.ComponentModel;
 
 namespace Roro.Activities.Excel
 {

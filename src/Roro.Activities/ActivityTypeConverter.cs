@@ -21,11 +21,11 @@ namespace Roro.Activities
                 // Category
                 if ((typeof(InArgument)).IsAssignableFrom(editPropDesc.PropertyType))
                 {
-                    editPropDesc.WriteableCategory = "Input Arguments";
+                    editPropDesc.WriteableCategory = "Inputs";
                 }
                 if ((typeof(OutArgument)).IsAssignableFrom(editPropDesc.PropertyType))
                 {
-                    editPropDesc.WriteableCategory = "Output Variables";
+                    editPropDesc.WriteableCategory = "Outputs";
                 }
                 if (editPropDesc.WriteableCategory != "Misc")
                 {

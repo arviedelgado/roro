@@ -1,12 +1,11 @@
-﻿using Roro.Activities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public sealed class EndNodeActivity : Activity
     {
-        public override List<OutArgument> Outputs => new List<OutArgument>();
+        public override List<OutArgument> Outputs { get; protected set; }
 
         public override void Execute(Context context)
         {
@@ -15,7 +14,8 @@ namespace Roro.Workflow
 
         public EndNodeActivity()
         {
-            this.Outputs.Add(new OutArgument<int>());
+            this.Outputs = new List<OutArgument>();
+            this.Outputs.Add(new OutArgument<int>("My Custom Output"));
         }
     }
 

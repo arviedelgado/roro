@@ -1,12 +1,11 @@
-﻿using Roro.Activities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public sealed class StartNodeActivity : Activity
     {
-        public override List<InArgument> Inputs => new List<InArgument>();
+        public override List<InArgument> Inputs { get; protected set; }
 
         public override void Execute(Context context)
         {
@@ -15,7 +14,8 @@ namespace Roro.Workflow
 
         public StartNodeActivity()
         {
-            this.Inputs.Add(new InArgument<int>());
+            this.Inputs = new List<InArgument>();
+            this.Inputs.Add(new InArgument<int>("My Custom Input"));
         }
     }
 }

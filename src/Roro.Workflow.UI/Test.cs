@@ -37,13 +37,17 @@ namespace Roro.Workflow.UI
 
             Console.Clear();
             Console.WriteLine("Serializing Object to XML . . .");
-            Console.WriteLine();
             var a = DataContractSerializerHelper.ToString(doc);
+            Console.WriteLine();
             Console.WriteLine(a);
             Console.WriteLine();
             Console.WriteLine("Serializing Object to XML completed.");
             Console.WriteLine("Deserializing XML to Object . . .");
-            var b = DataContractSerializerHelper.ToString(DataContractSerializerHelper.ToObject<Document>(a));
+            var o = DataContractSerializerHelper.ToObject<Document>(a);
+            var b = DataContractSerializerHelper.ToString(o);
+            Console.WriteLine();
+            Console.WriteLine(b);
+            Console.WriteLine();
             Console.WriteLine("Deserializing XML to Object completed.");
             Console.WriteLine("Matched: {0}", a == b);
             Console.WriteLine();

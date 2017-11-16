@@ -54,7 +54,7 @@
             this.skWorkspaceParent.Location = new System.Drawing.Point(504, 57);
             this.skWorkspaceParent.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.skWorkspaceParent.Name = "skWorkspaceParent";
-            this.skWorkspaceParent.Size = new System.Drawing.Size(548, 319);
+            this.skWorkspaceParent.Size = new System.Drawing.Size(342, 328);
             this.skWorkspaceParent.TabIndex = 1;
             // 
             // tableLayoutPanel1
@@ -74,7 +74,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1056, 379);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(850, 388);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // propGridParent
@@ -82,14 +82,14 @@
             this.propGridParent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propGridParent.Location = new System.Drawing.Point(3, 57);
             this.propGridParent.Name = "propGridParent";
-            this.propGridParent.Size = new System.Drawing.Size(494, 319);
+            this.propGridParent.Size = new System.Drawing.Size(494, 328);
             this.propGridParent.TabIndex = 2;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1056, 379);
+            this.ClientSize = new System.Drawing.Size(850, 388);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

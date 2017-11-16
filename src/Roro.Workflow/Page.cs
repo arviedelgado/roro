@@ -76,6 +76,7 @@ namespace Roro.Workflow
             this.propGrid.PropertySort = PropertySort.Categorized;
             this.propGrid.ToolbarVisible = false;
             this.propGrid.LineColor = Color.FromArgb(230, 230, 230);
+
             propGridParent.Controls.Add(this.propGrid);
         }
 

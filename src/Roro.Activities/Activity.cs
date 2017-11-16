@@ -11,10 +11,18 @@ namespace Roro.Activities
     public abstract class Activity
     {
         [DataMember]
-        public virtual List<InArgument> Inputs => this.Get<InArgument>();
+        public virtual List<InArgument> Inputs
+        {
+            get => this.Get<InArgument>();
+            protected set { /* For DataContractSerializer */ }
+        }
 
         [DataMember]
-        public virtual List<OutArgument> Outputs => this.Get<OutArgument>();
+        public virtual List<OutArgument> Outputs
+        {
+            get => this.Get<OutArgument>();
+            protected set { /* For DataContractSerializer */ }
+        }
 
         private List<T> Get<T>() where T : Argument
         {
@@ -23,14 +31,11 @@ namespace Roro.Activities
             foreach (var prop in props)
             {
                 T arg = prop.GetValue(this) as T;
-                // create a new instance if null.
                 if (arg == null)
                 {
-                    var gArgs = prop.PropertyType.GetGenericArguments();
-                    var gType = prop.PropertyType.GetGenericTypeDefinition().MakeGenericType(gArgs);
-                    arg = Activator.CreateInstance(gType) as T;
+                    arg = Activator.CreateInstance(prop.PropertyType) as T;
                     arg.Name = prop.Name;
-                    arg.Type = gArgs.First();
+                    arg.Type = arg.GetType().GetGenericArguments().First();
                     arg.Value = string.Empty;
                     prop.SetValue(this, arg);
                 }

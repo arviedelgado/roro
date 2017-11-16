@@ -1,8 +1,7 @@
-﻿using SkiaSharp;
+﻿using Roro.Activities;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
@@ -11,6 +10,7 @@ namespace Roro.Workflow
         public StartNode()
         {
             this.Ports.Add(new NextPort());
+            this.Activity = new StartNodeActivity();
         }
 
         public override SKPath Render(SKCanvas g, Rectangle r, NodeStyle o)

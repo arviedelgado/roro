@@ -1,14 +1,17 @@
-﻿using SkiaSharp;
+﻿using Roro.Activities;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 
 namespace Roro.Workflow
 {
     public sealed class EndNode : Node
     {
+        public EndNode()
+        {
+            this.Activity = new EndNodeActivity();
+        }
+
         public override SKPath Render(SKCanvas g, Rectangle r, NodeStyle o)
         {
             //

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Roro.Activities
 {
@@ -9,30 +8,21 @@ namespace Roro.Activities
     {
         public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
         {
-            var oldPropDescs = base.GetProperties(context, value, attributes);
-            var newPropDescs = new List<WriteablePropertyDescriptor>();
-            foreach (PropertyDescriptor propDesc in oldPropDescs)
+            var act = value as Activity;
+            var actProps = new List<PropertyDescriptor>();
+            foreach (var inArg in act.Inputs)
             {
-                var editPropDesc = new WriteablePropertyDescriptor(propDesc);
-                // Display Name
-                editPropDesc.WriteableDisplayName = new string(
-                    editPropDesc.WriteableDisplayName.ToCharArray().
-                    SelectMany(c => (Char.IsUpper(c) ? " " : "") + c).ToArray()).Trim();
-                // Category
-                if ((typeof(InArgument)).IsAssignableFrom(editPropDesc.PropertyType))
-                {
-                    editPropDesc.WriteableCategory = "Inputs";
-                }
-                if ((typeof(OutArgument)).IsAssignableFrom(editPropDesc.PropertyType))
-                {
-                    editPropDesc.WriteableCategory = "Outputs";
-                }
-                if (editPropDesc.WriteableCategory != "Misc")
-                {
-                    newPropDescs.Add(editPropDesc);
-                }
+                var inArgPropDesc = new ArgumentPropertyDescriptor(act, inArg);
+                inArgPropDesc.WriteableCategory = "Inputs";
+                actProps.Add(inArgPropDesc);
             }
-            return new PropertyDescriptorCollection(newPropDescs.ToArray(), true);
+            foreach (var outArg in act.Outputs)
+            {
+                var outArgPropDesc = new ArgumentPropertyDescriptor(act, outArg);
+                outArgPropDesc.WriteableCategory = "Outputs";
+                actProps.Add(outArgPropDesc);
+            }
+            return new PropertyDescriptorCollection(actProps.ToArray(), true);
         }
     }
 }

@@ -4,7 +4,6 @@ using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -36,10 +35,8 @@ namespace Roro.Workflow
         public Activity Activity { get; set; }
 
         [DataMember]
-        [Browsable(false)]
-        public List<Port> Ports { get; }
+        public List<Port> Ports { get; private set; }
 
-        [Browsable(false)]
         public Dictionary<Port, SKPath> RenderedPorts { get; }
 
         public Port GetPortById(Guid id)

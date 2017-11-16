@@ -69,10 +69,8 @@
     <Compile Include="Nodes\ProcessNode.cs" />
     <Compile Include="Nodes\DecisionNode.cs" />
     <Compile Include="Nodes\EndNode.cs" />
-    <Compile Include="Activities\EndNodeActivity.cs" />
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Nodes\StartNode.cs" />
-    <Compile Include="Activities\StartNodeActivity.cs" />
     <Compile Include="Variable.cs" />
     <Compile Include="VariableCollection.cs" />
   </ItemGroup>

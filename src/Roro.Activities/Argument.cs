@@ -28,23 +28,51 @@ namespace Roro.Activities
         public object Clone() => this.MemberwiseClone();
     }
 
+    [DataContract]
     public abstract class InArgument : Argument
     {
-
+        protected InArgument(string name, Type type)
+        {
+            this.Name = name;
+            this.Type = type;
+        }
     }
 
+    [DataContract]
     public sealed class InArgument<T> : InArgument
     {
+        public InArgument() : this(string.Empty)
+        {
 
+        }
+
+        public InArgument(string name) : base(name, typeof(T))
+        {
+
+        }
     }
 
+    [DataContract]
     public abstract class OutArgument : Argument
     {
-
+        protected OutArgument(string name, Type type)
+        {
+            this.Name = name;
+            this.Type = type;
+        }
     }
 
+    [DataContract]
     public sealed class OutArgument<T> : OutArgument
     {
+        public OutArgument() : this(string.Empty)
+        {
 
+        }
+
+        public OutArgument(string name) : base(name, typeof(T))
+        {
+
+        }
     }
 }

@@ -73,7 +73,7 @@ namespace Roro.Workflow
             this.propGrid = new PropertyGrid();
             this.propGrid.Dock = DockStyle.Fill;
             this.propGrid.PropertyValueChanged += (s, e) => this.skWorkspace.Invalidate();
-            this.propGrid.PropertySort = PropertySort.CategorizedAlphabetical;
+            this.propGrid.PropertySort = PropertySort.Categorized;
             this.propGrid.ToolbarVisible = false;
             this.propGrid.LineColor = Color.FromArgb(230, 230, 230);
             propGridParent.Controls.Add(this.propGrid);

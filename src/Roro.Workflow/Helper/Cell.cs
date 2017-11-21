@@ -21,6 +21,8 @@ namespace Roro.Workflow
 
         public CellLocation Direction { get; set; }
 
+        public Guid Session { get; set; }
+
         public Cell Parent { get; set; }
 
         public int Priority { get; set; }

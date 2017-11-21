@@ -15,7 +15,9 @@ namespace Roro.Workflow
 
         private int ColCount;
 
-        public PathFinder(List<Node> nodes)
+        private Guid Session;
+
+        public PathFinder(IEnumerable<Node> nodes)
         {
             this.CreateTable(nodes);
         }
@@ -42,24 +44,7 @@ namespace Roro.Workflow
                         {
                             continue;
                         }
-                        var cell = this.Table[r, c] = new Cell(r, c);
-                        cell.IsWall = true;
-                    }
-                }
-            }
-        }
-
-        private void ResetTable()
-        {
-            for (var row = 0; row < this.RowCount; row++)
-            {
-                for (var col = 0; col < this.ColCount; col++)
-                {
-                    if (this.Table[row, col] is Cell cell)
-                    {
-                        cell.Parent = null;
-                        cell.CurrentCost = 0;
-                        cell.IsOpen = !cell.IsWall;
+                        this.Table[r, c] = new Cell(r, c) { IsOpen = false, IsWall = true };
                     }
                 }
             }
@@ -67,7 +52,7 @@ namespace Roro.Workflow
 
         public SKPath GetPath(Point startPt, Point endPt)
         {
-            this.ResetTable();
+            this.Session = Guid.NewGuid();
 
             var startLoc = new CellLocation(startPt.Y, startPt.X).Scale(1.0 / PageRenderOptions.GridSize);
             var endLoc = new CellLocation(endPt.Y, endPt.X).Scale(1.0 / PageRenderOptions.GridSize);
@@ -130,6 +115,15 @@ namespace Roro.Workflow
                 }
 
                 var nextCell = this.Table[nextRow, nextCol];
+
+                if (nextCell.Session != this.Session)
+                {
+                    nextCell.Parent = null;
+                    nextCell.CurrentCost = 0;
+                    nextCell.IsOpen = nextCell == endCell || !nextCell.IsWall;
+                    nextCell.Session = this.Session;
+                }
+
                 if (nextCell.IsOpen)
                 {
                     nextCell.RowEffort = nextCell.Location.GetRowEffort(endCell.Location);

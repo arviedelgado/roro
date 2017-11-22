@@ -10,6 +10,11 @@ See [src](src) folder for the C# source files.
 
 See [bin](bin) folder for the compiled binaries.
 
+> The developer is in Malaysia from November 2017 to April 2018 for an RPA project.
+> <BR>Expect fewer commits during this time.
+> You may connect via [LinkedIn](https://linkedin.com/in/arviedelgado).
+
+
 ## Platforms
 - [x] Windows 10
 - [ ] Windows Server
@@ -23,16 +28,16 @@ See [bin](bin) folder for the compiled binaries.
 - [ ] Business app - Excel `using Office Interop`
 - [ ] Business app - Outlook `using Office Interop`
 ## AI
-- [ ] Image to Text or OCR
-- [ ] Speech to Text or STT
-- [ ] Text to Speech or TTS
-- [ ] Face Detection
-- [ ] Natural Language Processing `using LUIS`
+- [ ] Image to Text or OCR `in progress, with working draft`
+- [ ] Speech to Text or STT `in progress, with working draft`
+- [ ] Text to Speech or TTS `in progress, with working draft`
+- [ ] Face Detection `in progress, with working draft`
+- [ ] Natural Language Processing `not started, will use LUIS`
 ## Studio
-- [ ] Control Room
-- [ ] Bot Creator
-- [ ] Bot Runners
+- [ ] Control Room `not started`
+- [ ] Bot Creator `in progress, current priority`
+- [ ] Bot Runners `not started`
 
-## Roro uses the following open source projects
-- [Selenium](https://github.com/SeleniumHQ/selenium) for web browser automation
-- [SkiaSharp](https://github.com/mono/SkiaSharp) for fast graphics rendering
+## Roro uses the following projects
+- [x] [Selenium](https://github.com/SeleniumHQ/selenium) for web browser automation
+- [x] [SkiaSharp](https://github.com/mono/SkiaSharp) for BotCreator designer rendering

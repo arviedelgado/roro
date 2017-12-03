@@ -28,27 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
             this.skWorkspaceParent = new System.Windows.Forms.Panel();
-            this.skWorkspaceParent.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(11, 10);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(125, 25);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Spy Elements";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // skWorkspaceParent
             // 
             this.skWorkspaceParent.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.skWorkspaceParent.Controls.Add(this.button1);
             this.skWorkspaceParent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skWorkspaceParent.Location = new System.Drawing.Point(0, 0);
             this.skWorkspaceParent.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -67,14 +52,11 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.skWorkspaceParent.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel skWorkspaceParent;
     }
 }

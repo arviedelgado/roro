@@ -1,6 +1,5 @@
-﻿using SkiaSharp;
-using SkiaSharp.Views.Desktop;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
@@ -11,20 +10,16 @@ namespace Roro.Workflow
             this.Ports.Add(new NextPort());
         }
 
-        public override SKPath Render(SKCanvas g, Rectangle r, NodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {
-            var skPath = new SKPath();
-            skPath.AddRect(r.ToSKRect());
-            using (var p = new SKPaint() { IsAntialias = true })
-            {
-                p.Color = new Pen(o.BackBrush).Color.ToSKColor();
-                g.DrawPath(skPath, p);
-                p.IsStroke = true;
-                p.Color = o.BorderPen.Color.ToSKColor();
-                p.StrokeWidth = o.BorderPen.Width;
-                g.DrawPath(skPath, p);
-            }
-            return skPath;
+            var path = new GraphicsPath();
+            path.StartFigure();
+            path.AddRectangle(r);
+            path.CloseFigure();
+            //
+            g.FillPath(o.BackBrush, path);
+            g.DrawPath(o.BorderPen, path);
+            return path;
         }
 
         public override Size GetSize() => new Size(4, 2);

@@ -1,10 +1,9 @@
 ﻿using Roro.Activities;
 using Roro.Activities.Excel;
-using SkiaSharp;
-using SkiaSharp.Views.Desktop;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -37,7 +36,7 @@ namespace Roro.Workflow
         [DataMember]
         public List<Port> Ports { get; private set; }
 
-        public Dictionary<Port, SKPath> RenderedPorts { get; }
+        public Dictionary<Port, GraphicsPath> RenderedPorts { get; }
 
         public Port GetPortById(Guid id)
         {
@@ -46,7 +45,7 @@ namespace Roro.Workflow
 
         public Port GetPortFromPoint(Point pt)
         {
-            if (this.RenderedPorts.FirstOrDefault(x => x.Value.Contains(pt.X, pt.Y)) is KeyValuePair<Port, SKPath> item)
+            if (this.RenderedPorts.FirstOrDefault(x => x.Value.IsVisible(pt.X, pt.Y)) is KeyValuePair<Port, GraphicsPath> item)
             {
                 return item.Key;
             }
@@ -68,52 +67,17 @@ namespace Roro.Workflow
                 PageRenderOptions.GridSize * this.GetSize().Width,
                 PageRenderOptions.GridSize * this.GetSize().Height);
             this.Ports = new List<Port>();
-            this.RenderedPorts = new Dictionary<Port, SKPath>();
+            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
             this.Activity = new GetCellValue();
         }
 
         public abstract Size GetSize();
 
-        public abstract SKPath Render(SKCanvas g, Rectangle r, NodeStyle o);
+        public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
 
-        public void RenderText(SKCanvas g, Rectangle r, NodeStyle o)
+        public void RenderText(Graphics g, Rectangle r, NodeStyle o)
         {
-            using (var p = new SKPaint() { IsAntialias = true })
-            {
-                p.Color = Color.Black.ToSKColor();
-                p.Typeface = SKTypeface.FromFamilyName("Verdana");
-                p.TextSize = 11;
-                p.TextAlign = SKTextAlign.Center;
-
-                var words = this.Name.Split(new char[] { ' ' });
-                var phrase = string.Empty;
-                var phrases = new List<string>();
-                foreach (var word in words)
-                {
-                    if (p.MeasureText(phrase + ' ' + word) > r.Width)
-                    {
-                        phrases.Add(phrase);
-                        phrase = word;
-                    }
-                    else
-                    {
-                        phrase += ' ' + word;
-                    }
-                }
-                if (phrase.Length > 0)
-                {
-                    phrases.Add(phrase);
-                }
-                for (var i = 0; i < phrases.Count; i++)
-                {
-                    g.DrawText(phrases[i].Trim(),
-                        r.Center().X,
-                        r.Center().Y + p.TextSize / 4
-                        - (phrases.Count - 1) * p.TextSize / 2
-                        + i * p.TextSize,
-                        p);
-                }
-            }
+            g.DrawString(this.Name, o.Font, o.FontBrush, r, o.StringFormat);
         }
     }
 }

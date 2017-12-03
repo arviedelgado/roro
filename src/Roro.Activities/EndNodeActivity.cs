@@ -5,17 +5,20 @@ namespace Roro.Activities
 {
     public sealed class EndNodeActivity : Activity
     {
-        public override List<OutArgument> Outputs { get; protected set; }
+        public override List<Output> Outputs { get; protected set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
-            throw new NotImplementedException();
+            foreach (var output in this.Outputs)
+            {
+
+            }
         }
 
         public EndNodeActivity()
         {
-            this.Outputs = new List<OutArgument>();
-            this.Outputs.Add(new OutArgument<int>("My Custom Output"));
+            this.Outputs = new List<Output>();
+            this.Outputs.Add(new Output<Number>("My Custom Output"));
         }
     }
 

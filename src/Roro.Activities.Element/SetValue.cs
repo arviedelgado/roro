@@ -8,7 +8,7 @@ namespace Roro.Activities.Element
 
         public InArgument<string> Value { get; set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }

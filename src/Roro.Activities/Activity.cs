@@ -3,47 +3,51 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Roro.Activities
 {
     [DataContract]
-    [TypeConverter(typeof(ActivityTypeConverter))]
     public abstract class Activity
     {
         [DataMember]
-        public virtual List<InArgument> Inputs
+        public virtual List<Input> Inputs
         {
-            get => this.Get<InArgument>();
-            protected set { /* For DataContractSerializer */ }
+            get => this.Get<Input>(); protected set { /* For DataContractSerializer */ }
         }
 
         [DataMember]
-        public virtual List<OutArgument> Outputs
+        public virtual List<Output> Outputs
         {
-            get => this.Get<OutArgument>();
-            protected set { /* For DataContractSerializer */ }
+            get => this.Get<Output>(); protected set { /* For DataContractSerializer */ }
         }
 
-        private List<T> Get<T>() where T : Argument
+        private List<T> Get<T>() where T : class
         {
-            var args = new List<T>();
-            var props = this.GetType().GetProperties().Where(p => p.PropertyType.BaseType == typeof(T));
-            foreach (var prop in props)
+            var props = new List<T>();
+            var propInfos = this.GetType().GetProperties()
+                .Where(x => typeof(T).IsAssignableFrom(x.PropertyType) && !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
+            foreach (var propInfo in propInfos)
             {
-                T arg = prop.GetValue(this) as T;
-                if (arg == null)
+                T prop = propInfo.GetValue(this) as T;
+                if (prop == null)
                 {
-                    arg = Activator.CreateInstance(prop.PropertyType) as T;
-                    arg.Name = prop.Name;
-                    arg.Type = arg.GetType().GetGenericArguments().First();
-                    arg.Value = string.Empty;
-                    prop.SetValue(this, arg);
+                    prop = Activator.CreateInstance(propInfo.PropertyType) as T;
+                    if (prop is Input input)
+                    {
+                        input.Name = Regex.Replace(propInfo.Name, "([a-z](?=[A-Z0-9])|[A-Z](?=[A-Z][a-z]))", "$1 ");
+                    }
+                    if (prop is Output output)
+                    {
+                        output.Name = Regex.Replace(propInfo.Name, "([a-z](?=[A-Z0-9])|[A-Z](?=[A-Z][a-z]))", "$1 ");
+                    }
+                    propInfo.SetValue(this, prop);
                 }
-                args.Add(arg);
+                props.Add(prop);
             }
-            return args;
+            return props;
         }
 
-        public abstract void Execute(Context context);
+        public abstract void Execute(ActivityContext context);
     }
 }

@@ -15,10 +15,10 @@ namespace Roro.Workflow.UI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.Width = 1200;
+            this.Width = 800;
             this.Height = 600;
             robot = Test.TestWorkflowSerialization();
-            robot.Pages.First().AttachEvents(this.skWorkspaceParent, this.propGridParent);
+            robot.Pages.First().AttachEvents(this.skWorkspaceParent);
         }
 
         private void button1_Click(object sender, EventArgs e)

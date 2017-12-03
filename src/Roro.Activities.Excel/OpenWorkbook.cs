@@ -4,9 +4,9 @@ namespace Roro.Activities.Excel
 {
     public class OpenWorkbook : Activity
     {
-        public InArgument<string> Path { get; set; }
+        public Input<Text> Path { get; set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             // inputs
             var path = context.Get(this.Path);

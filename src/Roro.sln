@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Workflow", "Roro.Workflow\Roro.Workflow.csproj", "{DFA7C399-51B9-4391-8805-2731658965C6}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,6 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Workflow", "Roro.Workf
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities", "Roro.Activities\Roro.Activities.csproj", "{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B} = {98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro", "Roro\Roro.csproj", "{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}"
 EndProject
@@ -63,5 +66,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9847E870-0178-4C3C-A5A2-748FBCD42DDC}
 	EndGlobalSection
 EndGlobal

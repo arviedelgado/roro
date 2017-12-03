@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,23 +46,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityComponentSite.cs" />
-    <Compile Include="ActivityComponent.cs" />
-    <Compile Include="ArgumentPropertyDescriptor.cs" />
-    <Compile Include="ArgumentTypeEditorUI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ArgumentTypeEditor.cs" />
-    <Compile Include="ActivityTypeConverter.cs" />
-    <Compile Include="ArgumentTypeConverter.cs" />
-    <Compile Include="Context.cs" />
+    <Compile Include="ActivityContext.cs" />
+    <Compile Include="DataType.cs" />
     <Compile Include="Argument.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="EndNodeActivity.cs" />
+    <Compile Include="PropertyEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="StartNodeActivity.cs" />
+    <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PropertyEditor.resx">
+      <DependentUpon>PropertyEditor.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

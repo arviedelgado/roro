@@ -12,7 +12,7 @@ namespace Roro.Activities.Element
 
         public OutArgument<bool> Element { get; set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             var x = context.Get(X);
             var y = context.Get(Y);

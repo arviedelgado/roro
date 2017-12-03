@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Roro.Activities;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -20,6 +21,9 @@ namespace Roro.Workflow
 
         private void MouseEvents(object sender, MouseEventArgs e)
         {
+            this.skWorkspace.MouseDoubleClick -= SkWorkspace_MouseDoubleClick;
+            this.skWorkspace.MouseDoubleClick += SkWorkspace_MouseDoubleClick;
+
             // Pick Node from Point
             this.skWorkspace.MouseMove += this.SelectNodeFromPointCancel;
             this.skWorkspace.MouseUp += this.SelectNodeFromPointEnd;
@@ -52,8 +56,19 @@ namespace Roro.Workflow
             }
         }
 
+        private void SkWorkspace_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.GetNodeFromPoint(e.Location) is Node node)
+            {
+                using (var f = new PropertyEditor(node.Activity))
+                {
+                    f.ShowDialog();
+                }
+            }
+        }
+
         #region Link Nodes
-        
+
         private void LinkNodeCancel(object sender, MouseEventArgs e)
         {
             this.skWorkspace.MouseMove -= this.LinkNodeStart;

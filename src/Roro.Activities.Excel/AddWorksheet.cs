@@ -5,11 +5,11 @@ namespace Roro.Activities.Excel
 {
     public class AddWorksheet : Activity
     {
-        public InArgument<string> WorkbookPath { get; set; }
+        public Input<Text> WorkbookPath { get; set; }
 
-        public InArgument<string> WorksheetName { get; set; }
+        public Input<Text> WorksheetName { get; set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             // inputs
             var workbookPath = context.Get(this.WorkbookPath);

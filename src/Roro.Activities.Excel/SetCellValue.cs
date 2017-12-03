@@ -5,17 +5,17 @@ namespace Roro.Activities.Excel
 {
     public class SetCellValue : Activity
     {
-        public InArgument<string> WorkbookPath { get; set; }
+        public Input<Text> WorkbookPath { get; set; }
 
-        public InArgument<string> WorksheetName { get; set; }
+        public Input<Text> WorksheetName { get; set; }
 
-        public InArgument<int> RowIndex { get; set; }
+        public Input<Number> RowIndex { get; set; }
 
-        public InArgument<int> ColumnIndex { get; set; }
+        public Input<Number> ColumnIndex { get; set; }
 
-        public InArgument<string> CellValue { get; set; }
+        public Input<Text> CellValue { get; set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             // inputs
             var workbookPath = context.Get(this.WorkbookPath);

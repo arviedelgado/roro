@@ -4,7 +4,7 @@ namespace Roro.Activities.AI
 {
     public class GetTextFromImage : Activity
     {
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }
@@ -12,7 +12,7 @@ namespace Roro.Activities.AI
 
     public class GetFaceFromImage : Activity
     {
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }
@@ -20,7 +20,7 @@ namespace Roro.Activities.AI
 
     public class GetSpeechFromText : Activity
     {
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }
@@ -28,7 +28,7 @@ namespace Roro.Activities.AI
 
     public class GetTextFromSpeech : Activity
     {
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }

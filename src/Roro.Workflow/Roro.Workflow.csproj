@@ -71,8 +71,6 @@
     <Compile Include="Nodes\EndNode.cs" />
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Nodes\StartNode.cs" />
-    <Compile Include="Variable.cs" />
-    <Compile Include="VariableCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roro.Activities.Excel\Roro.Activities.Excel.csproj">

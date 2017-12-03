@@ -5,17 +5,17 @@ namespace Roro.Activities
 {
     public sealed class StartNodeActivity : Activity
     {
-        public override List<InArgument> Inputs { get; protected set; }
+        public override List<Input> Inputs { get; protected set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }
 
         public StartNodeActivity()
         {
-            this.Inputs = new List<InArgument>();
-            this.Inputs.Add(new InArgument<int>("My Custom Input"));
+            this.Inputs = new List<Input>();
+            this.Inputs.Add(new Input<Number>("My Custom Input"));
         }
     }
 }

@@ -6,24 +6,24 @@ namespace Roro.Activities.Excel
 {
     public class GetCellValue : Activity
     {
-        public InArgument<string> WorkbookPath { get; set; }
+        public Input<Text> WorkbookPath { get; set; }
 
-        public InArgument<string> WorksheetName { get; set; }
+        public Input<Text> WorksheetName { get; set; }
 
-        public InArgument<int> RowIndex { get; set; }
+        public Input<Number> RowIndex { get; set; }
 
-        public InArgument<int> ColumnIndex { get; set; }
+        public Input<Number> ColumnIndex { get; set; }
 
-        public OutArgument<string> CellValue { get; set; }
+        public Output<Text> CellValue { get; set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             // inputs
             var workbookPath = context.Get(this.WorkbookPath);
             var worksheetName = context.Get(this.WorksheetName);
             var rowIndex = context.Get(this.RowIndex);
             var columnIndex = context.Get(this.ColumnIndex);
-         
+
             var bot = ExcelBot.Shared;
             var xlApp = bot.Get(workbookPath);
             var xlWbs = xlApp.Workbooks;

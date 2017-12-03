@@ -4,9 +4,9 @@ namespace Roro.Activities.Excel
 {
     public class CreateWorkbook : Activity
     {
-        public OutArgument<string> Path { get; set; }
+        public Output<Text> Path { get; set; }
 
-        public override void Execute(Context context)
+        public override void Execute(ActivityContext context)
         {
             // inputs
             //

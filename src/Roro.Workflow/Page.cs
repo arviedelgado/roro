@@ -59,25 +59,14 @@ namespace Roro.Workflow
 
         private SKControl skWorkspace;
 
-        private PropertyGrid propGrid;
-
-        public void AttachEvents(Panel skWorkspaceParent, Panel propGridParent)
+        public void AttachEvents(Panel skWorkspaceParent)
         {
             //
             this.skWorkspace = new SKControl();
             this.skWorkspace.Dock = DockStyle.Fill;
             this.skWorkspace.PaintSurface += OnPaintSurface;
             this.skWorkspace.MouseDown += MouseEvents;
-            skWorkspaceParent.Controls.Add(this.skWorkspace);
-            //
-            this.propGrid = new PropertyGrid();
-            this.propGrid.Dock = DockStyle.Fill;
-            this.propGrid.PropertyValueChanged += (s, e) => this.skWorkspace.Invalidate();
-            this.propGrid.PropertySort = PropertySort.Categorized;
-            this.propGrid.ToolbarVisible = false;
-            this.propGrid.LineColor = Color.FromArgb(230, 230, 230);
-
-            propGridParent.Controls.Add(this.propGrid);
+            this.skWorkspace.Parent = skWorkspaceParent;
         }
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
@@ -113,8 +102,6 @@ namespace Roro.Workflow
             Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
             Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);
 
-            // Update Property Grid
-            this.propGrid.SelectedObject = this.SelectedNodes.Count == 1 ? this.SelectedNodes.First().Activity : null;
         }
 
         private void RenderBackground(SKPaintSurfaceEventArgs e)

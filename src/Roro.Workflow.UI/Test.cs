@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Roro.Activities;
+using System;
 using System.Linq;
 
 namespace Roro.Workflow.UI
@@ -30,10 +31,6 @@ namespace Roro.Workflow.UI
         {
             var doc = new Document();
             var page = doc.Pages.First();
-            page.AddNode<ProcessNode>();
-            page.AddNode<DecisionNode>();
-            page.AddNode<ProcessNode>();
-            page.AddNode<EndNode>();
 
             Console.Clear();
             Console.WriteLine("Serializing Object to XML . . .");
@@ -52,15 +49,9 @@ namespace Roro.Workflow.UI
             Console.WriteLine("Matched: {0}", a == b);
             Console.WriteLine();
 
-            return doc;
+            Console.ReadKey(true);
 
-    //        var activities = AppDomain.CurrentDomain.GetAssemblies()
-    //.SelectMany(x => x.GetTypes())
-    //.Where(x => x.BaseType == typeof(Roro.Activities.Activity));
-    //        foreach (var act in activities)
-    //        {
-    //            Console.WriteLine(act);
-    //        }
+            return doc;
 
         }
     }

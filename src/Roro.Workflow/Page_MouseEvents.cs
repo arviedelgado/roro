@@ -21,8 +21,8 @@ namespace Roro.Workflow
 
         private void MouseEvents(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseDoubleClick -= SkWorkspace_MouseDoubleClick;
-            this.canvas.MouseDoubleClick += SkWorkspace_MouseDoubleClick;
+            this.canvas.MouseDoubleClick -= Canvas_MouseDoubleClick;
+            this.canvas.MouseDoubleClick += Canvas_MouseDoubleClick;
 
             // Pick Node from Point
             this.canvas.MouseMove += this.SelectNodeFromPointCancel;
@@ -56,7 +56,7 @@ namespace Roro.Workflow
             }
         }
 
-        private void SkWorkspace_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void Canvas_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (this.GetNodeFromPoint(e.Location) is Node node)
             {

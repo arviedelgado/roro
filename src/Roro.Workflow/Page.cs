@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Roro.Activities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -30,7 +31,7 @@ namespace Roro.Workflow
             this.Id = Guid.NewGuid();
             this.Name = string.Format("My{0}_{1}", this.GetType().Name, DateTime.Now.Ticks);
             this.Nodes = new List<Node>();
-            this.AddNode<StartNode>();
+            this.AddNode<StartNode>(new StartNodeActivity());
             this.SelectedNodes = new HashSet<Node>();
             this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
         }
@@ -49,9 +50,12 @@ namespace Roro.Workflow
             return null;
         }
 
-        public void AddNode<T>() where T : Node, new()
+        public Node AddNode<T>(Activity activity) where T : Node, new()
         {
-            this.Nodes.Add(new T());
+            var node = new T();
+            this.Nodes.Add(node);
+            node.Activity = activity;
+            return node;
         }
 
         #region Events

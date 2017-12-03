@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
@@ -49,5 +51,24 @@ namespace Roro.Activities
         }
 
         public abstract void Execute(ActivityContext context);
+
+        public static IEnumerable<Type> GetActivities()
+        {
+            foreach (var file in Directory.GetFiles(Environment.CurrentDirectory, "Roro.Activities.Excel.dll"))
+            {
+                Assembly.LoadFrom(file);
+            }
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => typeof(Activity).IsAssignableFrom(x) && !x.IsAbstract &&
+                            x != typeof(StartNodeActivity) &&
+                            x != typeof(EndNodeActivity));
+        }
+
+        public static Activity CreateInstance(string name)
+        {
+            var activityType = Activity.GetActivities().Where(x => x.FullName == name).First();
+            return Activator.CreateInstance(activityType) as Activity;
+        }
     }
 }

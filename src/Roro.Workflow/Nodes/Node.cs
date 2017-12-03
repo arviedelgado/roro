@@ -23,6 +23,8 @@ namespace Roro.Workflow
 
         public void SetBounds(Rectangle rect)
         {
+            rect.X = (rect.X / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
+            rect.Y = (rect.Y / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
             foreach (var port in this.Ports)
             {
                 port.UpdateBounds(rect);
@@ -68,7 +70,6 @@ namespace Roro.Workflow
                 PageRenderOptions.GridSize * this.GetSize().Height);
             this.Ports = new List<Port>();
             this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
-            this.Activity = new GetCellValue();
         }
 
         public abstract Size GetSize();

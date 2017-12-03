@@ -1,9 +1,8 @@
-﻿using SkiaSharp;
-using SkiaSharp.Views.Desktop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
@@ -24,7 +23,7 @@ namespace Roro.Workflow
 
         private HashSet<Node> SelectedNodes { get; set; }
 
-        private Dictionary<Node, SKPath> RenderedNodes { get; }
+        private Dictionary<Node, GraphicsPath> RenderedNodes { get; }
 
         public Page()
         {
@@ -33,7 +32,7 @@ namespace Roro.Workflow
             this.Nodes = new List<Node>();
             this.AddNode<StartNode>();
             this.SelectedNodes = new HashSet<Node>();
-            this.RenderedNodes = new Dictionary<Node, SKPath>();
+            this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
         }
 
         public Node GetNodeById(Guid id)
@@ -43,7 +42,7 @@ namespace Roro.Workflow
 
         public Node GetNodeFromPoint(Point pt)
         {
-            if (this.RenderedNodes.FirstOrDefault(x => x.Value.Contains(pt.X, pt.Y)) is KeyValuePair<Node, SKPath> item)
+            if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt.X, pt.Y)) is KeyValuePair<Node, GraphicsPath> item)
             {
                 return item.Key;
             }
@@ -57,76 +56,68 @@ namespace Roro.Workflow
 
         #region Events
 
-        private SKControl skWorkspace;
+        private Control canvas;
 
-        public void AttachEvents(Panel skWorkspaceParent)
+        public void AttachEvents(Panel canvas)
         {
             //
-            this.skWorkspace = new SKControl();
-            this.skWorkspace.Dock = DockStyle.Fill;
-            this.skWorkspace.PaintSurface += OnPaintSurface;
-            this.skWorkspace.MouseDown += MouseEvents;
-            this.skWorkspace.Parent = skWorkspaceParent;
+            this.canvas = canvas;
+            this.canvas.Dock = DockStyle.Fill;
+            this.canvas.Paint += OnPaint;
+            this.canvas.MouseDown += MouseEvents;
+            this.canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.canvas, true);
         }
 
-        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        private void OnPaint(object sender, PaintEventArgs e)
         {
             Console.Clear();
             var total = Stopwatch.StartNew();
 
+            var g = e.Graphics;
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
             var sw = Stopwatch.StartNew();
-            this.RenderBackground(e);
+            this.RenderBackground(g);
             Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
-            this.RenderNodes(e);
+            this.RenderNodes(g);
             Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
-            this.RenderLines(e);
+            this.RenderLines(g);
             Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
-            this.RenderPorts(e);
+            this.RenderPorts(g);
             Console.WriteLine("Render Ports\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             if (this.SelectNodeRect != Rectangle.Empty)
             {
-                using (var p = new SKPaint() { IsAntialias = true })
-                {
-                    p.Color = new Pen(PageRenderOptions.SelectionBackBrush).Color.ToSKColor();
-                    e.Surface.Canvas.DrawRect(this.SelectNodeRect.ToSKRect(), p);
-                }
+                e.Graphics.FillRectangle(PageRenderOptions.SelectionBackBrush, this.SelectNodeRect);
             }
 
             Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
             Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);
-
         }
 
-        private void RenderBackground(SKPaintSurfaceEventArgs e)
+        private void RenderBackground(Graphics g)
         {
-            var r = e.Info.Rect;
-            var g = e.Surface.Canvas;
-            using (var p = new SKPaint())
+            var r = g.ClipBounds;
+            g.Clear(PageRenderOptions.BackColor);
+            for (var y = 0; y < r.Height; y += PageRenderOptions.GridSize)
             {
-                g.Clear(PageRenderOptions.BackColor.ToSKColor());
-                p.Color = PageRenderOptions.GridPen.Color.ToSKColor();
-                p.StrokeWidth = PageRenderOptions.GridPen.Width;
-                for (var y = 0; y < r.Height; y += PageRenderOptions.GridSize)
-                {
-                    g.DrawLine(0, y, r.Width, y, p);
-                }
-                for (var x = 0; x < r.Width; x += PageRenderOptions.GridSize)
-                {
-                    g.DrawLine(x, 0, x, r.Height, p);
-                }
+                g.DrawLine(PageRenderOptions.GridPen, 0, y, r.Width, y);
+            }
+            for (var x = 0; x < r.Width; x += PageRenderOptions.GridSize)
+            {
+                g.DrawLine(PageRenderOptions.GridPen, x, 0, x, r.Height);
             }
         }
 
-        private void RenderPorts(SKPaintSurfaceEventArgs e)
+        private void RenderPorts(Graphics g)
         {
-            var g = e.Surface.Canvas;
             var o = new NodeStyle();
             foreach (var node in this.Nodes)
             {
@@ -136,41 +127,35 @@ namespace Roro.Workflow
                 {
                     var portPath = port.Render(g, node.Bounds, o);
                     node.RenderedPorts.Add(port, portPath);
-                    nodePath.AddPath(portPath, SKPathAddMode.Append);
+                    nodePath.FillMode = FillMode.Winding;
+                    nodePath.AddPath(portPath, false);
                 }
             }
         }
 
-        private void RenderLines(SKPaintSurfaceEventArgs e)
+        private void RenderLines(Graphics g)
         {
-            var g = e.Surface.Canvas;
             var o = new NodeStyle();
             var f = new PathFinder(this.Nodes);
-            using (var p = new SKPaint() { IsAntialias = true })
+            foreach (var node in this.Nodes)
             {
-                p.IsStroke = true;
-                p.StrokeWidth = o.LinePen.Width;
-                foreach (var node in this.Nodes)
+                foreach (var port in node.Ports)
                 {
-                    foreach (var port in node.Ports)
+                    o.LinePenWithArrow.Brush = port.GetBackBrush();
+                    if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort == port)
                     {
-                        p.Color = new Pen(port.GetBackBrush()).Color.ToSKColor().WithAlpha(255);
-                        if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort == port)
-                        {
-                            g.DrawLine(port.Bounds.Center().X, port.Bounds.Center().Y, this.LinkNodeEndPoint.X, this.LinkNodeEndPoint.Y, p);
-                        }
-                        else if (this.GetNodeById(port.NextNodeId) is Node linkedNode)
-                        {
-                            g.DrawPath(f.GetPath(port.Bounds.Center(), linkedNode.Bounds.CenterTop()), p);
-                        }
+                        g.DrawLine(o.LinePenWithArrow, port.Bounds.Center().X, port.Bounds.Center().Y, this.LinkNodeEndPoint.X, this.LinkNodeEndPoint.Y);
+                    }
+                    else if (this.GetNodeById(port.NextNodeId) is Node linkedNode)
+                    {
+                        g.DrawPath(o.LinePenWithArrow, f.GetPath(port.Bounds.Center(), linkedNode.Bounds.CenterTop()));
                     }
                 }
             }
         }
 
-        private void RenderNodes(SKPaintSurfaceEventArgs e)
+        private void RenderNodes(Graphics g)
         {
-            var g = e.Surface.Canvas;
             this.RenderedNodes.Clear();
             foreach (var node in this.Nodes)
             {

@@ -40,4 +40,3 @@ See [bin](bin) folder for the compiled binaries.
 
 ## Roro uses the following projects
 - [x] [Selenium](https://github.com/SeleniumHQ/selenium) for web browser automation
-- [x] [SkiaSharp](https://github.com/mono/SkiaSharp) for BotCreator designer rendering

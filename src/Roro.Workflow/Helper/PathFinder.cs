@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Diagnostics;
-using SkiaSharp;
+using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
@@ -50,7 +50,7 @@ namespace Roro.Workflow
             }
         }
 
-        public SKPath GetPath(Point startPt, Point endPt)
+        public GraphicsPath GetPath(Point startPt, Point endPt)
         {
             this.Session = Guid.NewGuid();
 
@@ -65,14 +65,20 @@ namespace Roro.Workflow
 
             endCell.Parent = startCell;
 
-            return this.GetPath(startCell, endCell);
+            var path = this.GetPath(startCell, endCell);
+
+            path.AddLine(startPt, startPt);
+            path.Reverse();
+            path.AddLine(endPt, endPt);
+
+            return path;
         }
 
-        private SKPath GetPath(Cell startCell, Cell endCell)
+        private GraphicsPath GetPath(Cell startCell, Cell endCell)
         {
             if (startCell == null || endCell == null)
             {
-                return new SKPath();
+                return new GraphicsPath();
             }
 
             var stopWatch = Stopwatch.StartNew();
@@ -128,7 +134,7 @@ namespace Roro.Workflow
                 {
                     nextCell.RowEffort = nextCell.Location.GetRowEffort(endCell.Location);
                     nextCell.ColEffort = nextCell.Location.GetColEffort(endCell.Location);
-                    var nextCellNewCost = currentCell.CurrentCost + 1; // (nextCell.Direction == currentCell.Direction ? 0 : 10);
+                    var nextCellNewCost = currentCell.CurrentCost + 1;
                     if (nextCell.CurrentCost == 0 || nextCellNewCost < nextCell.CurrentCost)
                     {
                         nextCell.CurrentCost = nextCellNewCost;
@@ -142,75 +148,86 @@ namespace Roro.Workflow
             return nextCells.OrderBy(node => node.Priority).ThenByDescending(node => node.Direction == currentCell.Direction);
         }
 
-        private SKPath TracePath(Cell startCell, Cell endCell)
+        private GraphicsPath TracePath(Cell startCell, Cell endCell)
         {
-            var bending = false;
-            var lineToCell = endCell;
-            var endToStartPath = new SKPath();
-            while (lineToCell != null)
+            var path = new GraphicsPath();
+            bool bending = false; // Jon Snow.
+            var a = endCell;
+            while (a != startCell && a.Parent is Cell b)
             {
-                var lineToPt = new SKPoint(
-                    PageRenderOptions.GridSize * lineToCell.Location.Col,
-                    PageRenderOptions.GridSize * lineToCell.Location.Row);
-                if (lineToCell.Parent is Cell cornerCell &&
-                    cornerCell.Parent is Cell arcToCell &&
-                    lineToCell.Location.Col != arcToCell.Location.Col &&
-                    lineToCell.Location.Row != arcToCell.Location.Row)
-                {
-                    var cornerPt = new SKPoint(
-                        PageRenderOptions.GridSize * cornerCell.Location.Col,
-                        PageRenderOptions.GridSize * cornerCell.Location.Row);
-
-                    var arcToPt = new SKPoint(
-                        PageRenderOptions.GridSize * arcToCell.Location.Col,
-                        PageRenderOptions.GridSize * arcToCell.Location.Row);
-
-                    if (endToStartPath.IsEmpty)
-                    {
-                        endToStartPath.MoveTo(lineToPt);
-                    }
-                    endToStartPath.ArcTo(cornerPt, arcToPt, PageRenderOptions.GridSize / 2);
-
-                    bending = true;
-                }
-                else
+                var aDir = a.Direction.Scale(-1);
+                var bDir = b.Direction.Scale(-1);
+                var aLoc = a.Location;
+                var bLoc = b.Location;
+                var cLoc = b.Location.Translate(bDir.Row, bDir.Col);
+                var rect = new Rectangle(
+                    PageRenderOptions.GridSize * Math.Min(aLoc.Col, Math.Min(bLoc.Col, cLoc.Col)),
+                    PageRenderOptions.GridSize * Math.Min(aLoc.Row, Math.Min(bLoc.Row, cLoc.Row)),
+                    PageRenderOptions.GridSize * 1,
+                    PageRenderOptions.GridSize * 1);
+                if (aDir == bDir)
                 {
                     if (bending)
                     {
                         bending = false;
                     }
-                    else
+                }
+                else
+                {
+                    bending = true;
+                    if (aDir == Cell.MoveUp && bDir == Cell.MoveLeft)
                     {
-                        if (endToStartPath.IsEmpty)
-                        {
-                            endToStartPath.MoveTo(lineToPt);
-                        }
-                        else
-                        {
-                            endToStartPath.LineTo(lineToPt);
-                        }
+                        // c b
+                        //   a
+                        path.AddArc(rect, 0, -90);
+                    }
+                    else if (aDir == Cell.MoveUp && bDir == Cell.MoveRight)
+                    {
+                        // b c
+                        // a
+                        path.AddArc(rect, 180, 90);
+                    }
+                    else if (aDir == Cell.MoveDown && bDir == Cell.MoveLeft)
+                    {
+                        //   a
+                        // c b
+                        path.AddArc(rect, 0, 90);
+                    }
+                    else if (aDir == Cell.MoveDown && bDir == Cell.MoveRight)
+                    {
+                        // a
+                        // b c
+                        path.AddArc(rect, 180, -90);
+                    }
+                    else if (aDir == Cell.MoveLeft && bDir == Cell.MoveUp)
+                    {
+                        // c
+                        // b a
+                        path.AddArc(rect, 90, 90);
+                    }
+                    else if (aDir == Cell.MoveLeft && bDir == Cell.MoveDown)
+                    {
+                        // b a
+                        // c
+                        path.AddArc(rect, -90, -90);
+                    }
+                    else if (aDir == Cell.MoveRight && bDir == Cell.MoveUp)
+                    {
+                        //   c
+                        // a b 
+                        path.AddArc(rect, 90, -90);
+                    }
+                    else if (aDir == Cell.MoveRight && bDir == Cell.MoveDown)
+                    {
+                        // a b 
+                        //   c
+                        path.AddArc(rect, -90, 90);
                     }
                 }
-                lineToCell = lineToCell.Parent;
+                a = b;
             }
 
-            // reverse path
-            var startToEndPath = new SKPath();
-            startToEndPath.AddPathReverse(endToStartPath);
-
-            // add end arrow
-            var lastPt = startToEndPath.LastPoint;
-            var prevPt = startToEndPath.GetPoint(startToEndPath.PointCount - 2);
-            var angle = Math.Atan2(lastPt.Y - prevPt.Y, lastPt.X - prevPt.X) * 180 / Math.PI;
-            var arrow = new SKPath();
-            arrow.MoveTo(lastPt);
-            arrow.RLineTo(new SKPoint(-PageRenderOptions.GridSize / 2, +PageRenderOptions.GridSize / 2));
-            arrow.MoveTo(lastPt);
-            arrow.RLineTo(new SKPoint(-PageRenderOptions.GridSize / 2, -PageRenderOptions.GridSize / 2));
-            arrow.Transform(SKMatrix.MakeRotationDegrees((float)angle, lastPt.X, lastPt.Y));
-            startToEndPath.AddPath(arrow, SKPathAddMode.Append);
-
-            return startToEndPath;
+            return path;
         }
     }
 }

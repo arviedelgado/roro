@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\Helpers.cs" />
+    <Compile Include="Nodes\LoopEndNode.cs" />
+    <Compile Include="Nodes\PreparationNode.cs" />
+    <Compile Include="Nodes\LoopStartNode.cs" />
     <Compile Include="Page_PaintEvents.cs" />
     <Compile Include="Page_KeyEvents.cs" />
     <Compile Include="Port.cs" />

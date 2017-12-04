@@ -65,6 +65,21 @@ namespace Roro.Workflow
                 node = new EndNode();
                 node.Name = "End";
             }
+            else if (activity is LoopStartNodeActivity)
+            {
+                node = new LoopStartNode();
+                node.Name = "Loop Start";
+            }
+            else if (activity is LoopEndNodeActivity)
+            {
+                node = new LoopEndNode();
+                node.Name = "Loop End";
+            }
+            else if (activity is PreparationNodeActivity)
+            {
+                node = new PreparationNode();
+                node.Name = "Preparation";
+            }
             else
             {
                 node = new ProcessNode();

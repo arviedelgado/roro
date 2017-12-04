@@ -23,8 +23,8 @@ namespace Roro.Workflow
 
         public void SetBounds(Rectangle rect)
         {
-            rect.X = (rect.X / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
-            rect.Y = (rect.Y / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
+            rect.X = Math.Max(0, (rect.X / PageRenderOptions.GridSize) * PageRenderOptions.GridSize);
+            rect.Y = Math.Max(0, (rect.Y / PageRenderOptions.GridSize) * PageRenderOptions.GridSize);
             foreach (var port in this.Ports)
             {
                 port.UpdateBounds(rect);

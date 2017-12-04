@@ -160,8 +160,6 @@ namespace Roro.Workflow
             {
                 var rect = node.Bounds;
                 rect.Offset(this.MoveNodeOffsetPoint);
-                rect.X = Math.Max(0, rect.X);
-                rect.Y = Math.Max(0, rect.Y);
                 node.SetBounds(rect);
             }
             this.MoveNodeOffsetPoint = Point.Empty;

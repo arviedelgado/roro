@@ -43,6 +43,9 @@ namespace Roro.Workflow.UI
 
         private void ActivitiesTreeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
+            var view = sender as TreeView;
+            var node = e.Item as TreeNode;
+            view.SelectedNode = node;
             this.DoDragDrop(e.Item, DragDropEffects.Move);
         }
 
@@ -51,8 +54,7 @@ namespace Roro.Workflow.UI
             if (e.Data.GetData(typeof(TreeNode).FullName) is TreeNode treeNode)
             {
                 var canvas = sender as Control;
-                var activity = Activity.CreateInstance(treeNode.Name);
-                var node = robot.Pages.First().AddNode<ProcessNode>(activity);
+                var node = robot.Pages.First().AddNode(treeNode.Name);
                 var rect = node.Bounds;
                 rect.Location = canvas.PointToClient(new Point(e.X, e.Y));
                 rect.Offset(-rect.Width / 2, -rect.Height / 2);

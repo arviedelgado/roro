@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -60,9 +59,7 @@ namespace Roro.Activities
             }
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
-                .Where(x => typeof(Activity).IsAssignableFrom(x) && !x.IsAbstract &&
-                            x != typeof(StartNodeActivity) &&
-                            x != typeof(EndNodeActivity));
+                .Where(x => typeof(Activity).IsAssignableFrom(x) && !x.IsAbstract);
         }
 
         public static Activity CreateInstance(string name)

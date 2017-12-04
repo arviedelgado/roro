@@ -67,9 +67,10 @@ namespace Roro.Workflow
             //
             this.canvas = canvas;
             this.canvas.Dock = DockStyle.Fill;
+            this.canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.canvas, true);
             this.canvas.Paint += OnPaint;
             this.canvas.MouseDown += MouseEvents;
-            this.canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.canvas, true);
+            this.canvas.KeyDown += KeyEvents;
         }
 
         private void OnPaint(object sender, PaintEventArgs e)

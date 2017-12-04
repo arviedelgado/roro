@@ -1,14 +1,14 @@
-﻿using System.Drawing;
+﻿using Roro.Activities;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
-    public sealed class DecisionNode : Node
+    public sealed class LoopStartNode : Node
     {
-        public DecisionNode()
+        public LoopStartNode()
         {
-            this.Ports.Add(new TruePort());
-            this.Ports.Add(new FalsePort());
+            this.Ports.Add(new NextPort());
         }
 
         public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
@@ -17,10 +17,12 @@ namespace Roro.Workflow
             path.StartFigure();
             path.AddPolygon(new Point[]
             {
-                r.CenterTop(),
-                r.CenterRight(),
-                r.CenterBottom(),
-                r.CenterLeft()
+                new Point(r.X + PageRenderOptions.GridSize, r.Y),
+                new Point(r.Right - PageRenderOptions.GridSize, r.Y),
+                new Point(r.Right, r.Y + PageRenderOptions.GridSize),
+                new Point(r.Right, r.Bottom),
+                new Point(r.X, r.Bottom),
+                new Point(r.X, r.Y + PageRenderOptions.GridSize)
             });
             path.CloseFigure();
             //

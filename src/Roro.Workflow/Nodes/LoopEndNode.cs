@@ -3,9 +3,9 @@ using System.Drawing.Drawing2D;
 
 namespace Roro.Workflow
 {
-    public sealed class ProcessNode : Node
+    public sealed class LoopEndNode : Node
     {
-        public ProcessNode()
+        public LoopEndNode()
         {
             this.Ports.Add(new NextPort());
         }
@@ -14,7 +14,15 @@ namespace Roro.Workflow
         {
             var path = new GraphicsPath();
             path.StartFigure();
-            path.AddRectangle(r);
+            path.AddPolygon(new Point[]
+            {
+                new Point(r.X, r.Y),
+                new Point(r.Right, r.Y),
+                new Point(r.Right, r.Bottom - PageRenderOptions.GridSize),
+                new Point(r.Right - PageRenderOptions.GridSize, r.Bottom),
+                new Point(r.X + PageRenderOptions.GridSize, r.Bottom),
+                new Point(r.X, r.Bottom - PageRenderOptions.GridSize)
+            });
             path.CloseFigure();
             //
             g.FillPath(o.BackBrush, path);

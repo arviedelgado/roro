@@ -21,6 +21,10 @@ namespace Roro.Workflow
         [DataMember]
         public Rectangle Bounds { get; private set; }
 
+        public virtual bool CanStartLink => true;
+
+        public virtual bool CanEndLink => true;
+
         public void SetBounds(Rectangle rect)
         {
             rect.X = Math.Max(0, (rect.X / PageRenderOptions.GridSize) * PageRenderOptions.GridSize);

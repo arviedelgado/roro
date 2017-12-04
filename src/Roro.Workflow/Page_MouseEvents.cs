@@ -34,10 +34,13 @@ namespace Roro.Workflow
                 if (node.GetPortFromPoint(e.Location) is Port port)
                 {
                     // Link Nodes
-                    this.canvas.MouseMove += this.LinkNodeStart;
-                    this.canvas.MouseUp += this.LinkNodeCancel;
-                    this.LinkNodeStartPort = port;
-                    this.LinkNodeEndPoint = Point.Empty;
+                    if (node.CanStartLink)
+                    {
+                        this.canvas.MouseMove += this.LinkNodeStart;
+                        this.canvas.MouseUp += this.LinkNodeCancel;
+                        this.LinkNodeStartPort = port;
+                        this.LinkNodeEndPoint = Point.Empty;
+                    }
                 }
                 else
                 {
@@ -97,7 +100,7 @@ namespace Roro.Workflow
             this.canvas.MouseUp -= this.LinkNodeEnd;
             this.LinkNodeEndPoint = Point.Empty;
             //
-            if (this.GetNodeFromPoint(e.Location) is Node node)
+            if (this.GetNodeFromPoint(e.Location) is Node node && node.CanEndLink)
             {
                 this.LinkNodeStartPort.NextNodeId = node.Id;
             }

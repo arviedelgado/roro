@@ -6,10 +6,7 @@ namespace Roro.Workflow
 {
     public sealed class EndNode : Node
     {
-        public EndNode()
-        {
-            this.Activity = new EndNodeActivity();
-        }
+        public override bool CanStartLink => false;
 
         public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {

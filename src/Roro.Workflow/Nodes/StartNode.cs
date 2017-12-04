@@ -6,10 +6,11 @@ namespace Roro.Workflow
 {
     public sealed class StartNode : Node
     {
+        public override bool CanEndLink => false;
+
         public StartNode()
         {
             this.Ports.Add(new NextPort());
-            this.Activity = new StartNodeActivity();
         }
 
         public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)

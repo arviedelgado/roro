@@ -2,9 +2,9 @@
 
 namespace Roro.Activities.Excel
 {
-    public class OpenWorkbook : Activity
+    public class OpenWorkbook : ProcessNodeActivity
     {
-        public Input<Text> Path { get; set; }
+        public InArgument<Text> Path { get; set; }
 
         public override void Execute(ActivityContext context)
         {

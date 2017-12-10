@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HasWorksheet.cs" />
     <Compile Include="GetCellValue.cs" />
     <Compile Include="SetCellValue.cs" />
     <Compile Include="AddWorksheet.cs" />

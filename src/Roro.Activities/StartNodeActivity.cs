@@ -1,21 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace Roro.Activities
 {
+    [DataContract]
     public sealed class StartNodeActivity : Activity
     {
-        public override List<Input> Inputs { get; protected set; }
+        public override bool AllowUserToEditArgumentRowList => true;
 
-        public override void Execute(ActivityContext context)
+        public override bool AllowUserToEditArgumentColumn1 => true;
+
+        public override bool AllowUserToEditArgumentColumn2 => true;
+
+        public override bool AllowUserToEditArgumentColumn3 => true;
+
+        [DataMember]
+        private List<OutArgument> OutArguments { get; set; }
+
+        protected override List<OutArgument> GetOutArguments() => this.OutArguments;
+
+        public StartNodeActivity() => this.OutArguments = new List<OutArgument>();
+
+        public void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
-        }
-
-        public StartNodeActivity()
-        {
-            this.Inputs = new List<Input>();
-            this.Inputs.Add(new Input<Number>("My Custom Input"));
         }
     }
 }

@@ -46,26 +46,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArgumentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="ProcessNodeActivity.cs" />
+    <Compile Include="DecisionNodeActivity.cs" />
     <Compile Include="ActivityContext.cs" />
+    <Compile Include="DataTypeColumn.cs" />
+    <Compile Include="DataTypeCell.cs" />
     <Compile Include="DataType.cs" />
     <Compile Include="Argument.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="EndNodeActivity.cs" />
     <Compile Include="LoopEndNodeActivity.cs" />
     <Compile Include="PreparationNodeActivity.cs" />
-    <Compile Include="PropertyEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="LoopStartNodeActivity.cs" />
     <Compile Include="StartNodeActivity.cs" />
+    <Compile Include="VariableCell.cs" />
+    <Compile Include="VariableColumn.cs" />
     <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PropertyEditor.resx">
-      <DependentUpon>PropertyEditor.cs</DependentUpon>
+    <EmbeddedResource Include="ActivityForm.resx">
+      <DependentUpon>ActivityForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ArgumentForm.resx">
+      <DependentUpon>ArgumentForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

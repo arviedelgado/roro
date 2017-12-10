@@ -78,12 +78,6 @@ namespace Roro.Workflow
         private static string OnSerialized(string xml)
         {
             var xDoc = XDocument.Parse(xml);
-
-            // Excluded all new members of the derived classes of Activity base class.
-            xDoc.Descendants().Where(x => x.Name.LocalName == "Activity")
-                .Elements().Where(x => x.Name.LocalName != "Inputs" && x.Name.LocalName != "Outputs")
-                .Remove();
-
             return xDoc.ToString();
         }
 

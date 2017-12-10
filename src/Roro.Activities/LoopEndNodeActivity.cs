@@ -4,14 +4,9 @@ namespace Roro.Activities
 {
     public sealed class LoopEndNodeActivity : Activity
     {
-        public override void Execute(ActivityContext context)
+        public void Execute(ActivityContext context)
         {
-            throw new NotImplementedException();
-        }
-
-        public LoopEndNodeActivity()
-        {
-
+            throw new NotImplementedException();   
         }
     }
 }

@@ -1,17 +1,19 @@
 ﻿using Roro.Activities;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.Serialization;
 
 namespace Roro.Workflow
 {
+    [DataContract]
     public sealed class StartNode : Node
     {
-        public override bool CanEndLink => false;
-
-        public StartNode()
+        public StartNode(Activity activity) : base(activity)
         {
             this.Ports.Add(new NextPort());
         }
+
+        public override bool CanEndLink => false;
 
         public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
         {

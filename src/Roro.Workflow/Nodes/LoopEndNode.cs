@@ -1,11 +1,14 @@
-﻿using System.Drawing;
+﻿using Roro.Activities;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.Serialization;
 
 namespace Roro.Workflow
 {
+    [DataContract]
     public sealed class LoopEndNode : Node
     {
-        public LoopEndNode()
+        public LoopEndNode(Activity activity) : base(activity)
         {
             this.Ports.Add(new NextPort());
         }

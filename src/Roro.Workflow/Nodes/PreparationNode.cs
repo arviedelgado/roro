@@ -1,12 +1,14 @@
 ﻿using Roro.Activities;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.Serialization;
 
 namespace Roro.Workflow
 {
+    [DataContract]
     public sealed class PreparationNode : Node
     {
-        public PreparationNode()
+        public PreparationNode(Activity activity) : base(activity)
         {
             this.Ports.Add(new NextPort());
         }

@@ -1,11 +1,14 @@
-﻿using System.Drawing;
+﻿using Roro.Activities;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.Serialization;
 
 namespace Roro.Workflow
 {
+    [DataContract]
     public sealed class DecisionNode : Node
     {
-        public DecisionNode()
+        public DecisionNode(Activity activity) : base(activity)
         {
             this.Ports.Add(new TruePort());
             this.Ports.Add(new FalsePort());

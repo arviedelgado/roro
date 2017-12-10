@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Windows.Forms;
+using System.Security;
 
 namespace Roro.Activities
 {
@@ -15,6 +15,19 @@ namespace Roro.Activities
 
         [DataMember]
         public string Name { get; protected set; }
+
+        public static List<DataType> GetCommonTypes()
+        {
+            return new List<DataType>()
+            {
+                new Text(),
+                new Number(),
+                new Flag(),
+                new DateTime(),
+                new Password(),
+                new Collection()
+            };
+        }
 
         public static DataType GetTypeById(string id)
         {
@@ -89,39 +102,36 @@ namespace Roro.Activities
         public static implicit operator Flag(Boolean item) => new Flag(item);
     }
 
-    public sealed class DateAndTime : DataType<DateTime>
+    public sealed class DateTime : DataType<System.DateTime>
     {
-        public DateAndTime() : this(DateTime.MinValue) { }
+        public DateTime() : this(System.DateTime.MinValue) { }
 
-        public DateAndTime(DateTime value) : base(value) { }
+        public DateTime(System.DateTime value) : base(value) { }
 
-        public static implicit operator DateTime(DateAndTime item) => item.Value;
+        public static implicit operator System.DateTime(DateTime item) => item.Value;
 
-        public static implicit operator DateAndTime(DateTime item) => new DateAndTime(item);
+        public static implicit operator DateTime(System.DateTime item) => new DateTime(item);
     }
 
-    public sealed class DataTypeColumn : DataGridViewComboBoxColumn
+    public sealed class Collection : DataType<DataTable>
     {
-        public DataTypeColumn()
-        {
-            this.CellTemplate = new DataTypeCell();
-            this.ValueType = typeof(DataType);
-            this.DataSource = new List<DataType>() { new Text(), new Number() };
-            this.ValueMember = "Id";
-            this.DisplayMember = "Name";
-            this.DisplayStyleForCurrentCellOnly = true;
-        }
+        public Collection() : this(new DataTable()) { }
+
+        public Collection(DataTable value) : base(value) { }
+
+        public static implicit operator DataTable(Collection item) => item.Value;
+
+        public static implicit operator Collection(DataTable item) => new Collection(item);
     }
 
-    public sealed class DataTypeCell : DataGridViewComboBoxCell
+    public sealed class Password : DataType<SecureString>
     {
-        public void OnDataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            this.DataSource = new List<DataType>(this.DataSource as List<DataType>)
-            {
-                DataType.GetTypeById(this.Value.ToString())
-            };
-            e.ThrowException = false;
-        }
+        public Password() : this(new SecureString()) { }
+
+        public Password(SecureString value) : base(value) { }
+
+        public static implicit operator SecureString(Password item) => item.Value;
+
+        public static implicit operator Password(SecureString item) => new Password(item);
     }
- }
+}

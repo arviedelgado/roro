@@ -1,5 +1,6 @@
 ﻿using Roro.Activities;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -63,9 +64,9 @@ namespace Roro.Workflow
 
         private void Canvas_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (this.GetNodeFromPoint(e.Location) is Node node)
+            if (this.GetNodeFromPoint(e.Location) is Node node && node.Activity is Activity activity)
             {
-                using (var f = new PropertyEditor(node.Activity))
+                using (var f = new ActivityForm(activity))
                 {
                     f.ShowDialog();
                 }

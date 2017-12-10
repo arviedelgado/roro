@@ -1,5 +1,4 @@
 ﻿using Roro.Activities;
-using Roro.Activities.Excel;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,6 +20,9 @@ namespace Roro.Workflow
         [DataMember]
         public Rectangle Bounds { get; private set; }
 
+        [DataMember]
+        public Activity Activity { get; private set; }
+
         public virtual bool CanStartLink => true;
 
         public virtual bool CanEndLink => true;
@@ -35,9 +37,6 @@ namespace Roro.Workflow
             }
             this.Bounds = rect;
         }
-
-        [DataMember]
-        public Activity Activity { get; set; }
 
         [DataMember]
         public List<Port> Ports { get; private set; }
@@ -63,7 +62,7 @@ namespace Roro.Workflow
             return Guid.Empty;
         }
 
-        public Node()
+        public Node(Activity activity)
         {
             this.Id = Guid.NewGuid();
             this.Name = string.Format("{0} {1} {2}", this.GetType().Name, Helper.Between(0, 999), Helper.Between(0, 999));
@@ -74,6 +73,7 @@ namespace Roro.Workflow
                 PageRenderOptions.GridSize * this.GetSize().Height);
             this.Ports = new List<Port>();
             this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
+            this.Activity = activity;
         }
 
         public abstract Size GetSize();

@@ -11,6 +11,11 @@ namespace Roro.Workflow
         private void OnPaint(object sender, PaintEventArgs e)
         {
             Console.Clear();
+
+            Console.WriteLine();
+            Console.WriteLine(DataContractSerializerHelper.ToString(this));
+            Console.WriteLine();
+
             var total = Stopwatch.StartNew();
 
             var g = e.Graphics;
@@ -39,7 +44,7 @@ namespace Roro.Workflow
             }
 
             Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
-            Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);
+            Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);           
         }
 
         private void RenderBackground(Graphics g)

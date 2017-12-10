@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Roro.Workflow
@@ -20,6 +19,12 @@ namespace Roro.Workflow
         public string Name { get; set; }
 
         [DataMember]
+        private StartNodeActivity StartNodeActivity { get; set; }
+
+        [DataMember]
+        private EndNodeActivity EndNodeActivity { get; set; }
+
+        [DataMember]
         private List<Node> Nodes { get; set; }
 
         private HashSet<Node> SelectedNodes { get; set; }
@@ -29,10 +34,10 @@ namespace Roro.Workflow
         public Page()
         {
             this.Id = Guid.NewGuid();
-            this.Name = string.Format("My{0}_{1}", this.GetType().Name, DateTime.Now.Ticks);
+            this.Name = string.Format("My{0}_{1}", this.GetType().Name, System.DateTime.Now.Ticks);
             this.Nodes = new List<Node>();
-            this.AddNode(typeof(StartNodeActivity).FullName);
-            this.AddNode(typeof(EndNodeActivity).FullName);
+            this.StartNodeActivity = new StartNodeActivity();
+            this.EndNodeActivity = new EndNodeActivity();
             this.SelectedNodes = new HashSet<Node>();
             this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
         }
@@ -57,35 +62,37 @@ namespace Roro.Workflow
             var activity = Activity.CreateInstance(activityFullName);
             if (activity is StartNodeActivity)
             {
-                node = new StartNode();
-                node.Name = "Start";
+                node = new StartNode(this.StartNodeActivity);
             }
             else if (activity is EndNodeActivity)
             {
-                node = new EndNode();
-                node.Name = "End";
+                node = new EndNode(this.EndNodeActivity);
             }
-            else if (activity is LoopStartNodeActivity)
+            else if (activity is ProcessNodeActivity)
             {
-                node = new LoopStartNode();
-                node.Name = "Loop Start";
+                node = new ProcessNode(activity);
             }
-            else if (activity is LoopEndNodeActivity)
+            else if (activity is DecisionNodeActivity)
             {
-                node = new LoopEndNode();
-                node.Name = "Loop End";
+                node = new DecisionNode(activity);
             }
             else if (activity is PreparationNodeActivity)
             {
-                node = new PreparationNode();
-                node.Name = "Preparation";
+                node = new PreparationNode(activity);
+            }
+            else if (activity is LoopStartNodeActivity)
+            {
+                node = new LoopStartNode(activity);
+            }
+            else if (activity is LoopEndNodeActivity)
+            {
+                node = new LoopEndNode(activity);
             }
             else
             {
-                node = new ProcessNode();
-                node.Name = Regex.Replace(activityFullName.Split('.').Last(), "([a-z](?=[A-Z0-9])|[A-Z](?=[A-Z][a-z]))", "$1 ");
+                throw new NotSupportedException();
             }
-            node.Activity = activity;
+            node.Name = activityFullName.Split('.').Last().Humanize();
             this.Nodes.Add(node);
             return node;
         }

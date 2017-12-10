@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Roro.Workflow.UI
@@ -31,8 +30,7 @@ namespace Roro.Workflow.UI
             this.activitiesTreeView.Nodes.Clear();
             foreach (var act in Activity.GetActivities())
             {
-                this.activitiesTreeView.Nodes.Add(act.FullName,
-                    Regex.Replace(act.Name, "([a-z](?=[A-Z0-9])|[A-Z](?=[A-Z][a-z]))", "$1 "));
+                this.activitiesTreeView.Nodes.Add(act.FullName, act.Name.Humanize());
             }
         }
 

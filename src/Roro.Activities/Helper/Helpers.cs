@@ -22,11 +22,5 @@ namespace Roro.Workflow
         public static Point CenterRight(this Rectangle r) => new Point(r.Right, r.Center().Y);
 
         public static Point CenterBottom(this Rectangle r) => new Point(r.Center().X, r.Bottom);
-        
-        // Random
-
-        private static readonly Random Randomizer = new Random();
-        
-        public static int Between(int min, int max) => Randomizer.Next(min, max);
     }
 }

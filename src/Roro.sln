@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Workflow", "Roro.Workflow\Roro.Workflow.csproj", "{DFA7C399-51B9-4391-8805-2731658965C6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities", "Roro.Activities\Roro.Activities.csproj", "{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{98ECD238-1FDD-40DE-A44B-8EB5FF45D16B} = {98ECD238-1FDD-40DE-A44B-8EB5FF45D16B}
@@ -31,10 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DFA7C399-51B9-4391-8805-2731658965C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFA7C399-51B9-4391-8805-2731658965C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFA7C399-51B9-4391-8805-2731658965C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFA7C399-51B9-4391-8805-2731658965C6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Release|Any CPU.ActiveCfg = Release|Any CPU

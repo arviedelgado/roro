@@ -87,6 +87,8 @@
     <Compile Include="LoopStartNodeActivity.cs" />
     <Compile Include="RenderOptions.cs" />
     <Compile Include="StartNodeActivity.cs" />
+    <Compile Include="GhostTextBoxColumn.cs" />
+    <Compile Include="GhostTextBoxCell.cs" />
     <Compile Include="VariableForm.cs">
       <SubType>Form</SubType>
     </Compile>

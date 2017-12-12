@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Roro.Workflow;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Roro.Activities
@@ -168,53 +168,57 @@ namespace Roro.Activities
 
         private ArgumentForm() => this.InitializeComponent();
 
-        public static Panel Create<T>(Activity activity, List<T> arguments, List<Variable> variables) where T : Argument
+        public static TableLayoutPanel Create(Page page, Node node)
         {
-            var dataTypes = DataType.GetCommonTypes();
-            variables.Insert(0, new Variable<Text>());
-           
-            var form = new ArgumentForm();
+            var activity = node.Activity;
+            var variables = page.Variables;
 
+            var argumentPanels = new List<Panel>();
+            if (ArgumentForm.Create<InArgument>(page, node) is Panel inArgumentPanel) argumentPanels.Add(inArgumentPanel);
+            if (ArgumentForm.Create<OutArgument>(page, node) is Panel outArgumentPanel) argumentPanels.Add(outArgumentPanel);
+            if (ArgumentForm.Create<InOutArgument>(page, node) is Panel inOutArgumentPanel) argumentPanels.Add(inOutArgumentPanel);
+
+            var argumentTableLayoutPanel = new TableLayoutPanel
+            {
+                ColumnCount = 1,
+                RowCount = argumentPanels.Count,
+                Dock = DockStyle.Fill,
+            };
+
+            argumentTableLayoutPanel.RowStyles.Clear();
+            foreach (var argumentPanel in argumentPanels)
+            {
+                argumentTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / argumentPanels.Count));
+                argumentTableLayoutPanel.Controls.Add(argumentPanel, 0, argumentTableLayoutPanel.RowStyles.Count - 1);
+            }
+
+            return argumentTableLayoutPanel;
+        }
+
+        public static Panel Create<T>(Page page, Node node) where T : Argument
+        {
+            var activity = node.Activity;
+            var variables = page.Variables;
+            var dataTypes = DataType.GetCommonTypes();
+            var arguments = activity.GetArguments<T>();
+
+            if (arguments == null) return null;
+
+            var form = new ArgumentForm();
             form.CreateColumnsForArguments<T>(dataTypes, variables);
             form.argumentButtonsPanel.Visible = activity.AllowUserToEditArgumentRowList;
 
             var grid = form.argumentDataGridView;
-
-            if (activity.AllowUserToEditArgumentColumn1)
-            {
-                grid.Columns[0].HeaderCell.Style.ForeColor = Color.Blue;
-            }
-            else
-            {
-                grid.Columns[0].ReadOnly = true;
-            }
-
-            if (activity.AllowUserToEditArgumentColumn2)
-            {
-                grid.Columns[1].HeaderCell.Style.ForeColor = Color.Blue;
-            }
-            else
-            {
-                grid.Columns[1].ReadOnly = true;
-            }
-
-            if (activity.AllowUserToEditArgumentColumn3)
-            {
-                grid.Columns[2].HeaderCell.Style.ForeColor = Color.Blue;
-            }
-            else
-            {
-                grid.Columns[2].ReadOnly = true;
-            }
-
-
+            grid.Columns[0].ReadOnly = !activity.AllowUserToEditArgumentColumn1;
+            grid.Columns[1].ReadOnly = !activity.AllowUserToEditArgumentColumn2;
+            grid.Columns[2].ReadOnly = !activity.AllowUserToEditArgumentColumn3;
+                        
+            form.argumentTabPage.Text = typeof(T).Name;
             form.argumentPanel.ParentChanged += (sender, e) =>
             {
                 grid.DataSource = new BindingList<T>(arguments); // perfect.
             };
-            
-            form.argumentTabPage.Text = typeof(T).Name;
-            
+
             return form.argumentPanel;
         }
 
@@ -222,6 +226,8 @@ namespace Roro.Activities
 
         private void CreateColumnsForArguments<T>(List<DataType> dataTypes, List<Variable> variables)
         {
+            variables = new List<Variable>(variables);
+            variables.Insert(0, new Variable<Text>()); // add blank for dropdown
             if (typeof(T) == typeof(InArgument))
             {
                 this.CreateColumnsForInArguments(dataTypes);
@@ -245,7 +251,7 @@ namespace Roro.Activities
             var grid = this.argumentDataGridView;
             grid.AutoGenerateColumns = false;
             grid.Columns.Clear();
-            grid.Columns.Add(new DataGridViewTextBoxColumn()
+            grid.Columns.Add(new GhostTextBoxColumn()
             {
                 Name = "Name",
                 FillWeight = 35,
@@ -258,7 +264,7 @@ namespace Roro.Activities
                 DataPropertyName = "DataTypeId",
                 DataSource = dataTypes
             });
-            grid.Columns.Add(new DataGridViewTextBoxColumn()
+            grid.Columns.Add(new GhostTextBoxColumn()
             {
                 Name = "Expression",
                 FillWeight = 50,
@@ -271,7 +277,7 @@ namespace Roro.Activities
             var grid = this.argumentDataGridView;
             grid.AutoGenerateColumns = false;
             grid.Columns.Clear();
-            grid.Columns.Add(new DataGridViewTextBoxColumn()
+            grid.Columns.Add(new GhostTextBoxColumn()
             {
                 Name = "Name",
                 FillWeight = 35,
@@ -312,7 +318,7 @@ namespace Roro.Activities
                 DataPropertyName = "VariableId",
                 DataSource = variables
             });
-            grid.Columns.Add(new DataGridViewTextBoxColumn()
+            grid.Columns.Add(new GhostTextBoxColumn()
             {
                 Name = "Expression",
                 FillWeight = 50,

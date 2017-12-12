@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Roro.Activities
@@ -178,9 +179,35 @@ namespace Roro.Activities
             form.argumentButtonsPanel.Visible = activity.AllowUserToEditArgumentRowList;
 
             var grid = form.argumentDataGridView;
-            grid.Columns[0].ReadOnly = !activity.AllowUserToEditArgumentColumn1;
-            grid.Columns[1].ReadOnly = !activity.AllowUserToEditArgumentColumn2;
-            grid.Columns[2].ReadOnly = !activity.AllowUserToEditArgumentColumn3;
+
+            if (activity.AllowUserToEditArgumentColumn1)
+            {
+                grid.Columns[0].HeaderCell.Style.ForeColor = Color.Blue;
+            }
+            else
+            {
+                grid.Columns[0].ReadOnly = true;
+            }
+
+            if (activity.AllowUserToEditArgumentColumn2)
+            {
+                grid.Columns[1].HeaderCell.Style.ForeColor = Color.Blue;
+            }
+            else
+            {
+                grid.Columns[1].ReadOnly = true;
+            }
+
+            if (activity.AllowUserToEditArgumentColumn3)
+            {
+                grid.Columns[2].HeaderCell.Style.ForeColor = Color.Blue;
+            }
+            else
+            {
+                grid.Columns[2].ReadOnly = true;
+            }
+
+
             form.argumentPanel.ParentChanged += (sender, e) =>
             {
                 grid.DataSource = new BindingList<T>(arguments); // perfect.

@@ -40,22 +40,29 @@ namespace Roro.Activities
             this.argumentPanel.Controls.Add(this.argumentTabControl);
             this.argumentPanel.Controls.Add(this.argumentButtonsPanel);
             this.argumentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.argumentPanel.Location = new System.Drawing.Point(0, 0);
             this.argumentPanel.Name = "argumentPanel";
-            this.argumentPanel.TabStop = false;
+            this.argumentPanel.Size = new System.Drawing.Size(434, 311);
+            this.argumentPanel.TabIndex = 0;
             // 
             // argumentTabControl
             // 
             this.argumentTabControl.Controls.Add(this.argumentTabPage);
             this.argumentTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.argumentTabControl.Location = new System.Drawing.Point(0, 0);
             this.argumentTabControl.Name = "argumentTabControl";
             this.argumentTabControl.SelectedIndex = 0;
+            this.argumentTabControl.Size = new System.Drawing.Size(434, 282);
+            this.argumentTabControl.TabIndex = 0;
             this.argumentTabControl.TabStop = false;
             // 
             // argumentTabPage
             // 
             this.argumentTabPage.Controls.Add(this.argumentDataGridView);
+            this.argumentTabPage.Location = new System.Drawing.Point(4, 24);
             this.argumentTabPage.Name = "argumentTabPage";
             this.argumentTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.argumentTabPage.Size = new System.Drawing.Size(426, 254);
             this.argumentTabPage.TabIndex = 0;
             this.argumentTabPage.Text = "argumentTabPage";
             this.argumentTabPage.UseVisualStyleBackColor = true;
@@ -69,10 +76,14 @@ namespace Roro.Activities
             this.argumentDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.argumentDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.argumentDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.argumentDataGridView.EnableHeadersVisualStyles = false;
+            this.argumentDataGridView.Location = new System.Drawing.Point(3, 3);
             this.argumentDataGridView.MultiSelect = false;
             this.argumentDataGridView.Name = "argumentDataGridView";
             this.argumentDataGridView.RowHeadersVisible = false;
             this.argumentDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.argumentDataGridView.Size = new System.Drawing.Size(420, 248);
+            this.argumentDataGridView.TabIndex = 0;
             this.argumentDataGridView.TabStop = false;
             this.argumentDataGridView.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.ArgumentDataGridView_CellParsing);
             this.argumentDataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.ArgumentDataGridView_DataError);
@@ -84,9 +95,10 @@ namespace Roro.Activities
             this.argumentButtonsPanel.Controls.Add(this.argumentRemoveButton);
             this.argumentButtonsPanel.Controls.Add(this.argumentAddButton);
             this.argumentButtonsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.argumentButtonsPanel.Location = new System.Drawing.Point(0, 282);
             this.argumentButtonsPanel.Name = "argumentButtonsPanel";
             this.argumentButtonsPanel.Size = new System.Drawing.Size(434, 29);
-            this.argumentButtonsPanel.TabStop = false;
+            this.argumentButtonsPanel.TabIndex = 1;
             // 
             // argumentMoveUpButton
             // 
@@ -94,6 +106,7 @@ namespace Roro.Activities
             this.argumentMoveUpButton.Location = new System.Drawing.Point(265, 3);
             this.argumentMoveUpButton.Name = "argumentMoveUpButton";
             this.argumentMoveUpButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentMoveUpButton.TabIndex = 0;
             this.argumentMoveUpButton.TabStop = false;
             this.argumentMoveUpButton.Text = "Move Up";
             this.argumentMoveUpButton.UseVisualStyleBackColor = true;
@@ -105,6 +118,7 @@ namespace Roro.Activities
             this.argumentMoveDownButton.Location = new System.Drawing.Point(351, 3);
             this.argumentMoveDownButton.Name = "argumentMoveDownButton";
             this.argumentMoveDownButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentMoveDownButton.TabIndex = 1;
             this.argumentMoveDownButton.TabStop = false;
             this.argumentMoveDownButton.Text = "Move Down";
             this.argumentMoveDownButton.UseVisualStyleBackColor = true;
@@ -115,6 +129,7 @@ namespace Roro.Activities
             this.argumentRemoveButton.Location = new System.Drawing.Point(90, 3);
             this.argumentRemoveButton.Name = "argumentRemoveButton";
             this.argumentRemoveButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentRemoveButton.TabIndex = 2;
             this.argumentRemoveButton.TabStop = false;
             this.argumentRemoveButton.Text = "Remove";
             this.argumentRemoveButton.UseVisualStyleBackColor = true;
@@ -125,6 +140,7 @@ namespace Roro.Activities
             this.argumentAddButton.Location = new System.Drawing.Point(4, 3);
             this.argumentAddButton.Name = "argumentAddButton";
             this.argumentAddButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentAddButton.TabIndex = 3;
             this.argumentAddButton.TabStop = false;
             this.argumentAddButton.Text = "Add";
             this.argumentAddButton.UseVisualStyleBackColor = true;
@@ -145,6 +161,7 @@ namespace Roro.Activities
             ((System.ComponentModel.ISupportInitialize)(this.argumentDataGridView)).EndInit();
             this.argumentButtonsPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
 
         private ArgumentForm() => this.InitializeComponent();
@@ -175,13 +192,15 @@ namespace Roro.Activities
             grid.Columns[0].ReadOnly = !activity.AllowUserToEditArgumentColumn1;
             grid.Columns[1].ReadOnly = !activity.AllowUserToEditArgumentColumn2;
             grid.Columns[2].ReadOnly = !activity.AllowUserToEditArgumentColumn3;
-            grid.DataSource = new BindingList<T>(arguments);
+            form.argumentPanel.ParentChanged += (sender, e) =>
+            {
+                grid.DataSource = new BindingList<T>(arguments); // perfect.
+            };
             
             form.argumentTabPage.Text = typeof(T).Name;
             
             return form.argumentPanel;
         }
-
 
         private void ArgumentMasterForm_Load(object sender, EventArgs e)
         {

@@ -58,6 +58,7 @@ namespace Roro.Activities
             // 
             // argumentTabPage
             // 
+            this.argumentTabPage.BackColor = System.Drawing.Color.White;
             this.argumentTabPage.Controls.Add(this.argumentDataGridView);
             this.argumentTabPage.Location = new System.Drawing.Point(4, 24);
             this.argumentTabPage.Name = "argumentTabPage";
@@ -65,7 +66,6 @@ namespace Roro.Activities
             this.argumentTabPage.Size = new System.Drawing.Size(426, 254);
             this.argumentTabPage.TabIndex = 0;
             this.argumentTabPage.Text = "argumentTabPage";
-            this.argumentTabPage.UseVisualStyleBackColor = true;
             // 
             // argumentDataGridView
             // 
@@ -73,6 +73,7 @@ namespace Roro.Activities
             this.argumentDataGridView.AllowUserToDeleteRows = false;
             this.argumentDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.argumentDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.argumentDataGridView.BackgroundColor = System.Drawing.Color.White;
             this.argumentDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.argumentDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.argumentDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -169,18 +170,6 @@ namespace Roro.Activities
         public static Panel Create<T>(Activity activity, List<T> arguments, List<Variable> variables) where T : Argument
         {
             var dataTypes = DataType.GetCommonTypes();
-            variables = new List<Variable>()
-            {
-                new Variable<Text>("Text1"),
-                new Variable<Text>("Text2"),
-                new Variable<Number>("Num1"),
-                new Variable<Number>("Num2"),
-                new Variable<Number>("Num3"),
-                new Variable<Flag>("Flag1"),
-                new Variable<DateTime>("DateTime1"),
-                new Variable<Collection>("Collection1"),
-            };
-
             variables.Insert(0, new Variable<Text>());
            
             var form = new ArgumentForm();
@@ -200,11 +189,6 @@ namespace Roro.Activities
             form.argumentTabPage.Text = typeof(T).Name;
             
             return form.argumentPanel;
-        }
-
-        private void ArgumentMasterForm_Load(object sender, EventArgs e)
-        {
-
         }
 
         #region CreateColumnsForArguments
@@ -439,5 +423,9 @@ namespace Roro.Activities
 
         #endregion
 
+        private void ArgumentMasterForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

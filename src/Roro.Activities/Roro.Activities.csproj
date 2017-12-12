@@ -66,6 +66,9 @@
     <Compile Include="PreparationNodeActivity.cs" />
     <Compile Include="LoopStartNodeActivity.cs" />
     <Compile Include="StartNodeActivity.cs" />
+    <Compile Include="VariableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="VariableCell.cs" />
     <Compile Include="VariableColumn.cs" />
     <Compile Include="Variable.cs" />
@@ -79,6 +82,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ArgumentForm.resx">
       <DependentUpon>ArgumentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VariableForm.resx">
+      <DependentUpon>VariableForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Roro.Activities
 {
-    public sealed class DataTypeColumn : DataGridViewComboBoxColumn
+    public sealed class GhostTextBoxColumn : DataGridViewTextBoxColumn
     {
         public override bool ReadOnly
         {
@@ -15,13 +15,9 @@ namespace Roro.Activities
             }
         }
 
-        public DataTypeColumn()
+        public GhostTextBoxColumn()
         {
-            this.CellTemplate = new DataTypeCell();
-            this.ValueType = typeof(DataType);
-            this.ValueMember = "Id";
-            this.DisplayMember = "Name";
-            this.DisplayStyleForCurrentCellOnly = true;
+            this.CellTemplate = new GhostTextBoxCell();
         }
     }
- }
+}

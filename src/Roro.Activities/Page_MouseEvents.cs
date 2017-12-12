@@ -64,9 +64,9 @@ namespace Roro.Workflow
 
         private void Canvas_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (this.GetNodeFromPoint(e.Location) is Node node && node.Activity is Activity activity)
+            if (this.GetNodeFromPoint(e.Location) is Node node)
             {
-                using (var f = new ActivityForm(activity))
+                using (var f = new ActivityForm(this, node))
                 {
                     f.ShowDialog();
                 }

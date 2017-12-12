@@ -26,6 +26,12 @@ namespace Roro.Activities
             {
                 formattedValue = string.Format("[{0}]", formattedValue);
             }
+            else if (formattedValue.ToString().Length == 0 && !elementState.HasFlag(DataGridViewElementStates.Selected))
+            {
+                formattedValue = "Select " + this.OwningColumn.HeaderText.ToLower();
+                cellStyle.Font = new Font(cellStyle.Font, FontStyle.Italic);
+                cellStyle.ForeColor = Color.FromArgb(150, 150, 150);
+            }
             base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
         }
     }

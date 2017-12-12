@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Roro.Workflow;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -76,10 +76,10 @@ namespace Roro.Activities
 
         private VariableForm() => this.InitializeComponent();
 
-        public static Panel Create(List<Variable> variables)
+        public static Panel Create(Page page)
         {
             var form = new VariableForm();
-            form.treeView1.Tag = variables;
+            form.treeView1.Tag = page.Variables;
             form.textBox1.TextChanged += (sender, e) => form.FilterTreeView();
             form.FilterTreeView();
             return form.panel1;

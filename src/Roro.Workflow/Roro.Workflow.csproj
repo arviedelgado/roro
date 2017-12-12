@@ -46,29 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Nodes\DecisionNode.cs" />
-    <Compile Include="Nodes\EndNode.cs" />
-    <Compile Include="Helper\Helpers.cs" />
-    <Compile Include="Nodes\LoopEndNode.cs" />
-    <Compile Include="Nodes\LoopStartNode.cs" />
-    <Compile Include="Nodes\Node.cs" />
-    <Compile Include="Page_PaintEvents.cs" />
-    <Compile Include="Page_KeyEvents.cs" />
-    <Compile Include="Port.cs" />
-    <Compile Include="Page_MouseEvents.cs" />
-    <Compile Include="Helper\CellLocation.cs" />
-    <Compile Include="Helper\Cell.cs" />
-    <Compile Include="Helper\PriorityQueue.cs" />
-    <Compile Include="Helper\PathFinder.cs" />
-    <Compile Include="Nodes\PreparationNode.cs" />
-    <Compile Include="Nodes\ProcessNode.cs" />
-    <Compile Include="RenderOptions.cs" />
-    <Compile Include="Page.cs" />
-    <Compile Include="Document.cs" />
-    <Compile Include="Helper\DataContractSerializerHelper.cs" />
-    <Compile Include="Nodes\StartNode.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Roro.Activities.Excel\Roro.Activities.Excel.csproj">
       <Project>{1ba8b7ca-6bcb-434e-b7a8-4268962d35dd}</Project>
       <Name>Roro.Activities.Excel</Name>

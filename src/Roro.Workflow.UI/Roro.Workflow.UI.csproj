@@ -92,10 +92,6 @@
       <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
       <Name>Roro.Activities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Roro.Workflow\Roro.Workflow.csproj">
-      <Project>{dfa7c399-51b9-4391-8805-2731658965c6}</Project>
-      <Name>Roro.Workflow</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

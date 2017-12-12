@@ -65,10 +65,10 @@ namespace Roro.Workflow
         public Node(Activity activity)
         {
             this.Id = Guid.NewGuid();
-            this.Name = string.Format("{0} {1} {2}", this.GetType().Name, Helper.Between(0, 999), Helper.Between(0, 999));
+            this.Name = this.GetType().Name.Humanize();
             this.Bounds = new Rectangle(
-                PageRenderOptions.GridSize * Helper.Between(4, 30),
-                PageRenderOptions.GridSize * Helper.Between(4, 30),
+                PageRenderOptions.GridSize * 0,
+                PageRenderOptions.GridSize * 0,
                 PageRenderOptions.GridSize * this.GetSize().Width,
                 PageRenderOptions.GridSize * this.GetSize().Height);
             this.Ports = new List<Port>();

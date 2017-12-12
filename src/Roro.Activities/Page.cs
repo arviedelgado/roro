@@ -25,6 +25,9 @@ namespace Roro.Workflow
         private EndNodeActivity EndNodeActivity { get; set; }
 
         [DataMember]
+        private List<Variable> Variables { get; set; }
+
+        [DataMember]
         private List<Node> Nodes { get; set; }
 
         private HashSet<Node> SelectedNodes { get; set; }

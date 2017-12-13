@@ -81,13 +81,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
-      <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
-      <Name>Roro.Core.Activities</Name>
-    </ProjectReference>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
+      <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
+      <Name>Roro.Activities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

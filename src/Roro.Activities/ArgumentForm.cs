@@ -9,87 +9,40 @@ namespace Roro.Activities
     public sealed class ArgumentForm : Form
     {
         private Panel argumentPanel;
-        private TabControl argumentTabControl;
-        private DataGridView argumentDataGridView;
         private Panel argumentButtonsPanel;
         private Button argumentMoveUpButton;
         private Button argumentMoveDownButton;
         private Button argumentRemoveButton;
+        private DataGridView argumentDataGridView;
+        private Label argumentLabel;
         private Button argumentAddButton;
-        private TabPage argumentTabPage;
 
         private void InitializeComponent()
         {
             this.argumentPanel = new System.Windows.Forms.Panel();
-            this.argumentTabControl = new System.Windows.Forms.TabControl();
-            this.argumentTabPage = new System.Windows.Forms.TabPage();
-            this.argumentDataGridView = new System.Windows.Forms.DataGridView();
             this.argumentButtonsPanel = new System.Windows.Forms.Panel();
             this.argumentMoveUpButton = new System.Windows.Forms.Button();
             this.argumentMoveDownButton = new System.Windows.Forms.Button();
             this.argumentRemoveButton = new System.Windows.Forms.Button();
             this.argumentAddButton = new System.Windows.Forms.Button();
+            this.argumentDataGridView = new System.Windows.Forms.DataGridView();
+            this.argumentLabel = new System.Windows.Forms.Label();
             this.argumentPanel.SuspendLayout();
-            this.argumentTabControl.SuspendLayout();
-            this.argumentTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.argumentDataGridView)).BeginInit();
             this.argumentButtonsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.argumentDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // argumentPanel
             // 
-            this.argumentPanel.Controls.Add(this.argumentTabControl);
+            this.argumentPanel.BackColor = System.Drawing.Color.White;
+            this.argumentPanel.Controls.Add(this.argumentDataGridView);
             this.argumentPanel.Controls.Add(this.argumentButtonsPanel);
+            this.argumentPanel.Controls.Add(this.argumentLabel);
             this.argumentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.argumentPanel.Location = new System.Drawing.Point(0, 0);
             this.argumentPanel.Name = "argumentPanel";
             this.argumentPanel.Size = new System.Drawing.Size(434, 311);
             this.argumentPanel.TabIndex = 0;
-            // 
-            // argumentTabControl
-            // 
-            this.argumentTabControl.Controls.Add(this.argumentTabPage);
-            this.argumentTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.argumentTabControl.Location = new System.Drawing.Point(0, 0);
-            this.argumentTabControl.Name = "argumentTabControl";
-            this.argumentTabControl.SelectedIndex = 0;
-            this.argumentTabControl.Size = new System.Drawing.Size(434, 282);
-            this.argumentTabControl.TabIndex = 0;
-            this.argumentTabControl.TabStop = false;
-            // 
-            // argumentTabPage
-            // 
-            this.argumentTabPage.BackColor = System.Drawing.Color.White;
-            this.argumentTabPage.Controls.Add(this.argumentDataGridView);
-            this.argumentTabPage.Location = new System.Drawing.Point(4, 24);
-            this.argumentTabPage.Name = "argumentTabPage";
-            this.argumentTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.argumentTabPage.Size = new System.Drawing.Size(426, 254);
-            this.argumentTabPage.TabIndex = 0;
-            this.argumentTabPage.Text = "argumentTabPage";
-            // 
-            // argumentDataGridView
-            // 
-            this.argumentDataGridView.AllowUserToAddRows = false;
-            this.argumentDataGridView.AllowUserToDeleteRows = false;
-            this.argumentDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.argumentDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.argumentDataGridView.BackgroundColor = System.Drawing.Color.White;
-            this.argumentDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.argumentDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.argumentDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.argumentDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.argumentDataGridView.EnableHeadersVisualStyles = false;
-            this.argumentDataGridView.Location = new System.Drawing.Point(3, 3);
-            this.argumentDataGridView.MultiSelect = false;
-            this.argumentDataGridView.Name = "argumentDataGridView";
-            this.argumentDataGridView.RowHeadersVisible = false;
-            this.argumentDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.argumentDataGridView.Size = new System.Drawing.Size(420, 248);
-            this.argumentDataGridView.TabIndex = 0;
-            this.argumentDataGridView.TabStop = false;
-            this.argumentDataGridView.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.ArgumentDataGridView_CellParsing);
-            this.argumentDataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.ArgumentDataGridView_DataError);
             // 
             // argumentButtonsPanel
             // 
@@ -98,17 +51,17 @@ namespace Roro.Activities
             this.argumentButtonsPanel.Controls.Add(this.argumentRemoveButton);
             this.argumentButtonsPanel.Controls.Add(this.argumentAddButton);
             this.argumentButtonsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.argumentButtonsPanel.Location = new System.Drawing.Point(0, 282);
+            this.argumentButtonsPanel.Location = new System.Drawing.Point(0, 275);
             this.argumentButtonsPanel.Name = "argumentButtonsPanel";
-            this.argumentButtonsPanel.Size = new System.Drawing.Size(434, 29);
+            this.argumentButtonsPanel.Size = new System.Drawing.Size(434, 36);
             this.argumentButtonsPanel.TabIndex = 1;
             // 
             // argumentMoveUpButton
             // 
             this.argumentMoveUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.argumentMoveUpButton.Location = new System.Drawing.Point(265, 3);
+            this.argumentMoveUpButton.Location = new System.Drawing.Point(225, 3);
             this.argumentMoveUpButton.Name = "argumentMoveUpButton";
-            this.argumentMoveUpButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentMoveUpButton.Size = new System.Drawing.Size(100, 30);
             this.argumentMoveUpButton.TabIndex = 0;
             this.argumentMoveUpButton.TabStop = false;
             this.argumentMoveUpButton.Text = "Move Up";
@@ -118,9 +71,9 @@ namespace Roro.Activities
             // argumentMoveDownButton
             // 
             this.argumentMoveDownButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.argumentMoveDownButton.Location = new System.Drawing.Point(351, 3);
+            this.argumentMoveDownButton.Location = new System.Drawing.Point(331, 3);
             this.argumentMoveDownButton.Name = "argumentMoveDownButton";
-            this.argumentMoveDownButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentMoveDownButton.Size = new System.Drawing.Size(100, 30);
             this.argumentMoveDownButton.TabIndex = 1;
             this.argumentMoveDownButton.TabStop = false;
             this.argumentMoveDownButton.Text = "Move Down";
@@ -129,9 +82,9 @@ namespace Roro.Activities
             // 
             // argumentRemoveButton
             // 
-            this.argumentRemoveButton.Location = new System.Drawing.Point(90, 3);
+            this.argumentRemoveButton.Location = new System.Drawing.Point(110, 3);
             this.argumentRemoveButton.Name = "argumentRemoveButton";
-            this.argumentRemoveButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentRemoveButton.Size = new System.Drawing.Size(100, 30);
             this.argumentRemoveButton.TabIndex = 2;
             this.argumentRemoveButton.TabStop = false;
             this.argumentRemoveButton.Text = "Remove";
@@ -142,27 +95,60 @@ namespace Roro.Activities
             // 
             this.argumentAddButton.Location = new System.Drawing.Point(4, 3);
             this.argumentAddButton.Name = "argumentAddButton";
-            this.argumentAddButton.Size = new System.Drawing.Size(80, 23);
+            this.argumentAddButton.Size = new System.Drawing.Size(100, 30);
             this.argumentAddButton.TabIndex = 3;
             this.argumentAddButton.TabStop = false;
             this.argumentAddButton.Text = "Add";
             this.argumentAddButton.UseVisualStyleBackColor = true;
             this.argumentAddButton.Click += new System.EventHandler(this.ArgumentAddButton_Click);
             // 
+            // argumentDataGridView
+            // 
+            this.argumentDataGridView.AllowUserToAddRows = false;
+            this.argumentDataGridView.AllowUserToDeleteRows = false;
+            this.argumentDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.argumentDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.argumentDataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.argumentDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.argumentDataGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.argumentDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.argumentDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.argumentDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.argumentDataGridView.EnableHeadersVisualStyles = false;
+            this.argumentDataGridView.Location = new System.Drawing.Point(0, 27);
+            this.argumentDataGridView.Margin = new System.Windows.Forms.Padding(10, 10, 3, 3);
+            this.argumentDataGridView.MultiSelect = false;
+            this.argumentDataGridView.Name = "argumentDataGridView";
+            this.argumentDataGridView.RowHeadersVisible = false;
+            this.argumentDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.argumentDataGridView.Size = new System.Drawing.Size(434, 248);
+            this.argumentDataGridView.TabIndex = 2;
+            this.argumentDataGridView.TabStop = false;
+            // 
+            // argumentLabel
+            // 
+            this.argumentLabel.AutoSize = true;
+            this.argumentLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.argumentLabel.Font = new System.Drawing.Font("Calibri Light", 16F);
+            this.argumentLabel.Location = new System.Drawing.Point(0, 0);
+            this.argumentLabel.Name = "argumentLabel";
+            this.argumentLabel.Size = new System.Drawing.Size(143, 27);
+            this.argumentLabel.TabIndex = 3;
+            this.argumentLabel.Text = "argumentLabel";
+            // 
             // ArgumentForm
             // 
             this.ClientSize = new System.Drawing.Size(434, 311);
             this.Controls.Add(this.argumentPanel);
-            this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.Font = new System.Drawing.Font("Calibri", 11F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ArgumentForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Load += new System.EventHandler(this.ArgumentMasterForm_Load);
             this.argumentPanel.ResumeLayout(false);
-            this.argumentTabControl.ResumeLayout(false);
-            this.argumentTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.argumentDataGridView)).EndInit();
+            this.argumentPanel.PerformLayout();
             this.argumentButtonsPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.argumentDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -214,7 +200,6 @@ namespace Roro.Activities
             grid.Columns[1].ReadOnly = !activity.AllowUserToEditArgumentColumn2;
             grid.Columns[2].ReadOnly = !activity.AllowUserToEditArgumentColumn3;
                         
-            form.argumentTabPage.Text = typeof(T).Name;
             form.argumentPanel.ParentChanged += (sender, e) =>
             {
                 grid.DataSource = new BindingList<T>(arguments); // perfect.
@@ -231,14 +216,17 @@ namespace Roro.Activities
             variables.Insert(0, new Variable<Text>()); // add blank for dropdown
             if (typeof(T) == typeof(InArgument))
             {
+                this.argumentLabel.Text = "Inputs";
                 this.CreateColumnsForInArguments(dataTypes);
             }
             else if (typeof(T) == typeof(OutArgument))
             {
+                this.argumentLabel.Text = "Outputs";
                 this.CreateColumnsForOutArguments(dataTypes, variables);
             }
             else if (typeof(T) == typeof(InOutArgument))
             {
+                this.argumentLabel.Text = "Inputs";
                 this.CreateColumnsForInOutArguments(dataTypes, variables);
             }
             else

@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityForm.cs">
+    <Compile Include="NodeForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ArgumentForm.cs">
@@ -100,8 +100,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ActivityForm.resx">
-      <DependentUpon>ActivityForm.cs</DependentUpon>
+    <EmbeddedResource Include="NodeForm.resx">
+      <DependentUpon>NodeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ArgumentForm.resx">
       <DependentUpon>ArgumentForm.cs</DependentUpon>

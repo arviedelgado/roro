@@ -66,7 +66,7 @@ namespace Roro.Workflow
         {
             if (this.GetNodeFromPoint(e.Location) is Node node)
             {
-                using (var f = new ActivityForm(this, node))
+                using (var f = new NodeForm(this, node))
                 {
                     f.ShowDialog();
                 }

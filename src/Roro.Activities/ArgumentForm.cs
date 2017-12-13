@@ -78,6 +78,7 @@ namespace Roro.Activities
             this.argumentDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.argumentDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.argumentDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.argumentDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.argumentDataGridView.EnableHeadersVisualStyles = false;
             this.argumentDataGridView.Location = new System.Drawing.Point(3, 3);
             this.argumentDataGridView.MultiSelect = false;

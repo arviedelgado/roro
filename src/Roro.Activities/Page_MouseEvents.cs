@@ -73,6 +73,25 @@ namespace Roro.Workflow
             }
         }
 
+        private void DragDropEvent(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(typeof(TreeNode).FullName) is TreeNode treeNode)
+            {
+                var canvas = sender as Control;
+                var node = this.AddNode(treeNode.Name);
+                var rect = node.Bounds;
+                rect.Location = canvas.PointToClient(new Point(e.X, e.Y));
+                rect.Offset(-rect.Width / 2, -rect.Height / 2);
+                node.SetBounds(rect);
+                this.canvas.Invalidate();
+            }
+        }
+
+        private void DragEnterEvent(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
         #region Link Nodes
 
         private void LinkNodeCancel(object sender, MouseEventArgs e)
@@ -281,5 +300,6 @@ namespace Roro.Workflow
         }
 
         #endregion
+
     }
 }

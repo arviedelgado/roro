@@ -125,6 +125,7 @@ namespace Roro.Workflow
             this.canvas.Paint += OnPaint;
             this.canvas.MouseDown += MouseEvents;
             this.canvas.KeyDown += KeyEvents;
+            this.canvas.AllowDrop = true;
             this.canvas.DragEnter += DragEnterEvent;
             this.canvas.DragDrop += DragDropEvent;
         }

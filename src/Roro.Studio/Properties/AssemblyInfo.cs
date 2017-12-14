@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Roro.Workflow.UI")]
+[assembly: AssemblyTitle("Roro.Studio")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Roro.Workflow.UI")]
+[assembly: AssemblyProduct("Roro.Studio")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f254f9d2-1664-4129-b0b0-0705e4ada34d")]
+[assembly: Guid("5a67cf0f-da45-4269-b7e8-a9bd24fb0b41")]
 
 // Version information for an assembly consists of the following four values:
 //

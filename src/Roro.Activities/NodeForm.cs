@@ -24,9 +24,9 @@ namespace Roro.Activities
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 41);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 52);
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(710, 358);
+            this.splitContainer1.Size = new System.Drawing.Size(710, 347);
             this.splitContainer1.SplitterDistance = 494;
             this.splitContainer1.TabIndex = 4;
             this.splitContainer1.TabStop = false;
@@ -35,9 +35,10 @@ namespace Roro.Activities
             // 
             this.nodeNameTextBox.BackColor = System.Drawing.Color.White;
             this.nodeNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nodeNameTextBox.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.nodeNameTextBox.Location = new System.Drawing.Point(12, 12);
             this.nodeNameTextBox.Name = "nodeNameTextBox";
-            this.nodeNameTextBox.Size = new System.Drawing.Size(710, 23);
+            this.nodeNameTextBox.Size = new System.Drawing.Size(710, 34);
             this.nodeNameTextBox.TabIndex = 6;
             // 
             // NodeForm

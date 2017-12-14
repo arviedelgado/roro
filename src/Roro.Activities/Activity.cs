@@ -25,6 +25,13 @@ namespace Roro.Activities
 
         protected virtual List<InOutArgument> GetInOutArguments() => null;
 
+        public Activity()
+        {
+            this.GetInArguments();
+            this.GetOutArguments();
+            this.GetInOutArguments();
+        }
+
         public List<T> GetArguments<T>() where T : Argument
         {
             if (typeof(T) == typeof(InArgument)) return this.GetInArguments() as List<T>;

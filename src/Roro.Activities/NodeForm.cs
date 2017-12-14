@@ -24,9 +24,9 @@ namespace Roro.Activities
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 58);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 41);
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(710, 341);
+            this.splitContainer1.Size = new System.Drawing.Size(710, 358);
             this.splitContainer1.SplitterDistance = 494;
             this.splitContainer1.TabIndex = 4;
             this.splitContainer1.TabStop = false;
@@ -35,10 +35,9 @@ namespace Roro.Activities
             // 
             this.nodeNameTextBox.BackColor = System.Drawing.Color.White;
             this.nodeNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.nodeNameTextBox.Font = new System.Drawing.Font("Calibri Light", 20F);
             this.nodeNameTextBox.Location = new System.Drawing.Point(12, 12);
             this.nodeNameTextBox.Name = "nodeNameTextBox";
-            this.nodeNameTextBox.Size = new System.Drawing.Size(710, 40);
+            this.nodeNameTextBox.Size = new System.Drawing.Size(710, 23);
             this.nodeNameTextBox.TabIndex = 6;
             // 
             // NodeForm
@@ -47,7 +46,7 @@ namespace Roro.Activities
             this.ClientSize = new System.Drawing.Size(734, 411);
             this.Controls.Add(this.nodeNameTextBox);
             this.Controls.Add(this.splitContainer1);
-            this.Font = new System.Drawing.Font("Calibri", 11F);
+            this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.Name = "NodeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Load += new System.EventHandler(this.ActivityForm_Load);

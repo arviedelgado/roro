@@ -8,53 +8,109 @@ namespace Roro.Activities
 {
     public class NodeForm : Form
     {
+        private TableLayoutPanel tableLayoutPanel1;
+        private Panel variablePanel;
+        private Panel argumentPanel;
+        private Panel nodeNamePanel;
+        private Label nodeNameLabel;
         private TextBox nodeNameTextBox;
-        private SplitContainer splitContainer1;
 
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.nodeNameTextBox = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.SuspendLayout();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.nodeNamePanel = new System.Windows.Forms.Panel();
+            this.nodeNameLabel = new System.Windows.Forms.Label();
+            this.variablePanel = new System.Windows.Forms.Panel();
+            this.argumentPanel = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.nodeNamePanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 52);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(710, 347);
-            this.splitContainer1.SplitterDistance = 494;
-            this.splitContainer1.TabIndex = 4;
-            this.splitContainer1.TabStop = false;
             // 
             // nodeNameTextBox
             // 
             this.nodeNameTextBox.BackColor = System.Drawing.Color.White;
-            this.nodeNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.nodeNameTextBox.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.nodeNameTextBox.Location = new System.Drawing.Point(12, 12);
+            this.nodeNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.nodeNameTextBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.nodeNameTextBox.Font = new System.Drawing.Font("Segoe UI Light", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.nodeNameTextBox.Location = new System.Drawing.Point(20, 20);
             this.nodeNameTextBox.Name = "nodeNameTextBox";
-            this.nodeNameTextBox.Size = new System.Drawing.Size(710, 34);
+            this.nodeNameTextBox.Size = new System.Drawing.Size(438, 27);
             this.nodeNameTextBox.TabIndex = 6;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 250F));
+            this.tableLayoutPanel1.Controls.Add(this.nodeNamePanel, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.variablePanel, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.argumentPanel, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(734, 511);
+            this.tableLayoutPanel1.TabIndex = 7;
+            // 
+            // nodeNamePanel
+            // 
+            this.nodeNamePanel.Controls.Add(this.nodeNameLabel);
+            this.nodeNamePanel.Controls.Add(this.nodeNameTextBox);
+            this.nodeNamePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nodeNamePanel.Location = new System.Drawing.Point(3, 3);
+            this.nodeNamePanel.Name = "nodeNamePanel";
+            this.nodeNamePanel.Padding = new System.Windows.Forms.Padding(20, 20, 20, 0);
+            this.nodeNamePanel.Size = new System.Drawing.Size(478, 54);
+            this.nodeNamePanel.TabIndex = 0;
+            this.nodeNamePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.nodeNamePanel_Paint);
+            // 
+            // nodeNameLabel
+            // 
+            this.nodeNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nodeNameLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.nodeNameLabel.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.nodeNameLabel.Location = new System.Drawing.Point(20, 53);
+            this.nodeNameLabel.Name = "nodeNameLabel";
+            this.nodeNameLabel.Size = new System.Drawing.Size(438, 1);
+            this.nodeNameLabel.TabIndex = 0;
+            this.nodeNameLabel.Text = "nodeNameLabel";
+            // 
+            // variablePanel
+            // 
+            this.variablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.variablePanel.Location = new System.Drawing.Point(487, 3);
+            this.variablePanel.Name = "variablePanel";
+            this.variablePanel.Padding = new System.Windows.Forms.Padding(20);
+            this.tableLayoutPanel1.SetRowSpan(this.variablePanel, 2);
+            this.variablePanel.Size = new System.Drawing.Size(244, 505);
+            this.variablePanel.TabIndex = 8;
+            // 
+            // argumentPanel
+            // 
+            this.argumentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.argumentPanel.Location = new System.Drawing.Point(3, 63);
+            this.argumentPanel.Name = "argumentPanel";
+            this.argumentPanel.Padding = new System.Windows.Forms.Padding(20, 0, 20, 20);
+            this.argumentPanel.Size = new System.Drawing.Size(478, 445);
+            this.argumentPanel.TabIndex = 7;
             // 
             // NodeForm
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(734, 411);
-            this.Controls.Add(this.nodeNameTextBox);
-            this.Controls.Add(this.splitContainer1);
+            this.ClientSize = new System.Drawing.Size(734, 511);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.Name = "NodeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Activity Editor";
             this.Load += new System.EventHandler(this.ActivityForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.nodeNamePanel.ResumeLayout(false);
+            this.nodeNamePanel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -62,8 +118,8 @@ namespace Roro.Activities
 
         public NodeForm(Page page, Node node) : this()
         {
-            ArgumentForm.Create(page, node).Parent = this.splitContainer1.Panel1;
-            VariableForm.Create(page).Parent = this.splitContainer1.Panel2;
+            ArgumentForm.Create(page, node).Parent = this.argumentPanel;
+            VariableForm.Create(page).Parent = this.variablePanel;
             this.nodeNameTextBox.DataBindings.Add("Text", node, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
             this.nodeNameTextBox.PreviewKeyDown += NodeNameTextBox_PreviewKeyDown;
         }
@@ -74,6 +130,11 @@ namespace Roro.Activities
         }
 
         private void ActivityForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void nodeNamePanel_Paint(object sender, PaintEventArgs e)
         {
 
         }

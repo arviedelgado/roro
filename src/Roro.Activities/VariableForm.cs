@@ -10,22 +10,26 @@ namespace Roro.Activities
     {
         private Panel panel1;
         private TreeView treeView1;
+        private Label variableLabel;
         private TextBox textBox1;
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node1");
             this.panel1 = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.variableLabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.treeView1);
             this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.variableLabel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -36,16 +40,16 @@ namespace Roro.Activities
             // 
             this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 23);
+            this.treeView1.Location = new System.Drawing.Point(0, 48);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Node0";
-            treeNode1.Text = "Node0";
-            treeNode2.Name = "Node1";
-            treeNode2.Text = "Node1";
+            treeNode3.Name = "Node0";
+            treeNode3.Text = "Node0";
+            treeNode4.Name = "Node1";
+            treeNode4.Text = "Node1";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            this.treeView1.Size = new System.Drawing.Size(434, 288);
+            treeNode3,
+            treeNode4});
+            this.treeView1.Size = new System.Drawing.Size(434, 263);
             this.treeView1.TabIndex = 1;
             this.treeView1.TabStop = false;
             // 
@@ -53,11 +57,21 @@ namespace Roro.Activities
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Location = new System.Drawing.Point(0, 25);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(434, 23);
             this.textBox1.TabIndex = 0;
             this.textBox1.TabStop = false;
+            // 
+            // variableLabel
+            // 
+            this.variableLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.variableLabel.Font = new System.Drawing.Font("Segoe UI Light", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.variableLabel.Location = new System.Drawing.Point(0, 0);
+            this.variableLabel.Name = "variableLabel";
+            this.variableLabel.Size = new System.Drawing.Size(434, 25);
+            this.variableLabel.TabIndex = 4;
+            this.variableLabel.Text = "Variables";
             // 
             // VariableForm
             // 

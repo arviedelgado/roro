@@ -10,8 +10,8 @@ namespace Roro.Workflow
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.pagePanel = new System.Windows.Forms.Panel();
             this.activityPanel = new System.Windows.Forms.Panel();
+            this.pagePanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -21,6 +21,7 @@ namespace Roro.Workflow
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -31,30 +32,30 @@ namespace Roro.Workflow
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.pagePanel);
-            this.splitContainer1.Size = new System.Drawing.Size(569, 261);
-            this.splitContainer1.SplitterDistance = 162;
+            this.splitContainer1.Size = new System.Drawing.Size(984, 561);
+            this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.TabStop = false;
-            // 
-            // pagePanel
-            // 
-            this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pagePanel.Location = new System.Drawing.Point(0, 0);
-            this.pagePanel.Name = "pagePanel";
-            this.pagePanel.Size = new System.Drawing.Size(403, 261);
-            this.pagePanel.TabIndex = 0;
             // 
             // activityPanel
             // 
             this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.activityPanel.Location = new System.Drawing.Point(0, 0);
             this.activityPanel.Name = "activityPanel";
-            this.activityPanel.Size = new System.Drawing.Size(162, 261);
+            this.activityPanel.Size = new System.Drawing.Size(200, 561);
             this.activityPanel.TabIndex = 0;
+            // 
+            // pagePanel
+            // 
+            this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pagePanel.Location = new System.Drawing.Point(0, 0);
+            this.pagePanel.Name = "pagePanel";
+            this.pagePanel.Size = new System.Drawing.Size(780, 561);
+            this.pagePanel.TabIndex = 0;
             // 
             // DocumentForm
             // 
-            this.ClientSize = new System.Drawing.Size(569, 261);
+            this.ClientSize = new System.Drawing.Size(984, 561);
             this.Controls.Add(this.splitContainer1);
             this.Name = "DocumentForm";
             this.Load += new System.EventHandler(this.DocumentForm_Load);

@@ -24,7 +24,7 @@ namespace Roro.Workflow
         {
             foreach (var selectedNode in this.SelectedNodes)
             {
-                this.Nodes.Remove(selectedNode);
+                this.RemoveNode(selectedNode);
             }
             this.SelectedNodes.Clear();
             this.canvas.Invalidate();

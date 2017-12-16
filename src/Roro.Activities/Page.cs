@@ -39,10 +39,20 @@ namespace Roro.Workflow
             this.Id = Guid.NewGuid();
             this.Name = string.Format("My{0}_{1}", this.GetType().Name, System.DateTime.Now.Ticks);
             this.Nodes = new List<Node>();
-            this.StartNodeActivity = new StartNodeActivity();
-            this.EndNodeActivity = new EndNodeActivity();
             this.SelectedNodes = new HashSet<Node>();
             this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
+
+            this.StartNodeActivity = new StartNodeActivity();
+            this.EndNodeActivity = new EndNodeActivity();
+
+            this.AddNode(typeof(StartNodeActivity).FullName,
+                PageRenderOptions.GridSize * 15,
+                PageRenderOptions.GridSize * 5);
+
+            this.AddNode(typeof(EndNodeActivity).FullName,
+                PageRenderOptions.GridSize * 15,
+                PageRenderOptions.GridSize * 15);
+
 
             // test variables
             this.Variables = new List<Variable>()
@@ -72,45 +82,101 @@ namespace Roro.Workflow
             return null;
         }
 
-        public Node AddNode(string activityFullName)
+        public Node AddNode(string activityFullName, int x, int y)
         {
             Node node;
             var activity = Activity.CreateInstance(activityFullName);
             if (activity is StartNodeActivity)
             {
-                node = new StartNode(this.StartNodeActivity);
+                node = new StartNode(this.StartNodeActivity)
+                {
+                    Name = "Start"
+                };
             }
             else if (activity is EndNodeActivity)
             {
-                node = new EndNode(this.EndNodeActivity);
+                node = new EndNode(this.EndNodeActivity)
+                {
+                    Name = "End"
+                };
             }
             else if (activity is ProcessNodeActivity)
             {
-                node = new ProcessNode(activity);
+                node = new ProcessNode(activity)
+                {
+                    Name = activityFullName.Split('.').Last().Humanize()
+                };
             }
             else if (activity is DecisionNodeActivity)
             {
-                node = new DecisionNode(activity);
+                node = new DecisionNode(activity)
+                {
+                    Name = activityFullName.Split('.').Last().Humanize()
+                };
             }
             else if (activity is PreparationNodeActivity)
             {
-                node = new PreparationNode(activity);
+                node = new PreparationNode(activity)
+                {
+                    Name = "Preparation"
+                };
             }
             else if (activity is LoopStartNodeActivity)
             {
-                node = new LoopStartNode(activity);
+                node = new LoopStartNode(activity)
+                {
+                    Name = "Start Loop"
+                };
+                var loopStartNode = node as LoopStartNode;
+                var loopEndNode = this.AddNode(typeof(LoopEndNodeActivity).FullName, x, y + PageRenderOptions.GridSize * 10) as LoopEndNode;
+                loopStartNode.LoopEndNodeId = loopEndNode.Id;
+                loopEndNode.LoopStartNodeId = loopStartNode.Id;
             }
             else if (activity is LoopEndNodeActivity)
             {
-                node = new LoopEndNode(activity);
+                node = new LoopEndNode(activity)
+                {
+                    Name = "End Loop"
+                };
             }
             else
             {
                 throw new NotSupportedException();
             }
-            node.Name = activityFullName.Split('.').Last().Humanize();
+            var bounds = node.Bounds;
+            bounds.Location = new Point(x, y);
+            bounds.Offset(-bounds.Width / 2, -bounds.Height / 2);
+            node.SetBounds(bounds);
             this.Nodes.Add(node);
             return node;
+        }
+
+        public void RemoveNode(Node node)
+        {
+            if (node is StartNode)
+            {
+                MessageBox.Show("Start activity cannot be deleted.");
+            }
+            else if (node is LoopStartNode loopStartNode)
+            {
+                if (this.GetNodeById(loopStartNode.LoopEndNodeId) is Node relatedNode)
+                {
+                    this.Nodes.Remove(relatedNode);
+                }
+                this.Nodes.Remove(node);
+            }
+            else if (node is LoopEndNode loopEndNode)
+            {
+                if (this.GetNodeById(loopEndNode.LoopStartNodeId) is Node relatedNode)
+                {
+                    this.Nodes.Remove(relatedNode);
+                }
+                this.Nodes.Remove(node);
+            }
+            else
+            {
+                this.Nodes.Remove(node);
+            }
         }
 
         #region Attach/Detach Events

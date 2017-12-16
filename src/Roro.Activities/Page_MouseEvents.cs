@@ -78,11 +78,8 @@ namespace Roro.Workflow
             if (e.Data.GetData(typeof(TreeNode).FullName) is TreeNode treeNode)
             {
                 var canvas = sender as Control;
-                var node = this.AddNode(treeNode.Name);
-                var rect = node.Bounds;
-                rect.Location = canvas.PointToClient(new Point(e.X, e.Y));
-                rect.Offset(-rect.Width / 2, -rect.Height / 2);
-                node.SetBounds(rect);
+                var location = canvas.PointToClient(new Point(e.X, e.Y));
+                this.AddNode(treeNode.Name, location.X, location.Y);
                 this.canvas.Invalidate();
             }
         }

@@ -8,68 +8,82 @@ namespace Roro.Workflow
 {
     public sealed class ActivityForm : Form
     {
-        private Panel panel1;
-        private TreeView treeView1;
-        private TextBox textBox1;
+        private Panel activityPanel;
+        private TreeView activityTreeView;
+        private Label activityLabel;
+        private TextBox activityTextBox;
 
         private void InitializeComponent()
         {
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node1");
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.panel1.SuspendLayout();
+            this.activityPanel = new System.Windows.Forms.Panel();
+            this.activityTreeView = new System.Windows.Forms.TreeView();
+            this.activityTextBox = new System.Windows.Forms.TextBox();
+            this.activityLabel = new System.Windows.Forms.Label();
+            this.activityPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // activityPanel
             // 
-            this.panel1.Controls.Add(this.treeView1);
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(434, 311);
-            this.panel1.TabIndex = 0;
+            this.activityPanel.BackColor = System.Drawing.Color.White;
+            this.activityPanel.Controls.Add(this.activityTreeView);
+            this.activityPanel.Controls.Add(this.activityTextBox);
+            this.activityPanel.Controls.Add(this.activityLabel);
+            this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.activityPanel.Location = new System.Drawing.Point(0, 0);
+            this.activityPanel.Name = "activityPanel";
+            this.activityPanel.Size = new System.Drawing.Size(434, 311);
+            this.activityPanel.TabIndex = 0;
             // 
-            // treeView1
+            // activityTreeView
             // 
-            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 23);
-            this.treeView1.Name = "treeView1";
+            this.activityTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.activityTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.activityTreeView.Location = new System.Drawing.Point(0, 48);
+            this.activityTreeView.Name = "activityTreeView";
             treeNode1.Name = "Node0";
             treeNode1.Text = "Node0";
             treeNode2.Name = "Node1";
             treeNode2.Text = "Node1";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            this.activityTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
-            this.treeView1.Size = new System.Drawing.Size(434, 288);
-            this.treeView1.TabIndex = 1;
-            this.treeView1.TabStop = false;
+            this.activityTreeView.Size = new System.Drawing.Size(434, 263);
+            this.activityTreeView.TabIndex = 1;
+            this.activityTreeView.TabStop = false;
             // 
-            // textBox1
+            // activityTextBox
             // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(434, 23);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TabStop = false;
+            this.activityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.activityTextBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.activityTextBox.Location = new System.Drawing.Point(0, 25);
+            this.activityTextBox.Name = "activityTextBox";
+            this.activityTextBox.Size = new System.Drawing.Size(434, 23);
+            this.activityTextBox.TabIndex = 0;
+            this.activityTextBox.TabStop = false;
+            // 
+            // activityLabel
+            // 
+            this.activityLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.activityLabel.Font = new System.Drawing.Font("Segoe UI Light", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.activityLabel.Location = new System.Drawing.Point(0, 0);
+            this.activityLabel.Name = "activityLabel";
+            this.activityLabel.Size = new System.Drawing.Size(434, 25);
+            this.activityLabel.TabIndex = 4;
+            this.activityLabel.Text = "Activities";
             // 
             // ActivityForm
             // 
             this.ClientSize = new System.Drawing.Size(434, 311);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.activityPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ActivityForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Load += new System.EventHandler(this.ActivityForm_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.activityPanel.ResumeLayout(false);
+            this.activityPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -79,11 +93,11 @@ namespace Roro.Workflow
         public static Panel Create()
         {
             var form = new ActivityForm();
-            form.treeView1.Tag = Activity.GetActivities();
-            form.treeView1.ItemDrag += TreeView1_ItemDrag;
-            form.textBox1.TextChanged += (sender, e) => form.FilterTreeView();
+            form.activityTreeView.Tag = Activity.GetActivities();
+            form.activityTreeView.ItemDrag += TreeView1_ItemDrag;
+            form.activityTextBox.TextChanged += (sender, e) => form.FilterTreeView();
             form.FilterTreeView();
-            return form.panel1;
+            return form.activityPanel;
         }
 
         private static void TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
@@ -94,27 +108,27 @@ namespace Roro.Workflow
 
         private void FilterTreeView()
         {
-            this.treeView1.BeginUpdate(); // avoid flickering.
-            var dataSource = this.treeView1.Tag as IEnumerable<Type>;
-            var filterText = this.textBox1.Text.ToLower().Replace(" ", string.Empty);
-            this.treeView1.Nodes.Clear();
+            this.activityTreeView.BeginUpdate(); // avoid flickering.
+            var dataSource = this.activityTreeView.Tag as IEnumerable<Type>;
+            var filterText = this.activityTextBox.Text.ToLower().Replace(" ", string.Empty);
+            this.activityTreeView.Nodes.Clear();
             foreach (var type in dataSource)
             {
                 var groupKey = String.Join(".", type.FullName.Split('.').Reverse().Skip(1).Reverse());
-                if (!this.treeView1.Nodes.ContainsKey(groupKey))
+                if (!this.activityTreeView.Nodes.ContainsKey(groupKey))
                 {
-                    this.treeView1.Nodes.Add(groupKey, groupKey.Split('.').Last());
+                    this.activityTreeView.Nodes.Add(groupKey, groupKey.Split('.').Last());
                 }
                 if (type.Name.ToLower().Replace(" ", string.Empty).Contains(filterText))
                 {
-                    this.treeView1.Nodes[groupKey].Nodes.Add(type.FullName, type.Name.Humanize()).EnsureVisible();
+                    this.activityTreeView.Nodes[groupKey].Nodes.Add(type.FullName, type.Name.Humanize()).EnsureVisible();
                 }
             }
-            if (this.treeView1.Nodes.Count > 0)
+            if (this.activityTreeView.Nodes.Count > 0)
             {
-                this.treeView1.Nodes[0].EnsureVisible();
+                this.activityTreeView.Nodes[0].EnsureVisible();
             }
-            this.treeView1.EndUpdate();
+            this.activityTreeView.EndUpdate();
         }
 
         private void ActivityForm_Load(object sender, EventArgs e)

@@ -19,7 +19,7 @@ namespace Roro.Activities
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node1");
             this.panel1 = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new TextBox();
             this.variableLabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();

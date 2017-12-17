@@ -122,6 +122,7 @@ namespace Roro.Activities
             VariableForm.Create(page).Parent = this.variablePanel;
             this.nodeNameTextBox.DataBindings.Add("Text", node, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
             this.nodeNameTextBox.PreviewKeyDown += NodeNameTextBox_PreviewKeyDown;
+            this.Text = "Activity Editor - " + node.Activity.GetType().FullName;
         }
 
         private void NodeNameTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)

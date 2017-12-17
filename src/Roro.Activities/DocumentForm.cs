@@ -18,25 +18,25 @@ namespace Roro.Workflow
             // 
             this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.activityPanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.activityPanel.Location = new System.Drawing.Point(3, 69);
+            this.activityPanel.Location = new System.Drawing.Point(3, 70);
             this.activityPanel.Name = "activityPanel";
             this.activityPanel.Padding = new System.Windows.Forms.Padding(0, 20, 0, 0);
-            this.activityPanel.Size = new System.Drawing.Size(186, 489);
+            this.activityPanel.Size = new System.Drawing.Size(234, 488);
             this.activityPanel.TabIndex = 0;
             // 
             // pagePanel
             // 
             this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pagePanel.Location = new System.Drawing.Point(195, 69);
+            this.pagePanel.Location = new System.Drawing.Point(243, 70);
             this.pagePanel.Name = "pagePanel";
-            this.pagePanel.Size = new System.Drawing.Size(786, 489);
+            this.pagePanel.Size = new System.Drawing.Size(738, 488);
             this.pagePanel.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.5122F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.48781F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.49187F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.50813F));
             this.tableLayoutPanel1.Controls.Add(this.activityPanel, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.pagePanel, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;

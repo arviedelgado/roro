@@ -16,35 +16,38 @@ namespace Roro.Workflow
             // 
             // activityPanel
             // 
+            this.activityPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.activityPanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.activityPanel.Location = new System.Drawing.Point(3, 70);
+            this.activityPanel.Location = new System.Drawing.Point(23, 73);
             this.activityPanel.Name = "activityPanel";
-            this.activityPanel.Padding = new System.Windows.Forms.Padding(0, 20, 0, 0);
-            this.activityPanel.Size = new System.Drawing.Size(234, 488);
+            this.activityPanel.Size = new System.Drawing.Size(244, 465);
             this.activityPanel.TabIndex = 0;
             // 
             // pagePanel
             // 
+            this.pagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pagePanel.Location = new System.Drawing.Point(243, 70);
+            this.pagePanel.Location = new System.Drawing.Point(273, 73);
             this.pagePanel.Name = "pagePanel";
-            this.pagePanel.Size = new System.Drawing.Size(738, 488);
+            this.pagePanel.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
+            this.pagePanel.Size = new System.Drawing.Size(688, 465);
             this.pagePanel.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.49187F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.50813F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 250F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.activityPanel, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.pagePanel, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(20);
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.94296F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 88.05704F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(984, 561);
             this.tableLayoutPanel1.TabIndex = 1;
             // 

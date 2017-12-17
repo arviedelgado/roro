@@ -36,16 +36,17 @@ namespace Roro.Workflow
             this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.activityPanel.Location = new System.Drawing.Point(0, 0);
             this.activityPanel.Name = "activityPanel";
+            this.activityPanel.Padding = new System.Windows.Forms.Padding(5);
             this.activityPanel.Size = new System.Drawing.Size(434, 311);
             this.activityPanel.TabIndex = 0;
             // 
             // activityTreeView
             // 
-            this.activityTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.activityTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.activityTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.activityTreeView.FullRowSelect = true;
             this.activityTreeView.HotTracking = true;
-            this.activityTreeView.Location = new System.Drawing.Point(0, 48);
+            this.activityTreeView.Location = new System.Drawing.Point(5, 53);
             this.activityTreeView.Name = "activityTreeView";
             treeNode1.Name = "Node0";
             treeNode1.Text = "Process Node";
@@ -56,7 +57,7 @@ namespace Roro.Workflow
             this.activityTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode3});
             this.activityTreeView.ShowLines = false;
-            this.activityTreeView.Size = new System.Drawing.Size(434, 263);
+            this.activityTreeView.Size = new System.Drawing.Size(424, 253);
             this.activityTreeView.TabIndex = 1;
             this.activityTreeView.TabStop = false;
             // 
@@ -64,9 +65,9 @@ namespace Roro.Workflow
             // 
             this.activityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.activityTextBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.activityTextBox.Location = new System.Drawing.Point(0, 25);
+            this.activityTextBox.Location = new System.Drawing.Point(5, 30);
             this.activityTextBox.Name = "activityTextBox";
-            this.activityTextBox.Size = new System.Drawing.Size(434, 23);
+            this.activityTextBox.Size = new System.Drawing.Size(424, 23);
             this.activityTextBox.TabIndex = 0;
             this.activityTextBox.TabStop = false;
             // 
@@ -74,9 +75,9 @@ namespace Roro.Workflow
             // 
             this.activityLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.activityLabel.Font = new System.Drawing.Font("Segoe UI Light", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.activityLabel.Location = new System.Drawing.Point(0, 0);
+            this.activityLabel.Location = new System.Drawing.Point(5, 5);
             this.activityLabel.Name = "activityLabel";
-            this.activityLabel.Size = new System.Drawing.Size(434, 25);
+            this.activityLabel.Size = new System.Drawing.Size(424, 25);
             this.activityLabel.TabIndex = 4;
             this.activityLabel.Text = "Activities";
             // 

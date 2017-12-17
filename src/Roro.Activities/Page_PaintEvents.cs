@@ -64,7 +64,7 @@ namespace Roro.Workflow
         private void RenderPorts(Graphics g)
         {
             var o = new NodeStyle();
-            foreach (var node in this.Nodes)
+            foreach (var node in this.SelectedNodes)
             {
                 node.RenderedPorts.Clear();
                 var nodePath = this.RenderedNodes[node];

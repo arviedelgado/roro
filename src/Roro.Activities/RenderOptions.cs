@@ -10,7 +10,7 @@ namespace Roro.Workflow
 
         public static Pen GridPen = new Pen(Color.FromArgb(240, 240, 240), 1);
 
-        public static Color BackColor = Color.FromArgb(250, 250, 250);
+        public static Color BackColor = Color.White;
 
         public static Brush SelectionBackBrush = new SolidBrush(Color.FromArgb(50, 150, 150, 150));
     }

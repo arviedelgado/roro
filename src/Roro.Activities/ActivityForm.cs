@@ -121,11 +121,11 @@ namespace Roro.Workflow
                 var groupKey = String.Join(".", type.FullName.Split('.').Reverse().Skip(1).Reverse());
                 if (!this.activityTreeView.Nodes.ContainsKey(groupKey))
                 {
-                    this.activityTreeView.Nodes.Add(groupKey, groupKey.Split('.').Last(), null);
+                    this.activityTreeView.Nodes.Add(groupKey, groupKey.Split('.').Last());
                 }
                 if (type.Name.ToLower().Replace(" ", string.Empty).Contains(filterText))
                 {
-                    this.activityTreeView.Nodes[groupKey].Nodes.Add(type.FullName, type.Name.Humanize(), 1).EnsureVisible();
+                    this.activityTreeView.Nodes[groupKey].Nodes.Add(type.FullName, type.Name.Humanize()).EnsureVisible();
                 }
             }
             if (this.activityTreeView.Nodes.Count > 0)

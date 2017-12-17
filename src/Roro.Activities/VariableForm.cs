@@ -34,16 +34,17 @@ namespace Roro.Activities
             this.variablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.variablePanel.Location = new System.Drawing.Point(0, 0);
             this.variablePanel.Name = "variablePanel";
+            this.variablePanel.Padding = new System.Windows.Forms.Padding(5);
             this.variablePanel.Size = new System.Drawing.Size(434, 311);
             this.variablePanel.TabIndex = 0;
             // 
             // variableTreeView
             // 
-            this.variableTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.variableTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.variableTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.variableTreeView.FullRowSelect = true;
             this.variableTreeView.HotTracking = true;
-            this.variableTreeView.Location = new System.Drawing.Point(0, 48);
+            this.variableTreeView.Location = new System.Drawing.Point(5, 53);
             this.variableTreeView.Name = "variableTreeView";
             treeNode1.Name = "Node0";
             treeNode1.Text = "Node0";
@@ -53,7 +54,7 @@ namespace Roro.Activities
             treeNode1,
             treeNode2});
             this.variableTreeView.ShowLines = false;
-            this.variableTreeView.Size = new System.Drawing.Size(434, 263);
+            this.variableTreeView.Size = new System.Drawing.Size(424, 253);
             this.variableTreeView.TabIndex = 1;
             this.variableTreeView.TabStop = false;
             // 
@@ -61,9 +62,9 @@ namespace Roro.Activities
             // 
             this.variableTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.variableTextBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.variableTextBox.Location = new System.Drawing.Point(0, 25);
+            this.variableTextBox.Location = new System.Drawing.Point(5, 30);
             this.variableTextBox.Name = "variableTextBox";
-            this.variableTextBox.Size = new System.Drawing.Size(434, 23);
+            this.variableTextBox.Size = new System.Drawing.Size(424, 23);
             this.variableTextBox.TabIndex = 0;
             this.variableTextBox.TabStop = false;
             // 
@@ -71,9 +72,9 @@ namespace Roro.Activities
             // 
             this.variableLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.variableLabel.Font = new System.Drawing.Font("Segoe UI Light", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.variableLabel.Location = new System.Drawing.Point(0, 0);
+            this.variableLabel.Location = new System.Drawing.Point(5, 5);
             this.variableLabel.Name = "variableLabel";
-            this.variableLabel.Size = new System.Drawing.Size(434, 25);
+            this.variableLabel.Size = new System.Drawing.Size(424, 25);
             this.variableLabel.TabIndex = 4;
             this.variableLabel.Text = "Variables";
             // 

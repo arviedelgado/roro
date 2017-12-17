@@ -41,7 +41,7 @@ namespace Roro.Activities
             this.argumentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.argumentPanel.Location = new System.Drawing.Point(0, 0);
             this.argumentPanel.Name = "argumentPanel";
-            this.argumentPanel.Size = new System.Drawing.Size(434, 311);
+            this.argumentPanel.Size = new System.Drawing.Size(344, 311);
             this.argumentPanel.TabIndex = 0;
             // 
             // argumentDataGridView
@@ -59,12 +59,11 @@ namespace Roro.Activities
             this.argumentDataGridView.EnableHeadersVisualStyles = false;
             this.argumentDataGridView.GridColor = System.Drawing.SystemColors.ControlDarkDark;
             this.argumentDataGridView.Location = new System.Drawing.Point(0, 25);
-            this.argumentDataGridView.Margin = new System.Windows.Forms.Padding(10, 10, 3, 3);
             this.argumentDataGridView.MultiSelect = false;
             this.argumentDataGridView.Name = "argumentDataGridView";
             this.argumentDataGridView.RowHeadersVisible = false;
             this.argumentDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.argumentDataGridView.Size = new System.Drawing.Size(434, 256);
+            this.argumentDataGridView.Size = new System.Drawing.Size(344, 263);
             this.argumentDataGridView.TabIndex = 2;
             this.argumentDataGridView.TabStop = false;
             // 
@@ -74,7 +73,7 @@ namespace Roro.Activities
             this.argumentLabel.Font = new System.Drawing.Font("Segoe UI Light", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.argumentLabel.Location = new System.Drawing.Point(0, 0);
             this.argumentLabel.Name = "argumentLabel";
-            this.argumentLabel.Size = new System.Drawing.Size(434, 25);
+            this.argumentLabel.Size = new System.Drawing.Size(344, 25);
             this.argumentLabel.TabIndex = 3;
             this.argumentLabel.Text = "argumentLabel";
             // 
@@ -85,15 +84,17 @@ namespace Roro.Activities
             this.argumentButtonsPanel.Controls.Add(this.argumentRemoveButton);
             this.argumentButtonsPanel.Controls.Add(this.argumentAddButton);
             this.argumentButtonsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.argumentButtonsPanel.Location = new System.Drawing.Point(0, 281);
+            this.argumentButtonsPanel.Location = new System.Drawing.Point(0, 288);
             this.argumentButtonsPanel.Name = "argumentButtonsPanel";
-            this.argumentButtonsPanel.Size = new System.Drawing.Size(434, 30);
+            this.argumentButtonsPanel.Size = new System.Drawing.Size(344, 23);
             this.argumentButtonsPanel.TabIndex = 1;
             // 
             // argumentMoveUpButton
             // 
             this.argumentMoveUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.argumentMoveUpButton.Location = new System.Drawing.Point(265, 3);
+            this.argumentMoveUpButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.argumentMoveUpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.argumentMoveUpButton.Location = new System.Drawing.Point(178, 0);
             this.argumentMoveUpButton.Name = "argumentMoveUpButton";
             this.argumentMoveUpButton.Size = new System.Drawing.Size(80, 23);
             this.argumentMoveUpButton.TabIndex = 0;
@@ -105,7 +106,9 @@ namespace Roro.Activities
             // argumentMoveDownButton
             // 
             this.argumentMoveDownButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.argumentMoveDownButton.Location = new System.Drawing.Point(351, 3);
+            this.argumentMoveDownButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.argumentMoveDownButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.argumentMoveDownButton.Location = new System.Drawing.Point(264, 0);
             this.argumentMoveDownButton.Name = "argumentMoveDownButton";
             this.argumentMoveDownButton.Size = new System.Drawing.Size(80, 23);
             this.argumentMoveDownButton.TabIndex = 1;
@@ -116,7 +119,9 @@ namespace Roro.Activities
             // 
             // argumentRemoveButton
             // 
-            this.argumentRemoveButton.Location = new System.Drawing.Point(89, 3);
+            this.argumentRemoveButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.argumentRemoveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.argumentRemoveButton.Location = new System.Drawing.Point(86, 0);
             this.argumentRemoveButton.Name = "argumentRemoveButton";
             this.argumentRemoveButton.Size = new System.Drawing.Size(80, 23);
             this.argumentRemoveButton.TabIndex = 2;
@@ -127,7 +132,9 @@ namespace Roro.Activities
             // 
             // argumentAddButton
             // 
-            this.argumentAddButton.Location = new System.Drawing.Point(3, 3);
+            this.argumentAddButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.argumentAddButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.argumentAddButton.Location = new System.Drawing.Point(0, 0);
             this.argumentAddButton.Name = "argumentAddButton";
             this.argumentAddButton.Size = new System.Drawing.Size(80, 23);
             this.argumentAddButton.TabIndex = 3;
@@ -138,7 +145,7 @@ namespace Roro.Activities
             // 
             // ArgumentForm
             // 
-            this.ClientSize = new System.Drawing.Size(434, 311);
+            this.ClientSize = new System.Drawing.Size(344, 311);
             this.Controls.Add(this.argumentPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

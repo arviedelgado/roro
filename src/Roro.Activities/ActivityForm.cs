@@ -15,8 +15,11 @@ namespace Roro.Workflow
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Process Node");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Decision Node?");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Activities", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2});
             this.activityPanel = new System.Windows.Forms.Panel();
             this.activityTreeView = new System.Windows.Forms.TreeView();
             this.activityTextBox = new System.Windows.Forms.TextBox();
@@ -45,12 +48,13 @@ namespace Roro.Workflow
             this.activityTreeView.Location = new System.Drawing.Point(0, 48);
             this.activityTreeView.Name = "activityTreeView";
             treeNode1.Name = "Node0";
-            treeNode1.Text = "Node0";
+            treeNode1.Text = "Process Node";
             treeNode2.Name = "Node1";
-            treeNode2.Text = "Node1";
+            treeNode2.Text = "Decision Node?";
+            treeNode3.Name = "Node0";
+            treeNode3.Text = "Activities";
             this.activityTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            treeNode3});
             this.activityTreeView.ShowLines = false;
             this.activityTreeView.Size = new System.Drawing.Size(434, 263);
             this.activityTreeView.TabIndex = 1;
@@ -97,7 +101,7 @@ namespace Roro.Workflow
         {
             var form = new ActivityForm();
             form.activityTreeView.SetWindowTheme("explorer");
-            form.activityTreeView.Tag = Activity.GetActivities();
+            form.activityTreeView.Tag = Activity.GetExternalActivities();
             form.activityTreeView.ItemDrag += TreeView1_ItemDrag;
             form.activityTextBox.TextChanged += (sender, e) => form.FilterTreeView();
             form.FilterTreeView();
@@ -113,19 +117,30 @@ namespace Roro.Workflow
         private void FilterTreeView()
         {
             this.activityTreeView.BeginUpdate(); // avoid flickering.
+            this.activityTreeView.Nodes.Clear();
+            // internal activities
+            var generalActivities = this.activityTreeView.Nodes.Add("General");
+            generalActivities.Nodes.Add(typeof(PreparationNodeActivity).FullName, "Preparation Activity").EnsureVisible();
+            generalActivities.Nodes.Add(typeof(LoopStartNodeActivity).FullName, "Loop Activity").EnsureVisible();
+            generalActivities.Nodes.Add(typeof(EndNodeActivity).FullName, "End Activity").EnsureVisible();
+            // external activities
             var dataSource = this.activityTreeView.Tag as IEnumerable<Type>;
             var filterText = this.activityTextBox.Text.ToLower().Replace(" ", string.Empty);
-            this.activityTreeView.Nodes.Clear();
             foreach (var type in dataSource)
             {
                 var groupKey = String.Join(".", type.FullName.Split('.').Reverse().Skip(1).Reverse());
                 if (!this.activityTreeView.Nodes.ContainsKey(groupKey))
                 {
-                    this.activityTreeView.Nodes.Add(groupKey, groupKey.Split('.').Last());
+                    this.activityTreeView.Nodes.Add(groupKey, groupKey.Split('.').Last() + " Activities");
                 }
                 if (type.Name.ToLower().Replace(" ", string.Empty).Contains(filterText))
                 {
-                    this.activityTreeView.Nodes[groupKey].Nodes.Add(type.FullName, type.Name.Humanize()).EnsureVisible();
+                    var nodeText = type.Name.Humanize();
+                    if (typeof(DecisionNodeActivity).IsAssignableFrom(type))
+                    {
+                        nodeText += "?";
+                    }
+                    this.activityTreeView.Nodes[groupKey].Nodes.Add(type.FullName, nodeText).EnsureVisible();
                 }
             }
             if (this.activityTreeView.Nodes.Count > 0)

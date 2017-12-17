@@ -40,20 +40,30 @@ namespace Roro.Activities
             throw new NotSupportedException();
         }
 
-        public static IEnumerable<Type> GetActivities()
+        public static IEnumerable<Type> GetExternalActivities()
         {
-            foreach (var file in Directory.GetFiles(Environment.CurrentDirectory, "Roro.Activities.Excel.dll"))
+            foreach (var file in Directory.GetFiles(Environment.CurrentDirectory, "Roro.Activities.*.dll"))
             {
                 Assembly.LoadFrom(file);
             }
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
-                .Where(x => typeof(Activity).IsAssignableFrom(x) && !x.IsAbstract);
+                .Where(x => !x.IsAbstract
+                    && (typeof(ProcessNodeActivity).IsAssignableFrom(x)
+                        || typeof(DecisionNodeActivity).IsAssignableFrom(x)));
+        }
+
+        private static IEnumerable<Type> GetAllActivities()
+        {
+            Activity.GetExternalActivities();
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => !x.IsAbstract);
         }
 
         public static Activity CreateInstance(string name)
         {
-            var activityType = Activity.GetActivities().Where(x => x.FullName == name).First();
+            var activityType = Activity.GetAllActivities().Where(x => x.FullName == name).First();
             return Activator.CreateInstance(activityType) as Activity;
         }
     }

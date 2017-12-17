@@ -12,9 +12,9 @@ namespace Roro.Workflow
         {
             Console.Clear();
 
-            Console.WriteLine();
-            Console.WriteLine(DataContractSerializerHelper.ToString(this));
-            Console.WriteLine();
+            //Console.WriteLine();
+            //Console.WriteLine(DataContractSerializerHelper.ToString(this));
+            //Console.WriteLine();
 
             var total = Stopwatch.StartNew();
 
@@ -24,27 +24,27 @@ namespace Roro.Workflow
 
             var sw = Stopwatch.StartNew();
             this.RenderBackground(g);
-            Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            //Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
             this.RenderNodes(g);
-            Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            //Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
             this.RenderLines(g);
-            Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            //Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
             this.RenderPorts(g);
-            Console.WriteLine("Render Ports\t{0}", sw.ElapsedMilliseconds / 1000.0);
+            //Console.WriteLine("Render Ports\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             if (this.SelectNodeRect != Rectangle.Empty)
             {
                 e.Graphics.FillRectangle(PageRenderOptions.SelectionBackBrush, this.SelectNodeRect);
             }
 
-            Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
-            Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);           
+            //Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
+            //Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);           
         }
 
         private void RenderBackground(Graphics g)
@@ -63,17 +63,20 @@ namespace Roro.Workflow
 
         private void RenderPorts(Graphics g)
         {
-            var o = new NodeStyle();
-            foreach (var node in this.SelectedNodes)
+            if (this.MoveNodeOffsetPoint == Point.Empty)
             {
-                node.RenderedPorts.Clear();
-                var nodePath = this.RenderedNodes[node];
-                foreach (var port in node.Ports)
+                var o = new NodeStyle();
+                foreach (var node in this.SelectedNodes)
                 {
-                    var portPath = port.Render(g, node.Bounds, o);
-                    node.RenderedPorts.Add(port, portPath);
-                    nodePath.FillMode = FillMode.Winding;
-                    nodePath.AddPath(portPath, false);
+                    node.RenderedPorts.Clear();
+                    var nodePath = this.RenderedNodes[node];
+                    foreach (var port in node.Ports)
+                    {
+                        var portPath = port.Render(g, node.Bounds, o);
+                        node.RenderedPorts.Add(port, portPath);
+                        nodePath.FillMode = FillMode.Winding;
+                        nodePath.AddPath(portPath, false);
+                    }
                 }
             }
         }

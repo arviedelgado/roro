@@ -8,7 +8,7 @@ namespace Roro.Workflow
 {
     public partial class Page
     {
-        private void KeyEvents(object sender, KeyEventArgs e)
+        private void Canvas_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {

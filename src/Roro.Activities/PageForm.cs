@@ -4,17 +4,19 @@ using System.Windows.Forms;
 
 namespace Roro.Workflow
 {
-    public class DocumentForm : Form
+    public class PageForm : Form
     {
 
         private void InitializeComponent()
         {
             this.activityPanel = new System.Windows.Forms.Panel();
             this.pagePanel = new System.Windows.Forms.Panel();
+            this.pageCanvas = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.runButton = new System.Windows.Forms.Button();
             this.setNextButton = new System.Windows.Forms.Button();
+            this.runButton = new System.Windows.Forms.Button();
+            this.pagePanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -23,7 +25,6 @@ namespace Roro.Workflow
             // 
             this.activityPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.activityPanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.activityPanel.Location = new System.Drawing.Point(23, 73);
             this.activityPanel.Name = "activityPanel";
             this.activityPanel.Size = new System.Drawing.Size(244, 465);
@@ -31,13 +32,21 @@ namespace Roro.Workflow
             // 
             // pagePanel
             // 
+            this.pagePanel.AutoScroll = true;
             this.pagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pagePanel.Controls.Add(this.pageCanvas);
             this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pagePanel.Location = new System.Drawing.Point(273, 73);
             this.pagePanel.Name = "pagePanel";
-            this.pagePanel.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
             this.pagePanel.Size = new System.Drawing.Size(688, 465);
             this.pagePanel.TabIndex = 0;
+            // 
+            // pageCanvas
+            // 
+            this.pageCanvas.Location = new System.Drawing.Point(0, 0);
+            this.pageCanvas.Name = "pageCanvas";
+            this.pageCanvas.Size = new System.Drawing.Size(538, 360);
+            this.pageCanvas.TabIndex = 2;
             // 
             // tableLayoutPanel1
             // 
@@ -67,6 +76,18 @@ namespace Roro.Workflow
             this.panel1.Size = new System.Drawing.Size(688, 44);
             this.panel1.TabIndex = 1;
             // 
+            // setNextButton
+            // 
+            this.setNextButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.setNextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.setNextButton.Location = new System.Drawing.Point(84, 3);
+            this.setNextButton.Name = "setNextButton";
+            this.setNextButton.Size = new System.Drawing.Size(135, 38);
+            this.setNextButton.TabIndex = 1;
+            this.setNextButton.TabStop = false;
+            this.setNextButton.Text = "Set As Next Activity";
+            this.setNextButton.Click += new System.EventHandler(this.SetNextButton_Click);
+            // 
             // runButton
             // 
             this.runButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -79,32 +100,23 @@ namespace Roro.Workflow
             this.runButton.Text = "RUN";
             this.runButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
-            // setNextButton
-            // 
-            this.setNextButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.setNextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.setNextButton.Location = new System.Drawing.Point(84, 3);
-            this.setNextButton.Name = "setNextButton";
-            this.setNextButton.Size = new System.Drawing.Size(75, 38);
-            this.setNextButton.TabIndex = 1;
-            this.setNextButton.TabStop = false;
-            this.setNextButton.Text = "Set As Next Activity";
-            this.setNextButton.Click += new System.EventHandler(this.SetNextButton_Click);
-            // 
-            // DocumentForm
+            // PageForm
             // 
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(984, 561);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "DocumentForm";
-            this.Load += new System.EventHandler(this.DocumentForm_Load);
+            this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.Name = "PageForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Load += new System.EventHandler(this.PageForm_Load);
+            this.pagePanel.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
-        private DocumentForm() => this.InitializeComponent();
+        private PageForm() => this.InitializeComponent();
 
         private Panel pagePanel;
         private Panel activityPanel;
@@ -112,20 +124,21 @@ namespace Roro.Workflow
         private Panel panel1;
         private Button runButton;
         private Button setNextButton;
+        private Panel pageCanvas;
         private Page page;
 
-        public static DocumentForm Create()
+        public static PageForm Create()
         {
-            return new DocumentForm();
+            return new PageForm();
         }
 
-        private void DocumentForm_Load(object sender, System.EventArgs e)
+        private void PageForm_Load(object sender, System.EventArgs e)
         {
             this.page = new Page();
-            this.page.AttachEvents(this.pagePanel);
+            this.page.AttachEvents(this.pageCanvas);
             ActivityForm.Create().Parent = this.activityPanel;
         }
-
+        
         private void RunButton_Click(object sender, System.EventArgs e)
         {
             Console.Clear();

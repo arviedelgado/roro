@@ -14,10 +14,12 @@ namespace Roro.Workflow
 
         public static Brush SelectionBackBrush = new SolidBrush(Color.FromArgb(50, 150, 150, 150));
 
-        public static Pen DebugNodeBorderPen = new Pen(Color.ForestGreen, 3);
+        public static Brush DebugNodeBackBrush = Brushes.LightGreen;
+
+        public static Pen SelectedNodeBorderPen = new Pen(Color.Green, 2);
     }
 
-    public class NodeStyle
+    public sealed class NodeStyle
     {
         public Font Font { get; set; }
 
@@ -55,13 +57,5 @@ namespace Roro.Workflow
             Alignment = StringAlignment.Center,
             LineAlignment = StringAlignment.Center
         };
-    }
-
-    public class SelectedNodeStyle : NodeStyle
-    {
-        public SelectedNodeStyle()
-        {
-            this.BackBrush = new SolidBrush(Color.FromArgb(250, 250, 150));
-        }
     }
 }

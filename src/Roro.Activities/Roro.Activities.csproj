@@ -49,7 +49,7 @@
     <Compile Include="ActivityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DocumentForm.cs">
+    <Compile Include="PageForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NodeForm.cs">
@@ -58,7 +58,6 @@
     <Compile Include="ArgumentForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Document.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Cell.cs" />
     <Compile Include="Helper\CellLocation.cs" />
@@ -110,8 +109,8 @@
     <EmbeddedResource Include="ActivityForm.resx">
       <DependentUpon>ActivityForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DocumentForm.resx">
-      <DependentUpon>DocumentForm.cs</DependentUpon>
+    <EmbeddedResource Include="PageForm.resx">
+      <DependentUpon>PageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeForm.resx">
       <DependentUpon>NodeForm.cs</DependentUpon>

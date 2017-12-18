@@ -13,7 +13,7 @@ namespace Roro.Studio
         [STAThread]
         static void Main(string[] args)
         {
-            using (var f = DocumentForm.Create())
+            using (var f = PageForm.Create())
             {
                 Application.EnableVisualStyles();
                 //Application.SetCompatibleTextRenderingDefault(false);

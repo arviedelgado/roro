@@ -23,12 +23,13 @@ namespace Roro.Workflow
 
             var total = Stopwatch.StartNew();
 
+            var c = sender as Control;
             var g = e.Graphics;
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
             var sw = Stopwatch.StartNew();
-            this.RenderBackground(g);
+            this.RenderBackground(g, c.ClientRectangle);
             //Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             sw.Restart();
@@ -52,9 +53,8 @@ namespace Roro.Workflow
             //Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);           
         }
 
-        private void RenderBackground(Graphics g)
+        private void RenderBackground(Graphics g, Rectangle r)
         {
-            var r = g.ClipBounds;
             g.Clear(PageRenderOptions.BackColor);
             for (var y = 0; y < r.Height; y += PageRenderOptions.GridSize)
             {
@@ -109,6 +109,9 @@ namespace Roro.Workflow
 
         private void RenderNodes(Graphics g)
         {
+            var width = this.canvas.Parent.ClientSize.Width;
+            var height = this.canvas.Parent.ClientSize.Height;
+
             this.RenderedNodes.Clear();
             foreach (var node in this.Nodes)
             {
@@ -116,16 +119,22 @@ namespace Roro.Workflow
                 var o = new NodeStyle();
                 if (this.SelectedNodes.Contains(node))
                 {
-                    o = new SelectedNodeStyle();
+                    o.BorderPen = PageRenderOptions.SelectedNodeBorderPen;
                     r.Offset(this.MoveNodeOffsetPoint);
                 }
                 if (this.DebugNode == node)
                 {
-                    o.BorderPen = PageRenderOptions.DebugNodeBorderPen;
+                    o.BackBrush = PageRenderOptions.DebugNodeBackBrush;
                 }
                 this.RenderedNodes.Add(node, node.Render(g, r, o));
                 node.RenderText(g, r, o);
+
+                // update width and height
+                width = Math.Max(width, r.Right + PageRenderOptions.GridSize * 5);
+                height = Math.Max(height, r.Bottom + PageRenderOptions.GridSize * 5);
             }
+
+            this.canvas.Size = new Size(width, height);
         }
     }
 }

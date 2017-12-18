@@ -190,21 +190,13 @@ namespace Roro.Workflow
         public void AttachEvents(Panel canvas)
         {
             this.canvas = canvas;
-            this.canvas.Dock = DockStyle.Fill;
             this.canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.canvas, true);
             this.canvas.Paint += OnPaint;
-            this.canvas.MouseDown += MouseEvents;
-            this.canvas.KeyDown += KeyEvents;
+            this.canvas.MouseDown += Canvas_MouseDown;
+            this.canvas.KeyDown += Canvas_KeyDown;
             this.canvas.AllowDrop = true;
-            this.canvas.DragEnter += DragEnterEvent;
-            this.canvas.DragDrop += DragDropEvent;
-        }
-
-        public void DetachEvents()
-        {
-            this.canvas.Paint -= OnPaint;
-            this.canvas.MouseDown -= MouseEvents;
-            this.canvas.KeyDown -= KeyEvents;
+            this.canvas.DragEnter += Canvas_DragEnter;
+            this.canvas.DragDrop += Canvas_DragDrop;
         }
 
         #endregion

@@ -20,10 +20,16 @@ namespace Roro.Workflow
 
         private Rectangle SelectNodeRect { get; set; }
 
-        private void MouseEvents(object sender, MouseEventArgs e)
+        private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
+            // Focus the Canvas to allow KeyEvents
+            // Handle the scrollbar-resets-on-focus
+            var pagePanel = this.canvas.Parent as Panel;
+            var pagePanelScrollPosition = pagePanel.AutoScrollPosition;
             this.canvas.Focus();
+            pagePanel.AutoScrollPosition = new Point(-pagePanelScrollPosition.X, -pagePanelScrollPosition.Y);
 
+            // Handle Double Click
             this.canvas.MouseDoubleClick -= Canvas_MouseDoubleClick;
             this.canvas.MouseDoubleClick += Canvas_MouseDoubleClick;
 
@@ -73,7 +79,7 @@ namespace Roro.Workflow
             }
         }
 
-        private void DragDropEvent(object sender, DragEventArgs e)
+        private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(typeof(TreeNode).FullName) is TreeNode treeNode)
             {
@@ -84,7 +90,7 @@ namespace Roro.Workflow
             }
         }
 
-        private void DragEnterEvent(object sender, DragEventArgs e)
+        private void Canvas_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
         }

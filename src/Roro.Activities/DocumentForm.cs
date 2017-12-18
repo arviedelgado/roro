@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Roro.Workflow
@@ -11,7 +12,11 @@ namespace Roro.Workflow
             this.activityPanel = new System.Windows.Forms.Panel();
             this.pagePanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.runButton = new System.Windows.Forms.Button();
+            this.setNextButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // activityPanel
@@ -41,6 +46,7 @@ namespace Roro.Workflow
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.activityPanel, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.pagePanel, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -51,6 +57,40 @@ namespace Roro.Workflow
             this.tableLayoutPanel1.Size = new System.Drawing.Size(984, 561);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.setNextButton);
+            this.panel1.Controls.Add(this.runButton);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(273, 23);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(688, 44);
+            this.panel1.TabIndex = 1;
+            // 
+            // runButton
+            // 
+            this.runButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.runButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.runButton.Location = new System.Drawing.Point(3, 3);
+            this.runButton.Name = "runButton";
+            this.runButton.Size = new System.Drawing.Size(75, 38);
+            this.runButton.TabIndex = 0;
+            this.runButton.TabStop = false;
+            this.runButton.Text = "RUN";
+            this.runButton.Click += new System.EventHandler(this.RunButton_Click);
+            // 
+            // setNextButton
+            // 
+            this.setNextButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.setNextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.setNextButton.Location = new System.Drawing.Point(84, 3);
+            this.setNextButton.Name = "setNextButton";
+            this.setNextButton.Size = new System.Drawing.Size(75, 38);
+            this.setNextButton.TabIndex = 1;
+            this.setNextButton.TabStop = false;
+            this.setNextButton.Text = "Set As Next Activity";
+            this.setNextButton.Click += new System.EventHandler(this.SetNextButton_Click);
+            // 
             // DocumentForm
             // 
             this.BackColor = System.Drawing.Color.White;
@@ -59,6 +99,7 @@ namespace Roro.Workflow
             this.Name = "DocumentForm";
             this.Load += new System.EventHandler(this.DocumentForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -68,7 +109,10 @@ namespace Roro.Workflow
         private Panel pagePanel;
         private Panel activityPanel;
         private TableLayoutPanel tableLayoutPanel1;
-        private Document doc;
+        private Panel panel1;
+        private Button runButton;
+        private Button setNextButton;
+        private Page page;
 
         public static DocumentForm Create()
         {
@@ -77,9 +121,32 @@ namespace Roro.Workflow
 
         private void DocumentForm_Load(object sender, System.EventArgs e)
         {
-            this.doc = new Document();
-            this.doc.Pages.First().AttachEvents(this.pagePanel);
+            this.page = new Page();
+            this.page.AttachEvents(this.pagePanel);
             ActivityForm.Create().Parent = this.activityPanel;
+        }
+
+        private void RunButton_Click(object sender, System.EventArgs e)
+        {
+            Console.Clear();
+            new PageRunner(this.page).Run();
+        }
+
+        private void SetNextButton_Click(object sender, EventArgs e)
+        {
+            if (this.page.SelectedNodes.Count == 0)
+            {
+                MessageBox.Show("Please select an activity.");
+            }
+            else if (this.page.SelectedNodes.Count > 1)
+            {
+                MessageBox.Show("Please select 1 activity only.");
+            }
+            else
+            {
+                this.page.DebugNode = this.page.SelectedNodes.First();
+                this.page.Render();
+            }
         }
     }
 }

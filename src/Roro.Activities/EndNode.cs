@@ -1,4 +1,5 @@
 ﻿using Roro.Activities;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
@@ -11,6 +12,11 @@ namespace Roro.Workflow
         public EndNode(Activity activity) : base(activity)
         {
             this.Ports.Clear();
+        }
+
+        public override Guid Execute()
+        {
+            return Guid.Empty;
         }
 
         public override bool CanStartLink => false;

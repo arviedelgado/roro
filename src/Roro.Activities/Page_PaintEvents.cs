@@ -8,9 +8,14 @@ namespace Roro.Workflow
 {
     public partial class Page
     {
+        internal void Render()
+        {
+            this.canvas.Invalidate();
+        }
+
         private void OnPaint(object sender, PaintEventArgs e)
         {
-            Console.Clear();
+            //Console.Clear();
 
             //Console.WriteLine();
             //Console.WriteLine(DataContractSerializerHelper.ToString(this));
@@ -113,6 +118,10 @@ namespace Roro.Workflow
                 {
                     o = new SelectedNodeStyle();
                     r.Offset(this.MoveNodeOffsetPoint);
+                }
+                if (this.DebugNode == node)
+                {
+                    o.BorderPen = PageRenderOptions.DebugNodeBorderPen;
                 }
                 this.RenderedNodes.Add(node, node.Render(g, r, o));
                 node.RenderText(g, r, o);

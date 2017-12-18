@@ -24,6 +24,10 @@ namespace Roro.Workflow
         {
             foreach (var selectedNode in this.SelectedNodes)
             {
+                if (selectedNode == this.DebugNode)
+                {
+                    this.DebugNode = null;
+                }
                 this.RemoveNode(selectedNode);
             }
             this.SelectedNodes.Clear();

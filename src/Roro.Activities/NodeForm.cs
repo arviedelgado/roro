@@ -34,6 +34,7 @@ namespace Roro.Activities
             this.nodeNameTextBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.nodeNameTextBox.Font = new System.Drawing.Font("Segoe UI Light", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.nodeNameTextBox.Location = new System.Drawing.Point(0, 0);
+            this.nodeNameTextBox.MinimumSize = new System.Drawing.Size(0, 100);
             this.nodeNameTextBox.Name = "nodeNameTextBox";
             this.nodeNameTextBox.Size = new System.Drawing.Size(468, 27);
             this.nodeNameTextBox.TabIndex = 6;

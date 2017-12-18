@@ -13,21 +13,23 @@ namespace Roro.Workflow
         public static Color BackColor = Color.White;
 
         public static Brush SelectionBackBrush = new SolidBrush(Color.FromArgb(50, 150, 150, 150));
+
+        public static Pen DebugNodeBorderPen = new Pen(Color.ForestGreen, 3);
     }
 
     public class NodeStyle
     {
-        public Font Font { get; protected set; }
+        public Font Font { get; set; }
 
-        public Brush FontBrush { get; protected set; }
+        public Brush FontBrush { get; set; }
 
-        public Pen BorderPen { get; protected set; }
+        public Pen BorderPen { get; set; }
 
-        public Brush PortBackBrush { get; protected set; }
+        public Brush PortBackBrush { get; set; }
 
-        public Brush BackBrush { get; protected set; }
+        public Brush BackBrush { get; set; }
 
-        public Pen LinePenWithArrow { get; protected set; }
+        public Pen LinePenWithArrow { get; set; }
 
 
         public NodeStyle()

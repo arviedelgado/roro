@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
+using System;
+using System.Linq;
 
 namespace Roro.Workflow
 {
@@ -12,6 +14,11 @@ namespace Roro.Workflow
         {
             this.Ports.Add(new TruePort());
             this.Ports.Add(new FalsePort());
+        }
+
+        public override Guid Execute()
+        {
+            return this.Ports.First().NextNodeId;
         }
 
         public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)

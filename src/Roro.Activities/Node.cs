@@ -57,10 +57,7 @@ namespace Roro.Workflow
             return null;
         }
 
-        public virtual Guid Execute()
-        {
-            return Guid.Empty;
-        }
+        public abstract Guid Execute();
 
         public Node(Activity activity)
         {

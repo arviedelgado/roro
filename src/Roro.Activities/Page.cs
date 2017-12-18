@@ -30,9 +30,13 @@ namespace Roro.Workflow
         [DataMember]
         private List<Node> Nodes { get; set; }
 
-        private HashSet<Node> SelectedNodes { get; set; }
+        internal Node DebugNode { get; set; }
+
+        internal HashSet<Node> SelectedNodes { get; set; }
 
         private Dictionary<Node, GraphicsPath> RenderedNodes { get; }
+
+        internal Node FirstNode => this.Nodes.First(x => x is StartNode);
 
         public Page()
         {

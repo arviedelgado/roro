@@ -49,9 +49,6 @@
     <Compile Include="ActivityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PageForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="DocumentForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +71,7 @@
     <Compile Include="LoopEndNode.cs" />
     <Compile Include="LoopStartNode.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="PageRunner.cs" />
     <Compile Include="PreparationNode.cs" />
     <Compile Include="ProcessNode.cs" />
     <Compile Include="StartNode.cs" />
@@ -111,9 +109,6 @@
   <ItemGroup>
     <EmbeddedResource Include="ActivityForm.resx">
       <DependentUpon>ActivityForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PageForm.resx">
-      <DependentUpon>PageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DocumentForm.resx">
       <DependentUpon>DocumentForm.cs</DependentUpon>

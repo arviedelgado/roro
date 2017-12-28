@@ -49,6 +49,9 @@
     <Compile Include="ActivityForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="DataType.cs" />
+    <Compile Include="Expression.cs" />
+    <Compile Include="ShowMessageActivity.cs" />
     <Compile Include="PageForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,7 +87,6 @@
     <Compile Include="ActivityContext.cs" />
     <Compile Include="DataTypeColumn.cs" />
     <Compile Include="DataTypeCell.cs" />
-    <Compile Include="DataType.cs" />
     <Compile Include="Argument.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="EndNodeActivity.cs" />

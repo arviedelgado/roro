@@ -16,6 +16,8 @@ namespace Roro.Activities
         [DataMember]
         public string Name { get; protected set; }
 
+        public abstract bool TrySetValue(object value);
+
         public static List<DataType> GetCommonTypes()
         {
             return new List<DataType>()
@@ -73,6 +75,19 @@ namespace Roro.Activities
 
         public Text(string value) : base(value ?? string.Empty) { }
 
+        public override bool TrySetValue(object value)
+        {
+            try
+            {
+                this.Value = Convert.ToString(value);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static implicit operator String(Text item) => item.Value;
 
         public static implicit operator Text(String item) => new Text(item);
@@ -80,9 +95,22 @@ namespace Roro.Activities
 
     public sealed class Number : DataType<Decimal>
     {
-        public Number() : this(0) { }
+        public Number() : this(new Decimal()) { }
 
         public Number(Decimal value) : base(value) { }
+
+        public override bool TrySetValue(object value)
+        {
+            try
+            {
+                this.Value = Convert.ToDecimal(value);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
 
         public static implicit operator Decimal(Number item) => item.Value;
 
@@ -93,9 +121,22 @@ namespace Roro.Activities
 
     public sealed class Flag : DataType<Boolean>
     {
-        public Flag() : this(false) { }
+        public Flag() : this(new Boolean()) { }
 
         public Flag(Boolean value) : base(value) { }
+
+        public override bool TrySetValue(object value)
+        {
+            try
+            {
+                this.Value = Convert.ToBoolean(value);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
 
         public static implicit operator Boolean(Flag item) => item.Value;
 
@@ -104,9 +145,22 @@ namespace Roro.Activities
 
     public sealed class DateTime : DataType<System.DateTime>
     {
-        public DateTime() : this(System.DateTime.MinValue) { }
+        public DateTime() : this(new System.DateTime()) { }
 
         public DateTime(System.DateTime value) : base(value) { }
+
+        public override bool TrySetValue(object value)
+        {
+            try
+            {
+                this.Value = Convert.ToDateTime(value);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
 
         public static implicit operator System.DateTime(DateTime item) => item.Value;
 
@@ -119,6 +173,19 @@ namespace Roro.Activities
 
         public Collection(DataTable value) : base(value) { }
 
+        public override bool TrySetValue(object value)
+        {
+            try
+            {
+                this.Value = (DataTable)value;
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static implicit operator DataTable(Collection item) => item.Value;
 
         public static implicit operator Collection(DataTable item) => new Collection(item);
@@ -129,6 +196,20 @@ namespace Roro.Activities
         public Password() : this(new SecureString()) { }
 
         public Password(SecureString value) : base(value) { }
+
+        public override bool TrySetValue(object value)
+        {
+            try
+            {
+                this.Value.Clear();
+                Convert.ToString(value).ToList().ForEach(this.Value.AppendChar);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
 
         public static implicit operator SecureString(Password item) => item.Value;
 

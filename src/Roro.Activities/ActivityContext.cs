@@ -6,14 +6,26 @@ using System.Threading.Tasks;
 
 namespace Roro.Activities
 {
-    public abstract class ActivityContext
+    public sealed class ActivityContext
     {
-        public abstract T Get<T>(InArgument<T> input) where T : DataType, new();
+        public T Get<T>(InArgument<T> argument) where T : DataType, new()
+        {
+            return new Expression(null, argument.Expression).Evaluate<T>();
+        }
 
-        public abstract T Get<T>(InOutArgument<T> input) where T : DataType, new();
+        public T Get<T>(InOutArgument<T> argument) where T : DataType, new()
+        {
+            return new Expression(null, argument.Expression).Evaluate<T>();
+        }
 
-        public abstract void Set<T>(OutArgument<T> output, T value) where T : DataType, new();
+        public void Set<T>(OutArgument<T> argument, T value) where T : DataType, new()
+        {
 
-        public abstract void Set<T>(InOutArgument<T> output, T value) where T : DataType, new();
+        }
+
+        public void Set<T>(InOutArgument<T> argument, T value) where T : DataType, new()
+        {
+
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace Roro.Activities
         {
             this.InArguments = new List<InArgument>()
             {
-                new InArgument<Collection>("Collection")
+                new InArgument<Collection>(){ Name = "Collection" }
             };
             this.OutArguments = new List<OutArgument>();
         }

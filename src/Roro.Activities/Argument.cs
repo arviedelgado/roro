@@ -4,32 +4,33 @@ using System.Runtime.Serialization;
 namespace Roro.Activities
 {
     [DataContract]
-    public abstract class Argument
+    public abstract class Argument : ICloneable
     {
-
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 
     [DataContract]
     public abstract class InArgument : Argument
     {
         [DataMember]
-        public string Name { get; set; }
+        internal string Name { get; set; }
 
         [DataMember]
-        public string DataTypeId { get; set; }
+        internal string DataTypeId { get; set; }
 
         [DataMember]
-        public string Expression { get; set; }
+        internal string Expression { get; set; }
     }
 
     [DataContract]
     public sealed class InArgument<T> : InArgument where T : DataType, new()
     {
-        public InArgument() : this(string.Empty) { }
-
-        public InArgument(string name)
+        public InArgument()
         {
-            this.Name = name;
+            this.Name = string.Empty;
             this.DataTypeId = new T().Id;
             this.Expression = string.Empty;
         }
@@ -39,23 +40,21 @@ namespace Roro.Activities
     public abstract class OutArgument : Argument
     {
         [DataMember]
-        public string Name { get; set; }
+        internal string Name { get; set; }
 
         [DataMember]
-        public string DataTypeId { get; set; }
+        internal string DataTypeId { get; set; }
 
         [DataMember]
-        public Guid VariableId { get; set; }
+        internal Guid VariableId { get; set; }
     }
 
     [DataContract]
     public sealed class OutArgument<T> : OutArgument where T : DataType, new()
     {
-        public OutArgument() : this(string.Empty) { }
-
-        public OutArgument(string name)
+        public OutArgument()
         {
-            this.Name = name;
+            this.Name = string.Empty;
             this.DataTypeId = new T().Id;
             this.VariableId = Guid.Empty;
         }
@@ -65,13 +64,13 @@ namespace Roro.Activities
     public abstract class InOutArgument : Argument
     {
         [DataMember]
-        public Guid VariableId { get; set; }
+        internal Guid VariableId { get; set; }
 
         [DataMember]
-        public string DataTypeId { get; set; }
+        internal string DataTypeId { get; set; }
 
         [DataMember]
-        public string Expression { get; set; }
+        internal string Expression { get; set; }
     }
 
     [DataContract]

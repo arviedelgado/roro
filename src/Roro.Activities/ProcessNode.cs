@@ -17,6 +17,8 @@ namespace Roro.Workflow
 
         public override Guid Execute()
         {
+            var activity = this.Activity as ProcessNodeActivity;
+            activity.Execute(new ActivityContext());
             return this.Ports.First().NextNodeId;
         }
 

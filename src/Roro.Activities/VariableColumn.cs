@@ -18,7 +18,6 @@ namespace Roro.Activities
         public VariableColumn()
         {
             this.CellTemplate = new VariableCell();
-            this.ValueType = typeof(Variable);
             this.ValueMember = "Id";
             this.DisplayMember = "Name";
             this.DisplayStyleForCurrentCellOnly = true;

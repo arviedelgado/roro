@@ -18,7 +18,6 @@ namespace Roro.Activities
         public DataTypeColumn()
         {
             this.CellTemplate = new DataTypeCell();
-            this.ValueType = typeof(DataType);
             this.ValueMember = "Id";
             this.DisplayMember = "Name";
             this.DisplayStyleForCurrentCellOnly = true;

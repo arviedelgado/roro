@@ -16,13 +16,13 @@ namespace Roro.Activities
     public abstract class InArgument : Argument
     {
         [DataMember]
-        internal string Name { get; set; }
+        public string Name { get; set; }
 
         [DataMember]
-        internal string DataTypeId { get; set; }
+        public string DataTypeId { get; set; }
 
         [DataMember]
-        internal string Expression { get; set; }
+        public string Expression { get; set; }
     }
 
     [DataContract]
@@ -40,13 +40,13 @@ namespace Roro.Activities
     public abstract class OutArgument : Argument
     {
         [DataMember]
-        internal string Name { get; set; }
+        public string Name { get; set; }
 
         [DataMember]
-        internal string DataTypeId { get; set; }
+        public string DataTypeId { get; set; }
 
         [DataMember]
-        internal Guid VariableId { get; set; }
+        public Guid VariableId { get; set; }
     }
 
     [DataContract]
@@ -64,13 +64,13 @@ namespace Roro.Activities
     public abstract class InOutArgument : Argument
     {
         [DataMember]
-        internal Guid VariableId { get; set; }
+        public Guid VariableId { get; set; }
 
         [DataMember]
-        internal string DataTypeId { get; set; }
+        public string DataTypeId { get; set; }
 
         [DataMember]
-        internal string Expression { get; set; }
+        public string Expression { get; set; }
     }
 
     [DataContract]

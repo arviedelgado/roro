@@ -18,6 +18,7 @@ namespace Roro.Activities
         public GhostTextBoxColumn()
         {
             this.CellTemplate = new GhostTextBoxCell();
+            this.SortMode = DataGridViewColumnSortMode.NotSortable;
         }
     }
 }

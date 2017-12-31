@@ -18,6 +18,7 @@ namespace Roro.Activities
         public VariableColumn()
         {
             this.CellTemplate = new VariableCell();
+            this.SortMode = DataGridViewColumnSortMode.NotSortable;
             this.ValueMember = "Id";
             this.DisplayMember = "Name";
             this.DisplayStyleForCurrentCellOnly = true;

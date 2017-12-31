@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Roro.Activities
@@ -206,10 +207,46 @@ namespace Roro.Activities
             grid.Columns[0].ReadOnly = !activity.AllowUserToEditArgumentColumn1;
             grid.Columns[1].ReadOnly = !activity.AllowUserToEditArgumentColumn2;
             grid.Columns[2].ReadOnly = !activity.AllowUserToEditArgumentColumn3;
-                        
-            form.argumentPanel.ParentChanged += (sender, e) =>
+
+            grid.GetType().GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(grid, true);
+
+            grid.Tag = new BindingList<T>(arguments); // see AllowUserToEditArgumentRowList
+
+            UpdateRowList(grid);
+
+            grid.CellValueChanged += (sender, e) =>
             {
-                grid.DataSource = new BindingList<T>(arguments); // perfect.
+                var value = grid[e.ColumnIndex, e.RowIndex].Value;
+                if (arguments[e.RowIndex] is InArgument inArgument)
+                {
+                    if (e.ColumnIndex == 0) inArgument.Name = (string)value;
+                    if (e.ColumnIndex == 1) inArgument.DataTypeId = (string)value;
+                    if (e.ColumnIndex == 2) inArgument.Expression = (string)value;
+                }
+                else if (arguments[e.RowIndex] is OutArgument outArgument)
+                {
+                    if (e.ColumnIndex == 0) outArgument.Name = (string)value;
+                    if (e.ColumnIndex == 1) outArgument.DataTypeId = (string)value;
+                    if (e.ColumnIndex == 2) outArgument.VariableId = (Guid)value;
+                }
+                else if (arguments[e.RowIndex] is InOutArgument inOutArgument)
+                {
+                    if (e.ColumnIndex == 0) inOutArgument.DataTypeId = (string)value;
+                    if (e.ColumnIndex == 1) inOutArgument.VariableId = (Guid)value;
+                    if (e.ColumnIndex == 2) inOutArgument.Expression = (string)value;
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
+            };
+
+            grid.CurrentCellDirtyStateChanged += (sender, e) =>
+            {
+                if (grid.IsCurrentCellDirty)
+                {
+                    grid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                }
             };
 
             return form.argumentPanel;
@@ -251,20 +288,17 @@ namespace Roro.Activities
             {
                 Name = "Name",
                 FillWeight = 35,
-                DataPropertyName = "Name",
             });
             grid.Columns.Add(new DataTypeColumn()
             {
                 Name = "Type",
                 FillWeight = 15,
-                DataPropertyName = "DataTypeId",
                 DataSource = dataTypes
             });
             grid.Columns.Add(new GhostTextBoxColumn()
             {
                 Name = "Expression",
                 FillWeight = 50,
-                DataPropertyName = "Expression",
             });
         }
 
@@ -277,20 +311,17 @@ namespace Roro.Activities
             {
                 Name = "Name",
                 FillWeight = 35,
-                DataPropertyName = "Name",
             });
             grid.Columns.Add(new DataTypeColumn()
             {
                 Name = "Type",
                 FillWeight = 15,
-                DataPropertyName = "DataTypeId",
                 DataSource = dataTypes
             });
             grid.Columns.Add(new VariableColumn()
             {
                 Name = "Variable",
                 FillWeight = 50,
-                DataPropertyName = "VariableId",
                 DataSource = variables
             });
         }
@@ -304,21 +335,18 @@ namespace Roro.Activities
             {
                 Name = "Type",
                 FillWeight = 15,
-                DataPropertyName = "DataTypeId",
                 DataSource = dataTypes
             });
             grid.Columns.Add(new VariableColumn()
             {
                 Name = "Variable",
                 FillWeight = 35,
-                DataPropertyName = "VariableId",
                 DataSource = variables
             });
             grid.Columns.Add(new GhostTextBoxColumn()
             {
                 Name = "Expression",
                 FillWeight = 50,
-                DataPropertyName = "Expression",
             });
         }
 
@@ -326,30 +354,64 @@ namespace Roro.Activities
 
         #region ArgumentButtons
 
-        private void ArgumentAddButton_Click(object sender, EventArgs e)
+        private static void UpdateRowList(DataGridView grid)
         {
-            var grid = this.argumentDataGridView;
-            var list = (grid.DataSource as IBindingList);
-            if (grid.CurrentCell is DataGridViewCell cell && cell.Selected)
+            var firstDisplayedScrollingRowIndex = grid.FirstDisplayedScrollingRowIndex;
+
+            grid.Rows.Clear();
+            foreach (var argument in grid.Tag as IBindingList)
             {
-                grid.ClearSelection();
-                if (list is BindingList<InArgument>)
+                if (argument is InArgument inArgument)
                 {
-                    list.Insert(cell.RowIndex + 1, new InArgument<Text>());
+                    grid.Rows.Add(inArgument.Name, inArgument.DataTypeId, inArgument.Expression);
                 }
-                else if (list is BindingList<OutArgument>)
+                else if (argument is OutArgument outArgument)
                 {
-                    list.Insert(cell.RowIndex + 1, new OutArgument<Text>());
+                    grid.Rows.Add(outArgument.Name, outArgument.DataTypeId, outArgument.VariableId);
                 }
-                else if (list is BindingList<InOutArgument>)
+                else if (argument is InOutArgument inOutArgument)
                 {
-                    list.Insert(cell.RowIndex + 1, new InOutArgument<Text>());
+                    grid.Rows.Add(inOutArgument.DataTypeId, inOutArgument.VariableId, inOutArgument.Expression);
                 }
                 else
                 {
                     throw new NotSupportedException();
                 }
-                grid.CurrentCell = grid[0, cell.RowIndex + 1];
+            }
+
+            if (grid.Rows.Count > 0)
+            {
+                grid.FirstDisplayedScrollingRowIndex = Math.Max(Math.Min(firstDisplayedScrollingRowIndex, grid.Rows.Count - 1), 0);
+            }
+        }
+
+        private void ArgumentAddButton_Click(object sender, EventArgs e)
+        {
+            var grid = this.argumentDataGridView;
+            var list = grid.Tag as IBindingList;
+            if (grid.CurrentCell is DataGridViewCell cell && cell.Selected)
+            {
+                grid.ClearSelection();
+                if (list is BindingList<InArgument> && new InArgument() is InArgument inArgument)
+                {
+                    list.Insert(cell.RowIndex + 1, inArgument);
+                }
+                else if (list is BindingList<OutArgument> && new OutArgument() is OutArgument outArgument)
+                {
+                    list.Insert(cell.RowIndex + 1, outArgument);
+                }
+                else if (list is BindingList<InOutArgument> && new InOutArgument() is InOutArgument inOutArgument)
+                {
+                    list.Insert(cell.RowIndex + 1, inOutArgument);
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
+                var rowIndex = cell.RowIndex;
+                var columnIndex = 0; // cell.ColumnIndex;
+                UpdateRowList(grid);
+                grid.CurrentCell = grid[columnIndex, rowIndex + 1];
                 grid.Focus();
             }
             else
@@ -357,20 +419,21 @@ namespace Roro.Activities
                 grid.ClearSelection();
                 if (list is BindingList<InArgument>)
                 {
-                    list.Add(new InArgument<Text>());
+                    list.Add(new InArgument());
                 }
                 else if (list is BindingList<OutArgument>)
                 {
-                    list.Add(new OutArgument<Text>());
+                    list.Add(new OutArgument());
                 }
                 else if (list is BindingList<InOutArgument>)
                 {
-                    list.Add(new InOutArgument<Text>());
+                    list.Add(new InOutArgument());
                 }
                 else
                 {
                     throw new NotSupportedException();
                 }
+                UpdateRowList(grid);
                 grid.CurrentCell = grid[0, grid.Rows.Count - 1];
                 grid.Focus();
             }
@@ -379,11 +442,18 @@ namespace Roro.Activities
         private void ArgumentRemoveButton_Click(object sender, EventArgs e)
         {
             var grid = this.argumentDataGridView;
-            var list = (grid.DataSource as IBindingList);
+            var list = grid.Tag as IBindingList;
             if (grid.CurrentCell is DataGridViewCell cell && cell.Selected)
             {
                 grid.ClearSelection();
+                var rowIndex = cell.RowIndex;
+                var columnIndex = cell.ColumnIndex;
                 list.RemoveAt(cell.RowIndex);
+                UpdateRowList(grid);
+                if (grid.Rows.Count > 0)
+                {
+                    grid.CurrentCell = grid[columnIndex, Math.Min(rowIndex, grid.Rows.Count - 1)];
+                }
                 grid.Focus();
             }
         }
@@ -391,7 +461,7 @@ namespace Roro.Activities
         private void ArgumentMoveUpButton_Click(object sender, EventArgs e)
         {
             var grid = this.argumentDataGridView;
-            var list = (grid.DataSource as IBindingList);
+            var list = grid.Tag as IBindingList;
             if (grid.CurrentCell is DataGridViewCell cell && cell.Selected && cell.RowIndex > 0)
             {
                 grid.ClearSelection();
@@ -400,6 +470,7 @@ namespace Roro.Activities
                 var item = list[cell.RowIndex];
                 list.RemoveAt(rowIndex);
                 list.Insert(rowIndex - 1, item);
+                UpdateRowList(grid);
                 grid.CurrentCell = grid[columnIndex, rowIndex - 1];
                 grid.Focus();
             }
@@ -408,7 +479,7 @@ namespace Roro.Activities
         private void ArgumentMoveDownButton_Click(object sender, EventArgs e)
         {
             var grid = this.argumentDataGridView;
-            var list = (grid.DataSource as IBindingList);
+            var list = grid.Tag as IBindingList;
             if (grid.CurrentCell is DataGridViewCell cell && cell.Selected && cell.RowIndex < grid.Rows.Count - 1)
             {
                 grid.ClearSelection();
@@ -417,6 +488,7 @@ namespace Roro.Activities
                 var item = list[cell.RowIndex];
                 list.RemoveAt(rowIndex);
                 list.Insert(rowIndex + 1, item);
+                UpdateRowList(grid);
                 grid.CurrentCell = grid[columnIndex, rowIndex + 1];
                 grid.Focus();
             }

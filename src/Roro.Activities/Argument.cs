@@ -4,83 +4,101 @@ using System.Runtime.Serialization;
 namespace Roro.Activities
 {
     [DataContract]
-    public abstract class Argument : ICloneable
+    public abstract class Argument
     {
-        public object Clone()
+        [DataMember]
+        internal virtual string DataTypeId { get; set; }
+
+        protected Argument()
         {
-            return this.MemberwiseClone();
+            ;
         }
     }
 
     [DataContract]
-    public abstract class InArgument : Argument
+    public class InArgument : Argument
     {
         [DataMember]
-        public string Name { get; set; }
+        internal string Name { get; set; }
 
         [DataMember]
-        public string DataTypeId { get; set; }
+        internal string Expression { get; set; }
 
-        [DataMember]
-        public string Expression { get; set; }
+        internal InArgument()
+        {
+            this.Name = string.Empty;
+            base.DataTypeId = new Text().Id;
+            this.Expression = string.Empty;
+        }
     }
 
     [DataContract]
     public sealed class InArgument<T> : InArgument where T : DataType, new()
     {
-        public InArgument()
+        internal override string DataTypeId
         {
-            this.Name = string.Empty;
-            this.DataTypeId = new T().Id;
-            this.Expression = string.Empty;
+            get => base.DataTypeId;
+            set => throw new Exception(string.Format("Property '{0}.DataTypeId' cannot be assigned to -- it is readonly", this.GetType().Name));
         }
+
+        public InArgument() => base.DataTypeId = new T().Id;
     }
 
     [DataContract]
-    public abstract class OutArgument : Argument
+    public class OutArgument : Argument
     {
         [DataMember]
-        public string Name { get; set; }
+        internal string Name { get; set; }
 
         [DataMember]
-        public string DataTypeId { get; set; }
+        internal Guid VariableId { get; set; }
 
-        [DataMember]
-        public Guid VariableId { get; set; }
+        internal OutArgument()
+        {
+            this.Name = string.Empty;
+            base.DataTypeId = new Text().Id;
+            this.VariableId = Guid.Empty;
+        }
     }
 
     [DataContract]
     public sealed class OutArgument<T> : OutArgument where T : DataType, new()
     {
-        public OutArgument()
+        internal override string DataTypeId
         {
-            this.Name = string.Empty;
-            this.DataTypeId = new T().Id;
-            this.VariableId = Guid.Empty;
+            get => base.DataTypeId;
+            set => throw new Exception(string.Format("Property '{0}.DataTypeId' cannot be assigned to -- it is readonly", this.GetType().Name));
         }
+
+        public OutArgument() => base.DataTypeId = new T().Id;
     }
 
     [DataContract]
-    public abstract class InOutArgument : Argument
+    public class InOutArgument : Argument
     {
         [DataMember]
-        public Guid VariableId { get; set; }
+        internal Guid VariableId { get; set; }
 
         [DataMember]
-        public string DataTypeId { get; set; }
+        internal string Expression { get; set; }
 
-        [DataMember]
-        public string Expression { get; set; }
+        internal InOutArgument()
+        {
+            this.VariableId = Guid.Empty;
+            base.DataTypeId = new Text().Id;
+            this.Expression = string.Empty;
+        }
     }
 
     [DataContract]
     public sealed class InOutArgument<T> : InOutArgument where T : DataType, new()
     {
-        public InOutArgument()
+        internal override string DataTypeId
         {
-            this.VariableId = Guid.Empty;
-            this.DataTypeId = new T().Id;
-            this.Expression = string.Empty;
+            get => base.DataTypeId;
+            set => throw new Exception(string.Format("Property '{0}.DataTypeId' cannot be assigned to -- it is readonly", this.GetType().Name));
         }
+
+        public InOutArgument() => base.DataTypeId = new T().Id;
     }
 }

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
+﻿using System.Drawing;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public static class Helper
     {

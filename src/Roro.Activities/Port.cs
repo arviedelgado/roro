@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public abstract class Port
     {

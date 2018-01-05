@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public struct CellLocation
     {

@@ -1,10 +1,10 @@
-﻿using Roro.Activities;
+﻿
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     [DataContract]
     public sealed class EndNode : Node

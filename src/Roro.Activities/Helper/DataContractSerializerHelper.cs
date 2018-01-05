@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public sealed class DataContractSerializerHelper
     {

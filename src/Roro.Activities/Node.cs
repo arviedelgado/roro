@@ -1,4 +1,4 @@
-﻿using Roro.Activities;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     [DataContract]
     public abstract class Node

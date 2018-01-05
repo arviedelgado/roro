@@ -1,4 +1,4 @@
-﻿using Roro.Activities;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     [DataContract]
     public partial class Page

@@ -51,7 +51,6 @@
     </Compile>
     <Compile Include="DataType.cs" />
     <Compile Include="Expression.cs" />
-    <Compile Include="ShowMessageActivity.cs" />
     <Compile Include="PageForm.cs">
       <SubType>Form</SubType>
     </Compile>

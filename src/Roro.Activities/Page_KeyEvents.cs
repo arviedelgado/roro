@@ -1,10 +1,6 @@
-﻿using Roro.Activities;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public partial class Page
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Roro.Workflow
+namespace Roro.Activities
 {
     public class PageForm : Form
     {

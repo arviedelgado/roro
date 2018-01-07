@@ -4,8 +4,10 @@ using System.Runtime.Serialization;
 namespace Roro.Activities
 {
     [DataContract]
-    public abstract class Variable
+    public class Variable
     {
+        public const string Missing = "MISSING";
+
         [DataMember]
         public Guid Id { get; set; }
 
@@ -15,23 +17,19 @@ namespace Roro.Activities
         [DataMember]
         public string Name { get; set; }
 
-        public const string Missing = "MISSING";
-    }
+        [DataMember]
+        private object Value { get; set; }
 
-    public sealed class Variable<T> : Variable where T : DataType, new()
-    {
-        public Variable()
+        public void SetValue(object value)
         {
-            this.Id = Guid.Empty;
-            this.DataTypeId = new T().Id;
-            this.Name = string.Empty;
+            var dataType = DataType.FromId(this.DataTypeId);
+            dataType.SetValue(value);
+            this.Value = dataType.GetValue();
         }
 
-        public Variable(string name)
+        public object GetValue()
         {
-            this.Id = Guid.NewGuid();
-            this.DataTypeId = new T().Id;
-            this.Name = name;
+            return this.Value;
         }
     }
 }

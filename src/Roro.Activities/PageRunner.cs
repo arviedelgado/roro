@@ -32,7 +32,7 @@ namespace Roro.Activities
                     Console.WriteLine("Execute {0} - {1}", node.Id, node.Name);
                     this.CurrentPage.Render();
                     Thread.Sleep(500);
-                    this.CurrentPage.DebugNode = this.CurrentPage.GetNodeById(node.Execute());
+                    this.CurrentPage.DebugNode = this.CurrentPage.GetNodeById(node.Execute(this.CurrentPage.Variables));
                     this.RunNext();
                 }
                 else

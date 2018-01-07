@@ -16,7 +16,9 @@ namespace Roro.Activities
         [DataMember]
         public string Name { get; protected set; }
 
-        public abstract bool TrySetValue(object value);
+        public abstract void SetValue(object value);
+
+        public abstract object GetValue();
 
         public static List<DataType> GetCommonTypes()
         {
@@ -31,7 +33,7 @@ namespace Roro.Activities
             };
         }
 
-        public static DataType GetTypeById(string id)
+        public static DataType FromId(string id)
         {
             if (AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
@@ -41,7 +43,7 @@ namespace Roro.Activities
             {
                 return type;
             }
-            throw new TypeLoadException();
+            throw new Exception();
         }
     }
 
@@ -63,6 +65,11 @@ namespace Roro.Activities
             return obj is DataType<T> other && this.Value.Equals(other.Value);
         }
 
+        public override object GetValue()
+        {
+            return this.Value;
+        }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -75,7 +82,7 @@ namespace Roro.Activities
 
         public Text(string value) : base(value ?? string.Empty) { }
 
-        public override bool TrySetValue(object value)
+        public override void SetValue(object value)
         {
             try
             {
@@ -83,9 +90,8 @@ namespace Roro.Activities
             }
             catch
             {
-                return false;
+                throw;
             }
-            return true;
         }
 
         public static implicit operator String(Text item) => item.Value;
@@ -99,7 +105,7 @@ namespace Roro.Activities
 
         public Number(Decimal value) : base(value) { }
 
-        public override bool TrySetValue(object value)
+        public override void SetValue(object value)
         {
             try
             {
@@ -107,9 +113,8 @@ namespace Roro.Activities
             }
             catch
             {
-                return false;
+                throw;
             }
-            return true;
         }
 
         public static implicit operator Decimal(Number item) => item.Value;
@@ -125,7 +130,7 @@ namespace Roro.Activities
 
         public Flag(Boolean value) : base(value) { }
 
-        public override bool TrySetValue(object value)
+        public override void SetValue(object value)
         {
             try
             {
@@ -133,9 +138,8 @@ namespace Roro.Activities
             }
             catch
             {
-                return false;
+                throw;
             }
-            return true;
         }
 
         public static implicit operator Boolean(Flag item) => item.Value;
@@ -149,7 +153,7 @@ namespace Roro.Activities
 
         public DateTime(System.DateTime value) : base(value) { }
 
-        public override bool TrySetValue(object value)
+        public override void SetValue(object value)
         {
             try
             {
@@ -157,9 +161,8 @@ namespace Roro.Activities
             }
             catch
             {
-                return false;
+                throw;
             }
-            return true;
         }
 
         public static implicit operator System.DateTime(DateTime item) => item.Value;
@@ -173,7 +176,7 @@ namespace Roro.Activities
 
         public Collection(DataTable value) : base(value) { }
 
-        public override bool TrySetValue(object value)
+        public override void SetValue(object value)
         {
             try
             {
@@ -181,9 +184,8 @@ namespace Roro.Activities
             }
             catch
             {
-                return false;
+                throw;
             }
-            return true;
         }
 
         public static implicit operator DataTable(Collection item) => item.Value;
@@ -197,7 +199,7 @@ namespace Roro.Activities
 
         public Password(SecureString value) : base(value) { }
 
-        public override bool TrySetValue(object value)
+        public override void SetValue(object value)
         {
             try
             {
@@ -206,9 +208,8 @@ namespace Roro.Activities
             }
             catch
             {
-                return false;
+                throw;
             }
-            return true;
         }
 
         public static implicit operator SecureString(Password item) => item.Value;

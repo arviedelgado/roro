@@ -2,23 +2,17 @@
 using Microsoft.CSharp;
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 
 namespace Roro.Activities
 {
     public class Expression
     {
-        private string expression;
-
-        public Expression(Page page, string expression)
-        {
-            this.expression = expression;
-        }
-
-        public T Evaluate<T>() where T: DataType, new()
+        public static object Evaluate(string expression, IEnumerable<Variable> variables)
         {
             if (String.IsNullOrWhiteSpace(expression))
             {
-                return new T();
+                return null;
             }
 
             var codeProvider = new CSharpCodeProvider();
@@ -32,7 +26,7 @@ using System;
 public class ExpressionClass { public static object ExpressionMethod() {
 return
 #line 1
-" +  this.expression + @"
+" +  expression + @"
 ;}}";
             var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, code);
             if (compilerResults.Errors.HasErrors)
@@ -44,17 +38,10 @@ return
                 throw new Exception();
             }
 
-            var exprObject = compilerResults.CompiledAssembly.GetType("ExpressionClass");
-            var exprResult = exprObject.GetMethod("ExpressionMethod").Invoke(exprObject, null);
+            var expressionObject = compilerResults.CompiledAssembly.GetType("ExpressionClass");
+            var expressionResult = expressionObject.GetMethod("ExpressionMethod").Invoke(expressionObject, null);
 
-            if (new T() is T t && t.TrySetValue(exprResult))
-            {
-                return t;
-            }
-            else
-            {
-                throw new FormatException();
-            }
+            return expressionResult;
         }
     }
 }

@@ -89,16 +89,4 @@ namespace Roro.Activities
             this.Expression = string.Empty;
         }
     }
-
-    [DataContract]
-    public sealed class InOutArgument<T> : InOutArgument where T : DataType, new()
-    {
-        internal override string DataTypeId
-        {
-            get => base.DataTypeId;
-            set => throw new Exception(string.Format("Property '{0}.DataTypeId' cannot be assigned to -- it is readonly", this.GetType().Name));
-        }
-
-        public InOutArgument() => base.DataTypeId = new T().Id;
-    }
 }

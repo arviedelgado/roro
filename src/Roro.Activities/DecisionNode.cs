@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -16,9 +17,16 @@ namespace Roro.Activities
             this.Ports.Add(new FalsePort());
         }
 
-        public override Guid Execute()
+        public override Guid Execute(IEnumerable<Variable> variables)
         {
-            return this.Ports.First().NextNodeId;
+            if ((this.Activity as DecisionNodeActivity).Execute(new ActivityContext(variables)))
+            {
+                return this.Ports.Where(x => x is TruePort).First().Id;
+            }
+            else
+            {
+                return this.Ports.Where(x => x is FalsePort).First().Id;
+            }
         }
 
         public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)

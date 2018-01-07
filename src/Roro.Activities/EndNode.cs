@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
@@ -14,8 +15,9 @@ namespace Roro.Activities
             this.Ports.Clear();
         }
 
-        public override Guid Execute()
+        public override Guid Execute(IEnumerable<Variable> variables)
         {
+            (this.Activity as EndNodeActivity).Execute(new ActivityContext(variables));
             return Guid.Empty;
         }
 

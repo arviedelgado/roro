@@ -257,7 +257,7 @@ namespace Roro.Activities
         private void CreateColumnsForArguments<T>(List<DataType> dataTypes, List<Variable> variables)
         {
             variables = new List<Variable>(variables);
-            variables.Insert(0, new Variable<Text>()); // add blank for dropdown
+            variables.Insert(0, new Variable { DataTypeId = new Text().Id }); // add blank for dropdown
             if (typeof(T) == typeof(InArgument))
             {
                 this.argumentLabel.Text = "Inputs";

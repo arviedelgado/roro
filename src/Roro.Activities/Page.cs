@@ -59,17 +59,7 @@ namespace Roro.Activities
 
 
             // test variables
-            this.Variables = new List<Variable>()
-            {
-                new Variable<Text>("Text1"),
-                new Variable<Text>("Text2"),
-                new Variable<Number>("Num1"),
-                new Variable<Number>("Num2"),
-                new Variable<Number>("Num3"),
-                new Variable<Flag>("Flag1"),
-                new Variable<Activities.DateTime>("DateTime1"),
-                new Variable<Collection>("Collection1"),
-            };
+            this.Variables = new List<Variable>();
         }
 
         public Node GetNodeById(Guid id)

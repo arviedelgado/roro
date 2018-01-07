@@ -57,7 +57,7 @@ namespace Roro.Activities
             return null;
         }
 
-        public abstract Guid Execute();
+        public abstract Guid Execute(IEnumerable<Variable> variables);
 
         public Node(Activity activity)
         {

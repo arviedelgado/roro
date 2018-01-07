@@ -25,7 +25,7 @@ namespace Roro.Activities
 
         public void Execute(ActivityContext context)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

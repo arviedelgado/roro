@@ -19,7 +19,7 @@ namespace Roro.Activities
         {
             this.CellTemplate = new VariableCell();
             this.SortMode = DataGridViewColumnSortMode.NotSortable;
-            this.ValueMember = "Id";
+            this.ValueMember = "Name";
             this.DisplayMember = "Name";
             this.DisplayStyleForCurrentCellOnly = true;
         }

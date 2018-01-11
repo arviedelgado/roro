@@ -18,11 +18,7 @@ namespace Roro.Activities
 
         protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex, DataGridViewElementStates elementState, object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
         {
-            if (formattedValue.ToString() == Variable.Missing)
-            {
-                cellStyle.ForeColor = Color.Red;
-            }
-            else if (formattedValue.ToString().Length > 0)
+            if (formattedValue.ToString().Length > 0)
             {
                 formattedValue = string.Format("[{0}]", formattedValue);
             }

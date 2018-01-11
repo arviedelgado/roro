@@ -4,32 +4,41 @@ using System.Runtime.Serialization;
 namespace Roro.Activities
 {
     [DataContract]
-    public class Variable
+    public sealed class Variable
     {
-        public const string Missing = "MISSING";
-
-        [DataMember]
-        public Guid Id { get; set; }
-
-        [DataMember]
-        public string DataTypeId { get; set; }
-
         [DataMember]
         public string Name { get; set; }
 
         [DataMember]
-        private object Value { get; set; }
+        public string DataTypeId { get; set; }
 
-        public void SetValue(object value)
+        [DataMember(Name = "Value")]
+        private object _Value { get; set; }
+
+        public object Value
         {
-            var dataType = DataType.FromId(this.DataTypeId);
-            dataType.SetValue(value);
-            this.Value = dataType.GetValue();
+            get
+            {
+                var dataType = DataType.FromId(this.DataTypeId);
+                dataType.SetValue(this._Value);
+                return this._Value;
+            }
+            set
+            {
+                var dataType = DataType.FromId(this.DataTypeId);
+                dataType.SetValue(value);
+                this._Value = dataType.GetValue();
+            }
+        }
+ 
+            
+        public Variable()
+        {
+            this.Name = "<Enter name>";
+            this.DataTypeId = new Text().Id;
+            this.Value = string.Empty;
         }
 
-        public object GetValue()
-        {
-            return this.Value;
-        }
+        public static readonly Variable Empty = new Variable() { Name = string.Empty };
     }
 }

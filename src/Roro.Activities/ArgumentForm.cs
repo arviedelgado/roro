@@ -221,19 +221,19 @@ namespace Roro.Activities
                 {
                     if (e.ColumnIndex == 0) inArgument.Name = (string)value;
                     if (e.ColumnIndex == 1) inArgument.DataTypeId = (string)value;
-                    if (e.ColumnIndex == 2) inArgument.Expression = (string)value;
+                    if (e.ColumnIndex == 2) inArgument.Value = (string)value;
                 }
                 else if (arguments[e.RowIndex] is OutArgument outArgument)
                 {
                     if (e.ColumnIndex == 0) outArgument.Name = (string)value;
                     if (e.ColumnIndex == 1) outArgument.DataTypeId = (string)value;
-                    if (e.ColumnIndex == 2) outArgument.VariableId = (Guid)value;
+                    if (e.ColumnIndex == 2) outArgument.Value = (string)value;
                 }
                 else if (arguments[e.RowIndex] is InOutArgument inOutArgument)
                 {
                     if (e.ColumnIndex == 0) inOutArgument.DataTypeId = (string)value;
-                    if (e.ColumnIndex == 1) inOutArgument.VariableId = (Guid)value;
-                    if (e.ColumnIndex == 2) inOutArgument.Expression = (string)value;
+                    if (e.ColumnIndex == 1) inOutArgument.Name = (string)value;
+                    if (e.ColumnIndex == 2) inOutArgument.Value = (string)value;
                 }
                 else
                 {
@@ -257,7 +257,7 @@ namespace Roro.Activities
         private void CreateColumnsForArguments<T>(List<DataType> dataTypes, List<Variable> variables)
         {
             variables = new List<Variable>(variables);
-            variables.Insert(0, new Variable { DataTypeId = new Text().Id }); // add blank for dropdown
+            variables.Insert(0, Variable.Empty); // add blank for dropdown
             if (typeof(T) == typeof(InArgument))
             {
                 this.argumentLabel.Text = "Inputs";
@@ -359,19 +359,19 @@ namespace Roro.Activities
             var firstDisplayedScrollingRowIndex = grid.FirstDisplayedScrollingRowIndex;
 
             grid.Rows.Clear();
-            foreach (var argument in grid.Tag as IBindingList)
+            foreach (Argument argument in grid.Tag as IBindingList)
             {
                 if (argument is InArgument inArgument)
                 {
-                    grid.Rows.Add(inArgument.Name, inArgument.DataTypeId, inArgument.Expression);
+                    grid.Rows.Add(inArgument.Name, inArgument.DataTypeId, inArgument.Value);
                 }
                 else if (argument is OutArgument outArgument)
                 {
-                    grid.Rows.Add(outArgument.Name, outArgument.DataTypeId, outArgument.VariableId);
+                    grid.Rows.Add(outArgument.Name, outArgument.DataTypeId, outArgument.Value);
                 }
                 else if (argument is InOutArgument inOutArgument)
                 {
-                    grid.Rows.Add(inOutArgument.DataTypeId, inOutArgument.VariableId, inOutArgument.Expression);
+                    grid.Rows.Add(inOutArgument.DataTypeId, inOutArgument.Name, inOutArgument.Value);
                 }
                 else
                 {

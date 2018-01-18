@@ -51,6 +51,8 @@
     </Compile>
     <Compile Include="DataType.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="PreparationNode.cs" />
+    <Compile Include="PreparationNodeActivity.cs" />
     <Compile Include="VariableNodeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,7 +80,6 @@
     <Compile Include="LoopStartNode.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="PageRunner.cs" />
-    <Compile Include="PreparationNode.cs" />
     <Compile Include="ProcessNode.cs" />
     <Compile Include="StartNode.cs" />
     <Compile Include="Page.cs" />
@@ -95,7 +96,6 @@
     <Compile Include="Activity.cs" />
     <Compile Include="EndNodeActivity.cs" />
     <Compile Include="LoopEndNodeActivity.cs" />
-    <Compile Include="PreparationNodeActivity.cs" />
     <Compile Include="LoopStartNodeActivity.cs" />
     <Compile Include="RenderOptions.cs" />
     <Compile Include="StartNodeActivity.cs" />

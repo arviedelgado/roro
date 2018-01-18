@@ -270,13 +270,15 @@ namespace Roro.Activities
         private void InputGrid_Initialize(Node node)
         {
             var grid = this.inputGrid;
-            if (node.Activity.GetArguments<InArgument>() is List<InArgument> inputs)
+            if (node.Activity.GetArguments<InArgument>() is List<InArgument> inputs && inputs.Count > 0)
             {
                 this.inputTypeColumn.DataSource = DataType.GetCommonTypes();
                 foreach (var input in inputs)
                 {
                     grid.Rows.Add(input.Name, input.DataTypeId, input.Value);
                 }
+
+                this.inputTab.Text = this.inputTab.Text + " (" + inputs.Count + ")";
 
                 grid.CellValueChanged += (sender, e) =>
                 {
@@ -295,18 +297,24 @@ namespace Roro.Activities
                     }
                 };
             }
+            else
+            {
+                this.tabControl1.TabPages.Remove(this.inputTab);
+            }
         }
 
         private void OutputGrid_Initialize(Node node)
         {
             var grid = this.outputGrid;
-            if (node.Activity.GetArguments<OutArgument>() is List<OutArgument> outputs)
+            if (node.Activity.GetArguments<OutArgument>() is List<OutArgument> outputs && outputs.Count > 0)
             {
                 this.outputTypeColumn.DataSource = DataType.GetCommonTypes();
                 foreach (var output in outputs)
                 {
                     grid.Rows.Add(output.Name, output.DataTypeId, output.Value);
                 }
+
+                this.outputTab.Text = this.outputTab.Text + " (" + outputs.Count + ")";
 
                 grid.CellValueChanged += (sender, e) =>
                 {
@@ -324,6 +332,10 @@ namespace Roro.Activities
                         grid.CommitEdit(DataGridViewDataErrorContexts.Commit);
                     }
                 };
+            }
+            else
+            {
+                this.tabControl1.TabPages.Remove(this.outputTab);
             }
         }
 

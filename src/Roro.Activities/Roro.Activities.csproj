@@ -51,6 +51,11 @@
     </Compile>
     <Compile Include="DataType.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="VariableNodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VariableNode.cs" />
+    <Compile Include="VariableNodeActivity.cs" />
     <Compile Include="PageForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +123,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ArgumentForm.resx">
       <DependentUpon>ArgumentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VariableNodeForm.resx">
+      <DependentUpon>VariableNodeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VariableForm.resx">
       <DependentUpon>VariableForm.cs</DependentUpon>

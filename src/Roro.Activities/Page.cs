@@ -133,6 +133,13 @@ namespace Roro.Activities
                     Name = "End Loop"
                 };
             }
+            else if (activity is VariableNodeActivity)
+            {
+                node = new VariableNode(activity)
+                {
+                    Name = "New Variable"
+                };
+            }
             else
             {
                 throw new NotSupportedException();

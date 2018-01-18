@@ -121,9 +121,10 @@ namespace Roro.Activities
             this.activityTreeView.Nodes.Clear();
             // internal activities
             var generalActivities = this.activityTreeView.Nodes.Add("General");
-            generalActivities.Nodes.Add(typeof(PreparationNodeActivity).FullName, "Preparation Activity").EnsureVisible();
-            generalActivities.Nodes.Add(typeof(LoopStartNodeActivity).FullName, "Loop Activity").EnsureVisible();
-            generalActivities.Nodes.Add(typeof(EndNodeActivity).FullName, "End Activity").EnsureVisible();
+            generalActivities.Nodes.Add(typeof(VariableNodeActivity).FullName, "New Variable").EnsureVisible();
+            generalActivities.Nodes.Add(typeof(PreparationNodeActivity).FullName, "Set Variables").EnsureVisible();
+            generalActivities.Nodes.Add(typeof(LoopStartNodeActivity).FullName, "Loop Collection").EnsureVisible();
+            generalActivities.Nodes.Add(typeof(EndNodeActivity).FullName, "Start / End").EnsureVisible();
             // external activities
             var dataSource = this.activityTreeView.Tag as IEnumerable<Type>;
             var filterText = this.activityTextBox.Text.ToLower().Replace(" ", string.Empty);

@@ -118,8 +118,15 @@ namespace Roro.Activities
 
         public NodeForm(Page page, Node node) : this()
         {
-            ArgumentForm.Create(page, node).Parent = this.argumentPanel;
-            VariableForm.Create(page).Parent = this.variablePanel;
+            if (node is VariableNode)
+            {
+                VariableNodeForm.Create(page, node).Parent = this.argumentPanel;
+            }
+            else
+            {
+                ArgumentForm.Create(page, node).Parent = this.argumentPanel;
+                VariableForm.Create(page).Parent = this.variablePanel;
+            }
             this.nodeNameTextBox.DataBindings.Add("Text", node, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
             this.nodeNameTextBox.PreviewKeyDown += NodeNameTextBox_PreviewKeyDown;
             this.Text = "Activity Editor - " + node.Activity.GetType().FullName;

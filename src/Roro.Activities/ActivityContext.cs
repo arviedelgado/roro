@@ -23,7 +23,9 @@ namespace Roro.Activities
 
         public T Get<T>(Input<T> inArgument) where T : DataType, new()
         {
-            return this.InternalGet(inArgument) as T;
+            var t = new T();
+            t.SetValue(this.InternalGet(inArgument));
+            return t;
         }
 
         internal object InternalGet(InArgument inArgument)

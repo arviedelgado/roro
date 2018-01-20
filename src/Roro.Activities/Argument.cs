@@ -32,7 +32,7 @@ namespace Roro.Activities
     [DataContract]
     public sealed class Input<T> : InArgument where T : DataType, new()
     {
-        internal Input() { }
+        public Input() => this.DataTypeId = new T().Id;
     }
 
     [DataContract]
@@ -44,6 +44,6 @@ namespace Roro.Activities
     [DataContract]
     public sealed class Output<T> : OutArgument where T : DataType, new()
     {
-        internal Output() { }
+        public Output() => this.DataTypeId = new T().Id;
     }
 }

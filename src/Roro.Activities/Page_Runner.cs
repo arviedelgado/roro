@@ -30,11 +30,11 @@ namespace Roro.Activities
 
         public void Stop()
         {
-            if (this.Stopping && this.Started)
+            if (this.Started && this.Stopping)
             {
                 MessageBox.Show("The robot will stop after completing the current activity.. please wait.");
             }
-            else
+            else if (this.Started)
             {
                 this.Stopping = true;
             }
@@ -44,8 +44,8 @@ namespace Roro.Activities
         {
             Task.Run(() =>
             {
-                try
-                {
+                //try
+                //{
                     Console.WriteLine("Executing {0} - {1}", node.Id, node.Name);
                     this.DebugNode = node;
                     this.Render();
@@ -70,13 +70,13 @@ namespace Roro.Activities
                     {
                         throw new Exception("Next activity not found.");
                     }
-                }
-                catch (Exception ex)
-                {
-                    this.Started = false;
-                    this.Stopping = false;
-                    MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    this.Started = false;
+                //    this.Stopping = false;
+                //    MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //}
             });
         }
     }

@@ -58,14 +58,15 @@ namespace Roro.Activities.Excel
                 {
                     this.Apps.Remove(xlApp);
                     xlApp.Quit();
+                    Marshal.FinalReleaseComObject(obj);
                 }
                 else if (obj is Workbook xlWb)
                 {
-                    xlWb.Close(SaveChanges : false);
+                    //xlWb.Close(SaveChanges : false);
                 }
-                Marshal.FinalReleaseComObject(obj);
+                //Marshal.FinalReleaseComObject(obj);
             }
-            GC.Collect();
+            //GC.Collect();
         }
 
         public void Dispose()

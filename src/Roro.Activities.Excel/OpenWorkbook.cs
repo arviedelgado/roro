@@ -4,7 +4,7 @@ namespace Roro.Activities.Excel
 {
     public class OpenWorkbook : ProcessNodeActivity
     {
-        public InArgument<Text> Path { get; set; }
+        public Input<Text> Path { get; set; }
 
         public override void Execute(ActivityContext context)
         {

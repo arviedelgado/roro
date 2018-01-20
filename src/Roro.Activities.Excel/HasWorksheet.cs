@@ -5,9 +5,9 @@ namespace Roro.Activities.Excel
 {
     public class HasWorksheet : DecisionNodeActivity
     {
-        public InArgument<Text> WorkbookPath { get; set; }
+        public Input<Text> WorkbookPath { get; set; }
 
-        public InArgument<Text> WorksheetName { get; set; }
+        public Input<Text> WorksheetName { get; set; }
 
         public override bool Execute(ActivityContext context)
         {

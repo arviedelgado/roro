@@ -25,9 +25,9 @@ namespace Roro.Activities
             // 
             this.activityPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.activityPanel.Location = new System.Drawing.Point(23, 73);
+            this.activityPanel.Location = new System.Drawing.Point(6, 56);
             this.activityPanel.Name = "activityPanel";
-            this.activityPanel.Size = new System.Drawing.Size(244, 465);
+            this.activityPanel.Size = new System.Drawing.Size(244, 499);
             this.activityPanel.TabIndex = 0;
             // 
             // pagePanel
@@ -36,9 +36,9 @@ namespace Roro.Activities
             this.pagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pagePanel.Controls.Add(this.pageCanvas);
             this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pagePanel.Location = new System.Drawing.Point(273, 73);
+            this.pagePanel.Location = new System.Drawing.Point(256, 56);
             this.pagePanel.Name = "pagePanel";
-            this.pagePanel.Size = new System.Drawing.Size(688, 465);
+            this.pagePanel.Size = new System.Drawing.Size(722, 499);
             this.pagePanel.TabIndex = 0;
             // 
             // pageCanvas
@@ -59,7 +59,7 @@ namespace Roro.Activities
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(20);
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -71,38 +71,35 @@ namespace Roro.Activities
             this.panel1.Controls.Add(this.setNextButton);
             this.panel1.Controls.Add(this.runButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(273, 23);
+            this.panel1.Location = new System.Drawing.Point(256, 6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(688, 44);
+            this.panel1.Size = new System.Drawing.Size(722, 44);
             this.panel1.TabIndex = 1;
             // 
             // setNextButton
             // 
-            this.setNextButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.setNextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.setNextButton.Location = new System.Drawing.Point(84, 3);
             this.setNextButton.Name = "setNextButton";
             this.setNextButton.Size = new System.Drawing.Size(135, 38);
             this.setNextButton.TabIndex = 1;
             this.setNextButton.TabStop = false;
             this.setNextButton.Text = "Set As Next Activity";
+            this.setNextButton.UseVisualStyleBackColor = true;
             this.setNextButton.Click += new System.EventHandler(this.SetNextButton_Click);
             // 
             // runButton
             // 
-            this.runButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.runButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.runButton.Location = new System.Drawing.Point(3, 3);
             this.runButton.Name = "runButton";
             this.runButton.Size = new System.Drawing.Size(75, 38);
             this.runButton.TabIndex = 0;
             this.runButton.TabStop = false;
             this.runButton.Text = "RUN";
+            this.runButton.UseVisualStyleBackColor = true;
             this.runButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
             // PageForm
             // 
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(984, 561);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);

@@ -25,7 +25,7 @@ namespace Roro.Activities
         private EndNodeActivity EndNodeActivity { get; set; }
 
         [DataMember]
-        internal List<Variable> Variables { get; private set; }
+        internal List<VariableNode> Variables { get; private set; }
 
         [DataMember]
         private List<Node> Nodes { get; set; }
@@ -59,7 +59,7 @@ namespace Roro.Activities
 
 
             // test variables
-            this.Variables = new List<Variable>();
+            this.Variables = new List<VariableNode>();
         }
 
         public Node GetNodeById(Guid id)
@@ -106,13 +106,6 @@ namespace Roro.Activities
                 node = new DecisionNode(activity)
                 {
                     Name = activityFullName.Split('.').Last().Humanize()
-                };
-            }
-            else if (activity is PreparationNodeActivity)
-            {
-                node = new PreparationNode(activity)
-                {
-                    Name = "Preparation"
                 };
             }
             else if (activity is LoopStartNodeActivity)

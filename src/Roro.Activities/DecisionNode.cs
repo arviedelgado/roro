@@ -17,7 +17,7 @@ namespace Roro.Activities
             this.Ports.Add(new FalsePort());
         }
 
-        public override Guid Execute(IEnumerable<Variable> variables)
+        public override Guid Execute(IEnumerable<VariableNode> variables)
         {
             if ((this.Activity as DecisionNodeActivity).Execute(new ActivityContext(variables)))
             {
@@ -46,7 +46,5 @@ namespace Roro.Activities
             g.DrawPath(o.BorderPen, path);
             return path;
         }
-
-        public override Size GetSize() => new Size(4, 2);
     }
 }

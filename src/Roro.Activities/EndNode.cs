@@ -15,7 +15,7 @@ namespace Roro.Activities
             this.Ports.Clear();
         }
 
-        public override Guid Execute(IEnumerable<Variable> variables)
+        public override Guid Execute(IEnumerable<VariableNode> variables)
         {
             (this.Activity as EndNodeActivity).Execute(new ActivityContext(variables));
             return Guid.Empty;
@@ -37,7 +37,5 @@ namespace Roro.Activities
             g.DrawPath(o.BorderPen, path);
             return path;
         }
-
-        public override Size GetSize() => new Size(4, 2);
     }
 }

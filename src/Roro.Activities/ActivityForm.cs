@@ -122,7 +122,6 @@ namespace Roro.Activities
             // internal activities
             var generalActivities = this.activityTreeView.Nodes.Add("General");
             generalActivities.Nodes.Add(typeof(VariableNodeActivity).FullName, "New Variable").EnsureVisible();
-            generalActivities.Nodes.Add(typeof(PreparationNodeActivity).FullName, "Set Variables").EnsureVisible();
             generalActivities.Nodes.Add(typeof(LoopStartNodeActivity).FullName, "Loop Collection").EnsureVisible();
             generalActivities.Nodes.Add(typeof(EndNodeActivity).FullName, "Start / End").EnsureVisible();
             // external activities

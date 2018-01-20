@@ -11,63 +11,72 @@ namespace Roro.Activities
     [DataContract]
     public abstract class Activity
     {
-        public virtual List<InArgument> Inputs
+        private IEnumerable<PropertyInfo> GetInputProperties()
         {
-            get
-            {
-                var list = new List<InArgument>();
-                var props = this.GetType().GetProperties()
+            return this.GetType().GetProperties()
                     .Where(x => typeof(InArgument).IsAssignableFrom(x.PropertyType) &&
                         !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
-                foreach (var prop in props)
-                {
-                    var item = prop.GetValue(this) as InArgument;
-                    if (item == null)
-                    {
-                        item = Activator.CreateInstance(prop.PropertyType) as InArgument;
-                        item.Name = prop.Name.Humanize();
-                        prop.SetValue(this, item);
-                    }
-                    list.Add(item);
-                }
-                return list;
-            }
-            set
-            {
-
-            }
         }
 
-        public virtual List<OutArgument> Outputs
+        internal protected virtual List<InArgument> Inputs
         {
             get
             {
-                var list = new List<OutArgument>();
-                var props = this.GetType().GetProperties()
-                    .Where(x => typeof(OutArgument).IsAssignableFrom(x.PropertyType) &&
-                        !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
-                foreach (var prop in props)
+                var inputs = new List<InArgument>();
+                foreach (var inputProp in this.GetInputProperties())
                 {
-                    var item = prop.GetValue(this) as OutArgument;
-                    if (item == null)
+                    inputs.Add(new InArgument()
                     {
-                        item = Activator.CreateInstance(prop.PropertyType) as OutArgument;
-                        item.Name = prop.Name.Humanize();
-                        prop.SetValue(this, item);
-                    }
-                    list.Add(item);
+                        Name = inputProp.Name,
+                        DataTypeId = (Activator.CreateInstance(inputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
+                        Value = string.Empty
+                    });
                 }
-                return list;
+                return inputs;
             }
             set
             {
-
+                var inputs = new List<InArgument>(value);
+                foreach (var inputProp in this.GetInputProperties())
+                {
+                    var input = Activator.CreateInstance(inputProp.PropertyType) as InArgument;
+                    input.Value = inputs.First(x => x.Name == input.Name && x.DataTypeId == input.DataTypeId).Value;
+                }
             }
         }
 
-        public Activity()
+        private IEnumerable<PropertyInfo> GetOutputProperties()
         {
-            ;
+            return this.GetType().GetProperties()
+                    .Where(x => typeof(OutArgument).IsAssignableFrom(x.PropertyType) &&
+                        !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
+        }
+
+        internal protected virtual List<OutArgument> Outputs
+        {
+            get
+            {
+                var outputs = new List<OutArgument>();
+                foreach (var outputProp in this.GetOutputProperties())
+                {
+                    outputs.Add(new OutArgument()
+                    {
+                        Name = outputProp.Name,
+                        DataTypeId = (Activator.CreateInstance(outputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
+                        Value = string.Empty
+                    });
+                }
+                return outputs;
+            }
+            set
+            {
+                var outputs = new List<OutArgument>(value);
+                foreach (var outputProp in this.GetOutputProperties())
+                {
+                    var output = Activator.CreateInstance(outputProp.PropertyType) as OutArgument;
+                    output.Value = outputs.First(x => x.Name == output.Name && x.DataTypeId == output.DataTypeId).Value;
+                }
+            }
         }
 
         public static IEnumerable<Type> GetExternalActivities()

@@ -13,9 +13,9 @@ namespace Roro.Activities
 
         public static Brush SelectionBackBrush = new SolidBrush(Color.FromArgb(50, 150, 150, 150));
 
-        public static Brush DebugNodeBackBrush = Brushes.LightGreen;
+        public static Brush DebugNodeBackBrush = new SolidBrush(Color.FromArgb(255, 225, 125));
 
-        public static Pen SelectedNodeBorderPen = new Pen(Color.Green, 2);
+        public static Pen SelectedNodeBorderPen = new Pen(Color.DarkOrange, 2);
     }
 
     public sealed class NodeStyle

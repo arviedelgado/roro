@@ -14,8 +14,8 @@ namespace Roro.Activities
             this.pageCanvas = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.setNextButton = new System.Windows.Forms.Button();
-            this.runButton = new System.Windows.Forms.Button();
+            this.stopButton = new System.Windows.Forms.Button();
+            this.startButton = new System.Windows.Forms.Button();
             this.pagePanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -25,9 +25,9 @@ namespace Roro.Activities
             // 
             this.activityPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.activityPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.activityPanel.Location = new System.Drawing.Point(6, 56);
+            this.activityPanel.Location = new System.Drawing.Point(6, 41);
             this.activityPanel.Name = "activityPanel";
-            this.activityPanel.Size = new System.Drawing.Size(244, 499);
+            this.activityPanel.Size = new System.Drawing.Size(244, 514);
             this.activityPanel.TabIndex = 0;
             // 
             // pagePanel
@@ -36,9 +36,9 @@ namespace Roro.Activities
             this.pagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pagePanel.Controls.Add(this.pageCanvas);
             this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pagePanel.Location = new System.Drawing.Point(256, 56);
+            this.pagePanel.Location = new System.Drawing.Point(256, 41);
             this.pagePanel.Name = "pagePanel";
-            this.pagePanel.Size = new System.Drawing.Size(722, 499);
+            this.pagePanel.Size = new System.Drawing.Size(722, 514);
             this.pagePanel.TabIndex = 0;
             // 
             // pageCanvas
@@ -61,42 +61,42 @@ namespace Roro.Activities
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(984, 561);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.setNextButton);
-            this.panel1.Controls.Add(this.runButton);
+            this.panel1.Controls.Add(this.stopButton);
+            this.panel1.Controls.Add(this.startButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(256, 6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(722, 44);
+            this.panel1.Size = new System.Drawing.Size(722, 29);
             this.panel1.TabIndex = 1;
             // 
-            // setNextButton
+            // stopButton
             // 
-            this.setNextButton.Location = new System.Drawing.Point(84, 3);
-            this.setNextButton.Name = "setNextButton";
-            this.setNextButton.Size = new System.Drawing.Size(135, 38);
-            this.setNextButton.TabIndex = 1;
-            this.setNextButton.TabStop = false;
-            this.setNextButton.Text = "Set As Next Activity";
-            this.setNextButton.UseVisualStyleBackColor = true;
-            this.setNextButton.Click += new System.EventHandler(this.SetNextButton_Click);
+            this.stopButton.Location = new System.Drawing.Point(84, 3);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(75, 23);
+            this.stopButton.TabIndex = 1;
+            this.stopButton.TabStop = false;
+            this.stopButton.Text = "Stop";
+            this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
             // 
-            // runButton
+            // startButton
             // 
-            this.runButton.Location = new System.Drawing.Point(3, 3);
-            this.runButton.Name = "runButton";
-            this.runButton.Size = new System.Drawing.Size(75, 38);
-            this.runButton.TabIndex = 0;
-            this.runButton.TabStop = false;
-            this.runButton.Text = "RUN";
-            this.runButton.UseVisualStyleBackColor = true;
-            this.runButton.Click += new System.EventHandler(this.RunButton_Click);
+            this.startButton.Location = new System.Drawing.Point(3, 3);
+            this.startButton.Name = "startButton";
+            this.startButton.Size = new System.Drawing.Size(75, 23);
+            this.startButton.TabIndex = 0;
+            this.startButton.TabStop = false;
+            this.startButton.Text = "Start";
+            this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // PageForm
             // 
@@ -105,6 +105,7 @@ namespace Roro.Activities
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.Name = "PageForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Roro - Free RPA Software";
             this.Load += new System.EventHandler(this.PageForm_Load);
             this.pagePanel.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -119,9 +120,9 @@ namespace Roro.Activities
         private Panel activityPanel;
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel1;
-        private Button runButton;
-        private Button setNextButton;
+        private Button startButton;
         private Panel pageCanvas;
+        private Button stopButton;
         private Page page;
 
         public static PageForm Create()
@@ -136,27 +137,14 @@ namespace Roro.Activities
             ActivityForm.Create().Parent = this.activityPanel;
         }
         
-        private void RunButton_Click(object sender, System.EventArgs e)
+        private void StartButton_Click(object sender, System.EventArgs e)
         {
-            Console.Clear();
-            new PageRunner(this.page).Run();
+            this.page.Start();
         }
 
-        private void SetNextButton_Click(object sender, EventArgs e)
+        private void StopButton_Click(object sender, EventArgs e)
         {
-            if (this.page.SelectedNodes.Count == 0)
-            {
-                MessageBox.Show("Please select an activity.");
-            }
-            else if (this.page.SelectedNodes.Count > 1)
-            {
-                MessageBox.Show("Please select 1 activity only.");
-            }
-            else
-            {
-                this.page.DebugNode = this.page.SelectedNodes.First();
-                this.page.Render();
-            }
+            this.page.Stop();
         }
     }
 }

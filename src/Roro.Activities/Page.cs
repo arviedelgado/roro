@@ -25,18 +25,13 @@ namespace Roro.Activities
         private EndNodeActivity EndNodeActivity { get; set; }
 
         [DataMember]
-        internal List<VariableNode> Variables { get; private set; }
-
-        [DataMember]
         private List<Node> Nodes { get; set; }
 
-        internal Node DebugNode { get; set; }
-
-        internal HashSet<Node> SelectedNodes { get; set; }
+        private HashSet<Node> SelectedNodes { get; set; }
 
         private Dictionary<Node, GraphicsPath> RenderedNodes { get; }
 
-        internal Node FirstNode => this.Nodes.First(x => x is StartNode);
+        private List<VariableNode> VariableNodes => this.Nodes.Where(x => x is VariableNode).Cast<VariableNode>().ToList();
 
         public Page()
         {
@@ -56,10 +51,6 @@ namespace Roro.Activities
             this.AddNode(typeof(EndNodeActivity).FullName,
                 PageRenderOptions.GridSize * 15,
                 PageRenderOptions.GridSize * 15);
-
-
-            // test variables
-            this.Variables = new List<VariableNode>();
         }
 
         public Node GetNodeById(Guid id)
@@ -78,6 +69,12 @@ namespace Roro.Activities
 
         public Node AddNode(string activityFullName, int x, int y)
         {
+            if (this.Started)
+            {
+                MessageBox.Show("Cannot add activities while the robot is running.");
+                return null;
+            }
+
             Node node;
             var activity = Activity.CreateInstance(activityFullName);
             if (activity is StartNodeActivity)

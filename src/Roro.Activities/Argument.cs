@@ -10,7 +10,7 @@ namespace Roro.Activities
         internal string Name { get; set; }
 
         [DataMember]
-        internal virtual string DataTypeId { get; set; }
+        internal string DataTypeId { get; set; }
 
         [DataMember]
         internal string Value { get; set; }
@@ -18,6 +18,7 @@ namespace Roro.Activities
         protected Argument()
         {
             this.Name = string.Empty;
+            this.DataTypeId = DataType.GetDefault().Id;
             this.Value = string.Empty;
         }
     }
@@ -25,36 +26,24 @@ namespace Roro.Activities
     [DataContract]
     public class InArgument : Argument
     {
-        public InArgument() => base.DataTypeId = new Text().Id;
+        internal InArgument() { }
     }
 
     [DataContract]
     public sealed class Input<T> : InArgument where T : DataType, new()
     {
-        public Input() => base.DataTypeId = new T().Id;
-
-        internal override string DataTypeId
-        {
-            get => base.DataTypeId;
-            set => throw new Exception(string.Format("Property '{0}.DataTypeId' cannot be assigned to -- it is readonly", this.GetType().Name));
-        }
+        internal Input() { }
     }
 
     [DataContract]
     public class OutArgument : Argument
     {
-        public OutArgument() => base.DataTypeId = new Text().Id;
+        internal OutArgument() { }
     }
 
     [DataContract]
     public sealed class Output<T> : OutArgument where T : DataType, new()
     {
-        public Output() => base.DataTypeId = new T().Id;
-
-        internal override string DataTypeId
-        {
-            get => base.DataTypeId;
-            set => throw new Exception(string.Format("Property '{0}.DataTypeId' cannot be assigned to -- it is readonly", this.GetType().Name));
-        }
+        internal Output() { }
     }
 }

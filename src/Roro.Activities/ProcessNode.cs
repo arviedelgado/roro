@@ -18,7 +18,10 @@ namespace Roro.Activities
 
         public override Guid Execute(IEnumerable<VariableNode> variables)
         {
-            //(this.Activity as ProcessNodeActivity).Execute(new ActivityContext(variables));
+            var processNodeActivity = Activity.CreateInstance(this.Activity.GetType().FullName) as ProcessNodeActivity;
+            processNodeActivity.Inputs = this.Inputs;
+            processNodeActivity.Outputs = this.Outputs;
+            processNodeActivity.Execute(new ActivityContext(variables));
             return this.Ports.First().NextNodeId;
         }
 

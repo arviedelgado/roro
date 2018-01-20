@@ -16,7 +16,7 @@ namespace Roro.Activities.Excel
             var xlWbs = xlApp.Workbooks;
             var xlWb = xlWbs.Add();
             var path = xlWb.FullName;
-            bot.Release(xlWb, xlWbs);
+        //    bot.Release(xlWb, xlWbs);
 
             // outputs
             context.Set(this.Path, path);

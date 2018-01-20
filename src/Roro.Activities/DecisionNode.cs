@@ -19,7 +19,10 @@ namespace Roro.Activities
 
         public override Guid Execute(IEnumerable<VariableNode> variables)
         {
-            if ((this.Activity as DecisionNodeActivity).Execute(new ActivityContext(variables)))
+            var decisionNodeActivity = Activity.CreateInstance(this.Activity.GetType().FullName) as DecisionNodeActivity;
+            decisionNodeActivity.Inputs = this.Inputs;
+            decisionNodeActivity.Outputs = this.Outputs;
+            if (decisionNodeActivity.Execute(new ActivityContext(variables)))
             {
                 return this.Ports.Where(x => x is TruePort).First().Id;
             }

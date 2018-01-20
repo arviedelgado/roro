@@ -10,7 +10,7 @@ namespace Roro.Activities
         {
             this.DataSource = new List<DataType>(this.DataSource as List<DataType>)
             {
-                DataType.FromId(this.Value.ToString())
+                DataType.GetFromId(this.Value.ToString())
             };
             e.ThrowException = false;
         }

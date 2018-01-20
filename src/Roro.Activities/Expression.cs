@@ -8,7 +8,7 @@ namespace Roro.Activities
 {
     public class Expression
     {
-        public static object Evaluate(string expression, IEnumerable<Variable> variables)
+        public static object Evaluate(string expression, IEnumerable<VariableNode> variables)
         {
             if (String.IsNullOrWhiteSpace(expression))
             {

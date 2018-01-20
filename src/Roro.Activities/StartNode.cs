@@ -16,7 +16,7 @@ namespace Roro.Activities
             this.Ports.Add(new NextPort());
         }
 
-        public override Guid Execute(IEnumerable<Variable> variables)
+        public override Guid Execute(IEnumerable<VariableNode> variables)
         {
             return this.Ports.First().NextNodeId;
         }
@@ -37,7 +37,5 @@ namespace Roro.Activities
             g.DrawPath(o.BorderPen, path);
             return path;
         }
-
-        public override Size GetSize() => new Size(4, 2);
     }
 }

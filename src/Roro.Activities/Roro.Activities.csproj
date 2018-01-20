@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,8 +51,6 @@
     </Compile>
     <Compile Include="DataType.cs" />
     <Compile Include="Expression.cs" />
-    <Compile Include="PreparationNode.cs" />
-    <Compile Include="PreparationNodeActivity.cs" />
     <Compile Include="VariableNodeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,9 +60,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NodeForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ArgumentForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Extensions.cs" />
@@ -101,12 +96,8 @@
     <Compile Include="StartNodeActivity.cs" />
     <Compile Include="GhostTextBoxColumn.cs" />
     <Compile Include="GhostTextBoxCell.cs" />
-    <Compile Include="VariableForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="VariableCell.cs" />
     <Compile Include="VariableColumn.cs" />
-    <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -121,14 +112,8 @@
     <EmbeddedResource Include="NodeForm.resx">
       <DependentUpon>NodeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ArgumentForm.resx">
-      <DependentUpon>ArgumentForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="VariableNodeForm.resx">
       <DependentUpon>VariableNodeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VariableForm.resx">
-      <DependentUpon>VariableForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

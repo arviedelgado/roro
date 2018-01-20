@@ -23,9 +23,31 @@ namespace Roro.Activities
         [DataMember]
         public Activity Activity { get; private set; }
 
+        [DataMember]
+        public List<InArgument> Inputs { get; internal set; }
+
+        [DataMember]
+        public List<OutArgument> Outputs { get; internal set; }
+
         public virtual bool CanStartLink => true;
 
         public virtual bool CanEndLink => true;
+
+        public Node(Activity activity)
+        {
+            this.Id = Guid.NewGuid();
+            this.Name = this.GetType().Name.Humanize();
+            this.Bounds = new Rectangle(
+                PageRenderOptions.GridSize * 0,
+                PageRenderOptions.GridSize * 0,
+                PageRenderOptions.GridSize * 4,
+                PageRenderOptions.GridSize * 2);
+            this.Ports = new List<Port>();
+            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
+            this.Activity = activity;
+            this.Inputs = activity.Inputs;
+            this.Outputs = activity.Outputs;
+        }
 
         public void SetBounds(Rectangle rect)
         {
@@ -57,27 +79,11 @@ namespace Roro.Activities
             return null;
         }
 
-        public abstract Guid Execute(IEnumerable<Variable> variables);
-
-        public Node(Activity activity)
-        {
-            this.Id = Guid.NewGuid();
-            this.Name = this.GetType().Name.Humanize();
-            this.Bounds = new Rectangle(
-                PageRenderOptions.GridSize * 0,
-                PageRenderOptions.GridSize * 0,
-                PageRenderOptions.GridSize * this.GetSize().Width,
-                PageRenderOptions.GridSize * this.GetSize().Height);
-            this.Ports = new List<Port>();
-            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
-            this.Activity = activity;
-        }
-
-        public abstract Size GetSize();
+        public abstract Guid Execute(IEnumerable<VariableNode> variables);
 
         public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
 
-        public void RenderText(Graphics g, Rectangle r, NodeStyle o)
+        public virtual void RenderText(Graphics g, Rectangle r, NodeStyle o)
         {
             g.DrawString(this.Name, o.Font, o.FontBrush, r, o.StringFormat);
         }

@@ -11,33 +11,63 @@ namespace Roro.Activities
     [DataContract]
     public abstract class Activity
     {
-        public virtual bool AllowUserToEditArgumentRowList => false;
+        public virtual List<InArgument> Inputs
+        {
+            get
+            {
+                var list = new List<InArgument>();
+                var props = this.GetType().GetProperties()
+                    .Where(x => typeof(InArgument).IsAssignableFrom(x.PropertyType) &&
+                        !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
+                foreach (var prop in props)
+                {
+                    var item = prop.GetValue(this) as InArgument;
+                    if (item == null)
+                    {
+                        item = Activator.CreateInstance(prop.PropertyType) as InArgument;
+                        item.Name = prop.Name.Humanize();
+                        prop.SetValue(this, item);
+                    }
+                    list.Add(item);
+                }
+                return list;
+            }
+            set
+            {
 
-        public virtual bool AllowUserToEditArgumentColumn1 => false;
+            }
+        }
 
-        public virtual bool AllowUserToEditArgumentColumn2 => false;
+        public virtual List<OutArgument> Outputs
+        {
+            get
+            {
+                var list = new List<OutArgument>();
+                var props = this.GetType().GetProperties()
+                    .Where(x => typeof(OutArgument).IsAssignableFrom(x.PropertyType) &&
+                        !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
+                foreach (var prop in props)
+                {
+                    var item = prop.GetValue(this) as OutArgument;
+                    if (item == null)
+                    {
+                        item = Activator.CreateInstance(prop.PropertyType) as OutArgument;
+                        item.Name = prop.Name.Humanize();
+                        prop.SetValue(this, item);
+                    }
+                    list.Add(item);
+                }
+                return list;
+            }
+            set
+            {
 
-        public virtual bool AllowUserToEditArgumentColumn3 => false;
-
-        protected virtual List<InArgument> GetInArguments() => null;
-
-        protected virtual List<OutArgument> GetOutArguments() => null;
-
-        protected virtual List<InOutArgument> GetInOutArguments() => null;
+            }
+        }
 
         public Activity()
         {
-            this.GetInArguments();
-            this.GetOutArguments();
-            this.GetInOutArguments();
-        }
-
-        public List<T> GetArguments<T>() where T : Argument
-        {
-            if (typeof(T) == typeof(InArgument)) return this.GetInArguments() as List<T>;
-            if (typeof(T) == typeof(OutArgument)) return this.GetOutArguments() as List<T>;
-            if (typeof(T) == typeof(InOutArgument)) return this.GetInOutArguments() as List<T>;
-            throw new NotSupportedException();
+            ;
         }
 
         public static IEnumerable<Type> GetExternalActivities()

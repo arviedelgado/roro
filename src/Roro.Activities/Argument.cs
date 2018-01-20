@@ -29,9 +29,9 @@ namespace Roro.Activities
     }
 
     [DataContract]
-    public sealed class InArgument<T> : InArgument where T : DataType, new()
+    public sealed class Input<T> : InArgument where T : DataType, new()
     {
-        public InArgument() => base.DataTypeId = new T().Id;
+        public Input() => base.DataTypeId = new T().Id;
 
         internal override string DataTypeId
         {
@@ -47,20 +47,14 @@ namespace Roro.Activities
     }
 
     [DataContract]
-    public sealed class OutArgument<T> : OutArgument where T : DataType, new()
+    public sealed class Output<T> : OutArgument where T : DataType, new()
     {
-        public OutArgument() => base.DataTypeId = new T().Id;
+        public Output() => base.DataTypeId = new T().Id;
 
         internal override string DataTypeId
         {
             get => base.DataTypeId;
             set => throw new Exception(string.Format("Property '{0}.DataTypeId' cannot be assigned to -- it is readonly", this.GetType().Name));
         }
-    }
-
-    [DataContract]
-    public class InOutArgument : Argument
-    {
-        public InOutArgument() => base.DataTypeId = new Text().Id;
     }
 }

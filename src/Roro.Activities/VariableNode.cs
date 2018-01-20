@@ -12,7 +12,12 @@ namespace Roro.Activities
     public sealed class VariableNode : Node
     {
         [DataMember]
-        public Variable Variable { get; private set; }
+        public string DataTypeId { get; set; }
+
+        [DataMember]
+        public object InitialValue { get; set; }
+
+        public object CurrentValue { get; set; }
 
         public override bool CanEndLink => false;
 
@@ -20,10 +25,10 @@ namespace Roro.Activities
 
         public VariableNode(Activity activity) : base(activity)
         {
-            this.Variable = new Variable();
+            this.DataTypeId = DataType.GetDefault().Id;
         }
 
-        public override Guid Execute(IEnumerable<Variable> variables)
+        public override Guid Execute(IEnumerable<VariableNode> variables)
         {
             throw new NotImplementedException();
         }
@@ -46,6 +51,11 @@ namespace Roro.Activities
             return path;
         }
 
-        public override Size GetSize() => new Size(4, 2);
+        public override void RenderText(Graphics g, Rectangle r, NodeStyle o)
+        {
+            var value = this.InitialValue; // nope (TODO: use below once PageRunner is happy.)
+            //var value = page.DebugMode ? this.CurrentValue : this.InitialValue;
+            g.DrawString(this.Name + Environment.NewLine + value, o.Font, o.FontBrush, r, o.StringFormat);
+        }
     }
 }

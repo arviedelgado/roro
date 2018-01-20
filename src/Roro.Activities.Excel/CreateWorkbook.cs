@@ -4,7 +4,7 @@ namespace Roro.Activities.Excel
 {
     public class CreateWorkbook : ProcessNodeActivity
     {
-        public OutArgument<Text> Path { get; set; }
+        public Output<Text> Path { get; set; }
 
         public override void Execute(ActivityContext context)
         {

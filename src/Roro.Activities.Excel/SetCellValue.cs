@@ -5,15 +5,15 @@ namespace Roro.Activities.Excel
 {
     public class SetCellValue : ProcessNodeActivity
     {
-        public InArgument<Text> WorkbookPath { get; set; }
+        public Input<Text> WorkbookPath { get; set; }
 
-        public InArgument<Text> WorksheetName { get; set; }
+        public Input<Text> WorksheetName { get; set; }
 
-        public InArgument<Number> RowIndex { get; set; }
+        public Input<Number> RowIndex { get; set; }
 
-        public InArgument<Number> ColumnIndex { get; set; }
+        public Input<Number> ColumnIndex { get; set; }
 
-        public InArgument<Text> CellValue { get; set; }
+        public Input<Text> CellValue { get; set; }
 
         public override void Execute(ActivityContext context)
         {

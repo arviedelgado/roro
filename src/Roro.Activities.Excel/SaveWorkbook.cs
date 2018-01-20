@@ -4,9 +4,9 @@ namespace Roro.Activities.Excel
 {
     public class SaveWorkbook : ProcessNodeActivity
     {
-        public InArgument<Text> Path { get; set; }
+        public Input<Text> Path { get; set; }
 
-        public InArgument<Text> NewPath { get; set; }
+        public Input<Text> NewPath { get; set; }
 
         public override void Execute(ActivityContext context)
         {

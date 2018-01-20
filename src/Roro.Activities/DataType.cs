@@ -26,14 +26,16 @@ namespace Roro.Activities
             {
                 new Text(),
                 new Number(),
-                new Flag(),
+                new TrueFalse(),
                 new DateTime(),
-                new Password(),
-                new Collection()
+                //new Password(),
+                //new Collection()
             };
         }
 
-        public static DataType FromId(string id)
+        public static DataType GetDefault() => new Text();
+
+        public static DataType GetFromId(string id)
         {
             if (AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
@@ -124,11 +126,11 @@ namespace Roro.Activities
         public static implicit operator Int32(Number item) => Convert.ToInt32(item.Value);
     }
 
-    public sealed class Flag : DataType<Boolean>
+    public sealed class TrueFalse : DataType<Boolean>
     {
-        public Flag() : this(new Boolean()) { }
+        public TrueFalse() : this(new Boolean()) { }
 
-        public Flag(Boolean value) : base(value) { }
+        public TrueFalse(Boolean value) : base(value) { }
 
         public override void SetValue(object value)
         {
@@ -142,9 +144,9 @@ namespace Roro.Activities
             }
         }
 
-        public static implicit operator Boolean(Flag item) => item.Value;
+        public static implicit operator Boolean(TrueFalse item) => item.Value;
 
-        public static implicit operator Flag(Boolean item) => new Flag(item);
+        public static implicit operator TrueFalse(Boolean item) => new TrueFalse(item);
     }
 
     public sealed class DateTime : DataType<System.DateTime>

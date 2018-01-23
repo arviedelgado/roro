@@ -44,8 +44,8 @@ namespace Roro.Activities
         {
             Task.Run(() =>
             {
-                //try
-                //{
+                try
+                {
                     Console.WriteLine("Executing {0} - {1}", node.Id, node.Name);
                     this.DebugNode = node;
                     this.Render();
@@ -70,14 +70,14 @@ namespace Roro.Activities
                     {
                         throw new Exception("Next activity not found.");
                     }
-                //}
-                //catch (Exception ex)
-                //{
-                //    this.Started = false;
-                //    this.Stopping = false;
-                //    MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //}
-            });
+            }
+                catch (Exception ex)
+            {
+                this.Started = false;
+                this.Stopping = false;
+                MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        });
         }
     }
 }

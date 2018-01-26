@@ -43,10 +43,21 @@ namespace Roro.Activities
                 PageRenderOptions.GridSize * 4,
                 PageRenderOptions.GridSize * 2);
             this.Ports = new List<Port>();
-            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
             this.Activity = activity;
             this.Inputs = activity.Inputs;
             this.Outputs = activity.Outputs;
+            this.Initialize();
+        }
+
+        private void Initialize()
+        {
+            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
+        }
+
+        [OnDeserializing]
+        private void SetValuesOnDeserializing(StreamingContext context)
+        {
+            Initialize();
         }
 
         public void SetBounds(Rectangle rect)
@@ -63,7 +74,7 @@ namespace Roro.Activities
         [DataMember]
         public List<Port> Ports { get; private set; }
 
-        public Dictionary<Port, GraphicsPath> RenderedPorts { get; }
+        public Dictionary<Port, GraphicsPath> RenderedPorts { get; set; }
 
         public Port GetPortById(Guid id)
         {

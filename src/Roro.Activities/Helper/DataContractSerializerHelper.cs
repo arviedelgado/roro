@@ -16,22 +16,11 @@ namespace Roro.Activities
         {
             public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
             {
-                var name = typeName.Split('[').First();
-                var args = typeName.Split('[').Last().Split(',', ']').Where(x => x.Length > 0).ToList();
-
-                var typeNameFull = string.Format("{0}.{1}", typeNamespace.Replace(NamespacePrefix, string.Empty), name);
+                var typeNameFull = string.Format("{0}.{1}", typeNamespace.Replace(NamespacePrefix, string.Empty), typeName);
                 foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     if (asm.GetType(typeNameFull) is Type type)
                     {
-                        if (type.IsGenericType)
-                        {
-                            // will not handle nested generic types.
-                            var argTypes = args.ConvertAll(argType =>
-                                this.ResolveName(argType, string.Empty, null, null)
-                            ).ToArray();
-                            type = type.MakeGenericType(argTypes);
-                        }
                         return type;
                     }
                 }

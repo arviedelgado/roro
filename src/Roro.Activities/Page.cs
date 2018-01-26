@@ -29,11 +29,22 @@ namespace Roro.Activities
 
         private HashSet<Node> SelectedNodes { get; set; }
 
-        private Dictionary<Node, GraphicsPath> RenderedNodes { get; }
+        private Dictionary<Node, GraphicsPath> RenderedNodes { get; set; }
 
         private List<VariableNode> VariableNodes => this.Nodes.Where(x => x is VariableNode).Cast<VariableNode>().ToList();
 
         public Page()
+        {
+            Initialize();
+        }
+
+        [OnDeserializing]
+        private void SetValuesOnDeserializing(StreamingContext context)
+        {
+            Initialize();
+        }
+
+        private void Initialize()
         {
             this.Id = Guid.NewGuid();
             this.Name = string.Format("My{0}_{1}", this.GetType().Name, System.DateTime.Now.Ticks);

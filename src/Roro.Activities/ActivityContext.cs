@@ -21,30 +21,30 @@ namespace Roro.Activities
             this.OutVariables = outVariables;
         }
 
-        public T Get<T>(Input<T> inArgument) where T : DataType, new()
+        public T Get<T>(Input<T> input) where T : DataType, new()
         {
             var t = new T();
-            t.SetValue(this.InternalGet(inArgument));
+            t.SetValue(this.InternalGet(input));
             return t;
         }
 
-        internal object InternalGet(InArgument inArgument)
+        internal object InternalGet(Input input)
         {
-            return Expression.Evaluate(inArgument.Value, this.InVariables);
+            return Expression.Evaluate(input.Value, this.InVariables);
         }
 
-        public void Set<T>(Output<T> outArgument, T value) where T : DataType, new()
+        public void Set<T>(Output<T> output, T value) where T : DataType, new()
         {
-            this.InternalSet(outArgument, value);
+            this.InternalSet(output, value);
         }
 
-        internal void InternalSet(OutArgument outArgument, object value)
+        internal void InternalSet(Output output, object value)
         {
-            if (outArgument.Value.Length == 0)
+            if (output.Value.Length == 0)
             {
                 return;
             }
-            if (this.OutVariables.FirstOrDefault(x => x.Name == outArgument.Value) is VariableNode variable)
+            if (this.OutVariables.FirstOrDefault(x => x.Name == output.Value) is VariableNode variable)
             {
                 if (value is DataType dataType)
                 {

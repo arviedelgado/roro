@@ -14,21 +14,21 @@ namespace Roro.Activities
         private IEnumerable<PropertyInfo> GetInputProperties()
         {
             return this.GetType().GetProperties()
-                    .Where(x => typeof(InArgument).IsAssignableFrom(x.PropertyType) &&
+                    .Where(x => typeof(Input).IsAssignableFrom(x.PropertyType) &&
                         !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
         }
 
-        internal protected virtual List<InArgument> Inputs
+        internal protected virtual List<Input> Inputs
         {
             get
             {
-                var inputs = new List<InArgument>();
+                var inputs = new List<Input>();
                 foreach (var inputProp in this.GetInputProperties())
                 {
-                    inputs.Add(new InArgument()
+                    inputs.Add(new Input()
                     {
                         Name = inputProp.Name,
-                        DataTypeId = (Activator.CreateInstance(inputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
+                        Type = (Activator.CreateInstance(inputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
                         Value = string.Empty
                     });
                 }
@@ -36,11 +36,11 @@ namespace Roro.Activities
             }
             set
             {
-                var inputs = new List<InArgument>(value);
+                var inputs = new List<Input>(value);
                 foreach (var inputProp in this.GetInputProperties())
                 {
-                    var input = Activator.CreateInstance(inputProp.PropertyType) as InArgument;
-                    input.Value = inputs.First(x => x.Name == inputProp.Name && x.DataTypeId == input.DataTypeId).Value;
+                    var input = Activator.CreateInstance(inputProp.PropertyType) as Input;
+                    input.Value = inputs.First(x => x.Name == inputProp.Name && x.Type == input.Type).Value;
                     inputProp.SetValue(this, input);
                 }
             }
@@ -49,21 +49,21 @@ namespace Roro.Activities
         private IEnumerable<PropertyInfo> GetOutputProperties()
         {
             return this.GetType().GetProperties()
-                    .Where(x => typeof(OutArgument).IsAssignableFrom(x.PropertyType) &&
+                    .Where(x => typeof(Output).IsAssignableFrom(x.PropertyType) &&
                         !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
         }
 
-        internal protected virtual List<OutArgument> Outputs
+        internal protected virtual List<Output> Outputs
         {
             get
             {
-                var outputs = new List<OutArgument>();
+                var outputs = new List<Output>();
                 foreach (var outputProp in this.GetOutputProperties())
                 {
-                    outputs.Add(new OutArgument()
+                    outputs.Add(new Output()
                     {
                         Name = outputProp.Name,
-                        DataTypeId = (Activator.CreateInstance(outputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
+                        Type = (Activator.CreateInstance(outputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
                         Value = string.Empty
                     });
                 }
@@ -71,11 +71,11 @@ namespace Roro.Activities
             }
             set
             {
-                var outputs = new List<OutArgument>(value);
+                var outputs = new List<Output>(value);
                 foreach (var outputProp in this.GetOutputProperties())
                 {
-                    var output = Activator.CreateInstance(outputProp.PropertyType) as OutArgument;
-                    output.Value = outputs.First(x => x.Name == outputProp.Name && x.DataTypeId == output.DataTypeId).Value;
+                    var output = Activator.CreateInstance(outputProp.PropertyType) as Output;
+                    output.Value = outputs.First(x => x.Name == outputProp.Name && x.Type == output.Type).Value;
                     outputProp.SetValue(this, output);
                 }
             }

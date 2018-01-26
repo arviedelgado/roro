@@ -33,18 +33,10 @@ namespace Roro.Activities
 
         private List<VariableNode> VariableNodes => this.Nodes.Where(x => x is VariableNode).Cast<VariableNode>().ToList();
 
-        public Page()
-        {
-            Initialize();
-        }
+        public Page() => Initialize();
 
         [OnDeserializing]
-        private void SetValuesOnDeserializing(StreamingContext context)
-        {
-            Initialize();
-        }
-
-        private void Initialize()
+        private void Initialize(StreamingContext context = default)
         {
             this.Id = Guid.NewGuid();
             this.Name = string.Format("My{0}_{1}", this.GetType().Name, System.DateTime.Now.Ticks);

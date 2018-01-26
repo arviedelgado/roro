@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -15,42 +14,20 @@ namespace Roro.Activities
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
-            //Console.Clear();
-
-            //Console.WriteLine();
-            //Console.WriteLine(DataContractSerializerHelper.ToString(this));
-            //Console.WriteLine();
-
-            var total = Stopwatch.StartNew();
-
-            var c = sender as Control;
             var g = e.Graphics;
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            var sw = Stopwatch.StartNew();
-            this.RenderBackground(g, c.ClientRectangle);
-            //Console.WriteLine("Render Back\t{0}", sw.ElapsedMilliseconds / 1000.0);
-
-            sw.Restart();
+            this.RenderBackground(g, (sender as Control).ClientRectangle);
+            
             this.RenderNodes(g);
-            //Console.WriteLine("Render Nodes\t{0}", sw.ElapsedMilliseconds / 1000.0);
-
-            sw.Restart();
             this.RenderLines(g);
-            //Console.WriteLine("Render Lines\t{0}", sw.ElapsedMilliseconds / 1000.0);
-
-            sw.Restart();
             this.RenderPorts(g);
-            //Console.WriteLine("Render Ports\t{0}", sw.ElapsedMilliseconds / 1000.0);
 
             if (this.SelectNodeRect != Rectangle.Empty)
             {
                 e.Graphics.FillRectangle(PageRenderOptions.SelectionBackBrush, this.SelectNodeRect);
             }
-
-            //Console.WriteLine("Render Total\t{0}", total.ElapsedMilliseconds / 1000.0);
-            //Console.WriteLine("Render Total\t{0:#.00} fps", 1000.0 / total.ElapsedMilliseconds);           
         }
 
         private void RenderBackground(Graphics g, Rectangle r)

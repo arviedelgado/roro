@@ -399,12 +399,12 @@ namespace Roro.Activities
 
         private void InputsTab_Initialize()
         {
-            if (this.targetNode.Inputs is List<InArgument> inputs && inputs.Count > 0)
+            if (this.targetNode.Inputs is List<Input> inputs && inputs.Count > 0)
             {
                 this.inputTypeColumn.DataSource = DataType.GetCommonTypes();
                 foreach (var input in inputs)
                 {
-                    this.inputGrid.Rows.Add(input.Name, input.DataTypeId, input.Value);
+                    this.inputGrid.Rows.Add(input.Name, input.Type, input.Value);
                 }
 
                 this.inputsTab.Text = this.inputsTab.Text + " (" + inputs.Count + ")";
@@ -417,12 +417,12 @@ namespace Roro.Activities
 
         private void OutputsTab_Initialize()
         {
-            if (this.targetNode.Outputs is List<OutArgument> outputs && outputs.Count > 0)
+            if (this.targetNode.Outputs is List<Output> outputs && outputs.Count > 0)
             {
                 this.outputTypeColumn.DataSource = DataType.GetCommonTypes();
                 foreach (var output in outputs)
                 {
-                    this.outputGrid.Rows.Add(output.Name, output.DataTypeId, output.Value);
+                    this.outputGrid.Rows.Add(output.Name, output.Type, output.Value);
                 }
 
                 this.outputsTab.Text = this.outputsTab.Text + " (" + outputs.Count + ")";
@@ -503,25 +503,25 @@ namespace Roro.Activities
                 }
                 else
                 {
-                    var inputs = new List<InArgument>();
+                    var inputs = new List<Input>();
                     foreach (DataGridViewRow row in this.inputGrid.Rows)
                     {
-                        inputs.Add(new InArgument()
+                        inputs.Add(new Input()
                         {
                             Name = row.Cells[0].Value.ToString(),
-                            DataTypeId = row.Cells[1].Value.ToString(),
+                            Type = row.Cells[1].Value.ToString(),
                             Value = row.Cells[2].Value.ToString()
                         });
                     }
                     this.targetNode.Inputs = inputs;
 
-                    var outputs = new List<OutArgument>();
+                    var outputs = new List<Output>();
                     foreach (DataGridViewRow row in this.outputGrid.Rows)
                     {
-                        outputs.Add(new OutArgument()
+                        outputs.Add(new Output()
                         {
                             Name = row.Cells[0].Value.ToString(),
-                            DataTypeId = row.Cells[1].Value.ToString(),
+                            Type = row.Cells[1].Value.ToString(),
                             Value = row.Cells[2].Value.ToString()
                         });
                     }

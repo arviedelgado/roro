@@ -49,6 +49,7 @@
     <Compile Include="ActivityForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ActivityOutput.cs" />
     <Compile Include="DataType.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="VariableNodeForm.cs">
@@ -87,7 +88,7 @@
     <Compile Include="ActivityContext.cs" />
     <Compile Include="DataTypeColumn.cs" />
     <Compile Include="DataTypeCell.cs" />
-    <Compile Include="Argument.cs" />
+    <Compile Include="ActivityInput.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="EndNodeActivity.cs" />
     <Compile Include="LoopEndNodeActivity.cs" />

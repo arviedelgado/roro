@@ -24,10 +24,15 @@ namespace Roro.Activities
         public Activity Activity { get; private set; }
 
         [DataMember]
-        public List<InArgument> Inputs { get; internal set; }
+        public List<Input> Inputs { get; internal set; }
 
         [DataMember]
-        public List<OutArgument> Outputs { get; internal set; }
+        public List<Output> Outputs { get; internal set; }
+
+        [DataMember]
+        public List<Port> Ports { get; private set; }
+
+        public Dictionary<Port, GraphicsPath> RenderedPorts { get; set; }
 
         public virtual bool CanStartLink => true;
 
@@ -49,15 +54,10 @@ namespace Roro.Activities
             this.Initialize();
         }
 
-        private void Initialize()
+        [OnDeserializing]
+        private void Initialize(StreamingContext context = default)
         {
             this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
-        }
-
-        [OnDeserializing]
-        private void SetValuesOnDeserializing(StreamingContext context)
-        {
-            Initialize();
         }
 
         public void SetBounds(Rectangle rect)
@@ -70,11 +70,6 @@ namespace Roro.Activities
             }
             this.Bounds = rect;
         }
-
-        [DataMember]
-        public List<Port> Ports { get; private set; }
-
-        public Dictionary<Port, GraphicsPath> RenderedPorts { get; set; }
 
         public Port GetPortById(Guid id)
         {

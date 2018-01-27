@@ -102,9 +102,9 @@ namespace Roro.Activities
                 .Where(x => !x.IsAbstract);
         }
 
-        public static Activity CreateInstance(string name)
+        public static Activity CreateInstance(string id)
         {
-            var activityType = Activity.GetAllActivities().Where(x => x.FullName == name).First();
+            var activityType = Activity.GetAllActivities().Where(x => x.FullName == id).First();
             return Activator.CreateInstance(activityType) as Activity;
         }
     }

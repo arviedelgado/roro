@@ -402,7 +402,7 @@ namespace Roro.Activities
 
         private void InputsTab_Initialize()
         {
-            if (this.targetNode.Inputs is List<Input> inputs && inputs.Count > 0)
+            if (this.targetNode.ActivityInputs is List<Input> inputs && inputs.Count > 0)
             {
                 this.inputTypeColumn.DataSource = DataType.GetCommonTypes();
                 foreach (var input in inputs)
@@ -420,7 +420,7 @@ namespace Roro.Activities
 
         private void OutputsTab_Initialize(Page page)
         {
-            if (this.targetNode.Outputs is List<Output> outputs && outputs.Count > 0)
+            if (this.targetNode.ActivityOutputs is List<Output> outputs && outputs.Count > 0)
             {
                 // Type ComboBox
                 this.outputTypeColumn.DataSource = DataType.GetCommonTypes();
@@ -533,7 +533,7 @@ namespace Roro.Activities
                             Value = row.Cells[2].Value?.ToString() ?? string.Empty
                         });
                     }
-                    this.targetNode.Inputs = inputs;
+                    this.targetNode.ActivityInputs = inputs;
 
                     var outputs = new List<Output>();
                     foreach (DataGridViewRow row in this.outputGrid.Rows)
@@ -545,7 +545,7 @@ namespace Roro.Activities
                             Value = row.Cells[2].Value?.ToString() ?? string.Empty
                         });
                     }
-                    this.targetNode.Outputs = outputs;
+                    this.targetNode.ActivityOutputs = outputs;
                 }
                 this.DialogResult = DialogResult.OK;
             }

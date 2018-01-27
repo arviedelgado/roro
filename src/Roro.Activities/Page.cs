@@ -19,12 +19,6 @@ namespace Roro.Activities
         public string Name { get; set; }
 
         [DataMember]
-        private StartNodeActivity StartNodeActivity { get; set; }
-
-        [DataMember]
-        private EndNodeActivity EndNodeActivity { get; set; }
-
-        [DataMember]
         private List<Node> Nodes { get; set; }
 
         private HashSet<Node> SelectedNodes { get; set; }
@@ -43,9 +37,6 @@ namespace Roro.Activities
             this.Nodes = new List<Node>();
             this.SelectedNodes = new HashSet<Node>();
             this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
-
-            this.StartNodeActivity = new StartNodeActivity();
-            this.EndNodeActivity = new EndNodeActivity();
 
             this.AddNode(typeof(StartNodeActivity).FullName,
                 PageRenderOptions.GridSize * 15,
@@ -70,7 +61,7 @@ namespace Roro.Activities
             return null;
         }
 
-        public Node AddNode(string activityFullName, int x, int y)
+        public Node AddNode(string activityId, int x, int y)
         {
             if (this.Started)
             {
@@ -79,34 +70,28 @@ namespace Roro.Activities
             }
 
             Node node;
-            var activity = Activity.CreateInstance(activityFullName);
+            var activity = Activity.CreateInstance(activityId);
             if (activity is StartNodeActivity)
             {
-                node = new StartNode(this.StartNodeActivity)
+                node = new StartNode(activity)
                 {
                     Name = "Start"
                 };
             }
             else if (activity is EndNodeActivity)
             {
-                node = new EndNode(this.EndNodeActivity)
+                node = new EndNode(activity)
                 {
                     Name = "End"
                 };
             }
             else if (activity is ProcessNodeActivity)
             {
-                node = new ProcessNode(activity)
-                {
-                    Name = activityFullName.Split('.').Last().Humanize()
-                };
+                node = new ProcessNode(activity);
             }
             else if (activity is DecisionNodeActivity)
             {
-                node = new DecisionNode(activity)
-                {
-                    Name = activityFullName.Split('.').Last().Humanize()
-                };
+                node = new DecisionNode(activity);
             }
             else if (activity is LoopStartNodeActivity)
             {

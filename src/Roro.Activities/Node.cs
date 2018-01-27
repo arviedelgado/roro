@@ -21,13 +21,13 @@ namespace Roro.Activities
         public Rectangle Bounds { get; private set; }
 
         [DataMember]
-        public Activity Activity { get; private set; }
+        public string ActivityId { get; private set; }
 
         [DataMember]
-        public List<Input> Inputs { get; internal set; }
+        public List<Input> ActivityInputs { get; internal set; }
 
         [DataMember]
-        public List<Output> Outputs { get; internal set; }
+        public List<Output> ActivityOutputs { get; internal set; }
 
         [DataMember]
         public List<Port> Ports { get; private set; }
@@ -41,16 +41,16 @@ namespace Roro.Activities
         public Node(Activity activity)
         {
             this.Id = Guid.NewGuid();
-            this.Name = this.GetType().Name.Humanize();
+            this.Name = activity.GetType().Name.Humanize();
             this.Bounds = new Rectangle(
                 PageRenderOptions.GridSize * 0,
                 PageRenderOptions.GridSize * 0,
                 PageRenderOptions.GridSize * 4,
                 PageRenderOptions.GridSize * 2);
             this.Ports = new List<Port>();
-            this.Activity = activity;
-            this.Inputs = activity.Inputs;
-            this.Outputs = activity.Outputs;
+            this.ActivityId = activity.GetType().FullName;
+            this.ActivityInputs = activity.Inputs;
+            this.ActivityOutputs = activity.Outputs;
             this.Initialize();
         }
 
@@ -85,7 +85,7 @@ namespace Roro.Activities
             return null;
         }
 
-        public abstract Guid Execute(IEnumerable<VariableNode> variables);
+        public abstract Guid Execute(IEnumerable<VariableNode> variableNodes);
 
         public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
 

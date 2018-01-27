@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Excel", "Roro.Activities.Excel\Roro.Activities.Excel.csproj", "{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Studio", "Roro.Studio\Roro.Studio.csproj", "{5A67CF0F-DA45-4269-B7E8-A9BD24FB0B41}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD} = {1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

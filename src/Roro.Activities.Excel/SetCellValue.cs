@@ -1,11 +1,10 @@
-﻿using Microsoft.Office.Interop.Excel;
-using System;
+﻿using System;
 
 namespace Roro.Activities.Excel
 {
     public class SetCellValue : ProcessNodeActivity
     {
-        public Input<Text> WorkbookPath { get; set; }
+        public Input<Text> WorkbookName { get; set; }
 
         public Input<Text> WorksheetName { get; set; }
 
@@ -18,21 +17,16 @@ namespace Roro.Activities.Excel
         public override void Execute(ActivityContext context)
         {
             // inputs
-            var workbookPath = context.Get(this.WorkbookPath);
-            var worksheetName = context.Get(this.WorksheetName);
-            var rowIndex = context.Get(this.RowIndex);
-            var columnIndex = context.Get(this.ColumnIndex);
-            var cellValue = context.Get(this.CellValue);
+            var workbookName = (string)context.Get(this.WorkbookName);
+            var worksheetName = (string)context.Get(this.WorksheetName);
+            var rowIndex = (int)context.Get(this.RowIndex);
+            var columnIndex = (int)context.Get(this.ColumnIndex);
+            var cellValue = (string)context.Get(this.CellValue);
 
-            var bot = ExcelBot.Shared;
-            var xlApp = bot.Get(workbookPath);
-            var xlWbs = xlApp.Workbooks;
-            var xlWb = xlWbs.Item[1];
-            var xlWss = xlWb.Worksheets;
-            var xlWs = xlWss.Item[0] as Worksheet;
-            var xlCell = xlWs.Cells[rowIndex, columnIndex] as Range;
-            xlCell.Value = cellValue;
-            bot.Release(xlCell, xlWs, xlWss, xlWb, xlWbs);
+            var xlApp = ExcelBot.Shared.GetInstance();
+            var xlWb = ExcelBot.Shared.GetWorkbook(xlApp, workbookName);
+            var xlWs = ExcelBot.Shared.GetWorksheet(xlWb, worksheetName);
+            xlWs.Cells(rowIndex, columnIndex).Value = cellValue;
 
             // outputs
             //

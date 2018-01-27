@@ -1,80 +1,121 @@
 ﻿using System;
-using Microsoft.Office.Interop.Excel;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Roro.Activities.Excel
 {
-    public sealed class ExcelBot : IDisposable
+    internal sealed class ExcelBot : IDisposable
     {
+        private const string EXCEL_PROG_ID = "Excel.Application";
+
+        private const uint RPC_SERVER_UNAVAILABLE = 0x800706BA;
+
         public static readonly ExcelBot Shared = new ExcelBot();
 
-        private readonly IList<Application> Apps = new List<Application>();
+        private dynamic App { get; set; }
+
+        public dynamic GetInstance()
+        {
+            if (this.App == null)
+            {
+                try
+                {
+                    var excelType = Type.GetTypeFromProgID(EXCEL_PROG_ID);
+                    if (excelType == null)
+                    {
+                        throw new TypeLoadException("The Excel application is not installed.");
+                    }
+                    this.App = Activator.CreateInstance(excelType);
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                try
+                {
+                    var version = this.App.Version;
+                }
+                catch
+                {
+                    this.Dispose();
+                    return this.GetInstance();
+                }
+            }
+            this.App.Visible = true;
+            return this.App;
+        }
+
+        public dynamic GetWorkbook(dynamic xlApp, string workbookName)
+        {
+            dynamic xlWb = null;
+            if (workbookName == string.Empty)
+            {
+                xlWb = xlApp.ActiveWorkbook ?? xlApp.Workbooks.Add();
+            }
+            else
+            {
+                xlWb = xlApp.Workbooks.Item(workbookName);
+            }
+            xlWb.Activate();
+            return xlWb;
+        }
+
+        public dynamic GetWorksheet(dynamic xlWb, string worksheetName)
+        {
+            dynamic xlWs = null;
+            if (worksheetName == string.Empty)
+            {
+                xlWs = xlWb.ActiveSheet;
+            }
+            else
+            {
+                xlWs = xlWb.Item(worksheetName);
+            }
+            xlWs.Activate();
+            return xlWs;
+        }
 
         private ExcelBot()
         {
-            ; // singleton pattern
-        }
-
-        internal Application Get()
-        {
-            var xlApp = new Application()
-            {
-                Visible = true
-            };
-            this.Apps.Add(xlApp);
-            return xlApp;
-        }
-
-        internal Application Get(string name)
-        {
-            Console.WriteLine("Get: {0}", name);
-            foreach (var xlApp in this.Apps)
-            {
-                var xlWbs = xlApp.Workbooks;
-                if (xlWbs.Count == 0)
-                {
-                    this.Apps.Remove(xlApp);
-                    this.Release(xlWbs, xlApp);
-                    continue;
-                }
-                var xlWb = xlWbs.Item[1];
-                if (xlWb.FullName == name)
-                {
-                    this.Release(xlWb, xlWbs);
-                    return xlApp;
-                }
-                this.Release(xlWb, xlWbs);
-            }
-            throw new Exception(string.Format("ERROR: Workbook not found - {0}", name));
-        }
-
-        internal void Release(params object[] objs)
-        {
-            foreach (var obj in objs)
-            {
-                if (obj is Application xlApp)
-                {
-                    this.Apps.Remove(xlApp);
-                    xlApp.Quit();
-                    Marshal.FinalReleaseComObject(obj);
-                }
-                else if (obj is Workbook xlWb)
-                {
-                    //xlWb.Close(SaveChanges : false);
-                }
-                //Marshal.FinalReleaseComObject(obj);
-            }
-            //GC.Collect();
+            ;
         }
 
         public void Dispose()
         {
-            while (this.Apps.Count() > 0)
+            try
             {
-                this.Release(this.Apps.Last());
+                this.App.Quit();
             }
+            catch
+            {
+
+            }
+            try
+            {
+                Marshal.FinalReleaseComObject(this.App);
+            }
+            catch (COMException ex)
+            {
+                switch ((uint)ex.ErrorCode)
+                {
+                    // 
+                    case RPC_SERVER_UNAVAILABLE:
+                        break;
+
+                    default:
+                        throw;
+                }
+            }
+
+            this.App = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
+
+
 }

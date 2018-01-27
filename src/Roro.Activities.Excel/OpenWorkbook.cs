@@ -12,7 +12,7 @@ namespace Roro.Activities.Excel
             var path = context.Get(this.Path);
 
             var bot = ExcelBot.Shared;
-            var xlApp = bot.Get();
+            var xlApp = bot.New();
             var xlWbs = xlApp.Workbooks;
             var xlWb = xlWbs.Open(path);
             bot.Release(xlWb, xlWbs);

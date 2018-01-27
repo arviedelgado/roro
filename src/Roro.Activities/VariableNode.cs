@@ -12,7 +12,7 @@ namespace Roro.Activities
     public sealed class VariableNode : Node
     {
         [DataMember]
-        public string DataTypeId { get; set; }
+        public string Type { get; set; }
 
         [DataMember]
         public object InitialValue { get; set; }
@@ -25,7 +25,7 @@ namespace Roro.Activities
 
         public VariableNode(Activity activity) : base(activity)
         {
-            this.DataTypeId = DataType.GetDefault().Id;
+            this.Type = DataType.GetDefault().Id;
         }
 
         public override Guid Execute(IEnumerable<VariableNode> variables)

@@ -31,7 +31,7 @@ namespace Roro.Activities
 
         private Dictionary<Node, GraphicsPath> RenderedNodes { get; set; }
 
-        private List<VariableNode> VariableNodes => this.Nodes.Where(x => x is VariableNode).Cast<VariableNode>().ToList();
+        internal List<VariableNode> VariableNodes => this.Nodes.Where(x => x is VariableNode).Cast<VariableNode>().ToList();
 
         public Page() => Initialize();
 
@@ -128,9 +128,14 @@ namespace Roro.Activities
             }
             else if (activity is VariableNodeActivity)
             {
+                var variableIndex = 1;
+                while (this.VariableNodes.Exists(v => v.Name == "Variable " + variableIndex))
+                {
+                    variableIndex++;
+                }
                 node = new VariableNode(activity)
                 {
-                    Name = "New Variable"
+                    Name = "Variable " + variableIndex
                 };
             }
             else

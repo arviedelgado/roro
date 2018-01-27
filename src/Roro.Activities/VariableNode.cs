@@ -19,6 +19,10 @@ namespace Roro.Activities
 
         public object CurrentValue { get; set; }
 
+        public const string StartToken = "[";
+
+        public const string EndToken = "]";
+
         public override bool CanEndLink => false;
 
         public override bool CanStartLink => false;

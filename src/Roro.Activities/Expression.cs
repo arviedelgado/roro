@@ -7,12 +7,8 @@ using System.Linq;
 
 namespace Roro.Activities
 {
-    public class Expression
+    internal class Expression
     {
-        private const string StartToken = "[";
-
-        private const String EndToken = "]";
-
         public static object Evaluate(string expression, IEnumerable<VariableNode> variableNodes)
         {
             if (String.IsNullOrWhiteSpace(expression))
@@ -58,19 +54,19 @@ return
             var currentIndex = 0;
             while (currentIndex < expression.Length)
             {
-                var startIndex = expression.IndexOf(StartToken, currentIndex);
+                var startIndex = expression.IndexOf(VariableNode.StartToken, currentIndex);
                 if (startIndex < 0)
                 {
                     resolvedExpression += expression.Substring(currentIndex);
                     break;
                 }
-                var endIndex = expression.IndexOf(EndToken, startIndex + 1);
+                var endIndex = expression.IndexOf(VariableNode.EndToken, startIndex + 1);
                 if (endIndex < 0)
                 {
-                    throw new FormatException(string.Format("The variable at char {0} has missing '{1}' in expression:\n\n{2}", startIndex, EndToken, expression));
+                    throw new FormatException(string.Format("The variable at char {0} has missing '{1}' in expression:\n\n{2}", startIndex, VariableNode.EndToken, expression));
                 }
                 var variableName = expression.Substring(startIndex + 1, endIndex - startIndex - 1);
-                if (variableName == StartToken)
+                if (variableName == VariableNode.StartToken)
                 {
                     resolvedExpression += expression.Substring(currentIndex, endIndex - currentIndex + 1);
                     currentIndex = endIndex + 1;
@@ -79,7 +75,7 @@ return
                 var variableNode = variableNodes.FirstOrDefault(x => x.Name == variableName);
                 if (variableNode == null)
                 {
-                    throw new FormatException(string.Format("Variable {0}{1}{2} not found.", StartToken, variableName, EndToken));
+                    throw new FormatException(string.Format("Variable {0}{1}{2} not found.", VariableNode.StartToken, variableName, VariableNode.EndToken));
                 }
                 var variable = DataType.GetFromId(variableNode.Type);
                 variable.SetValue(variableNode.CurrentValue);

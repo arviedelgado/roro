@@ -510,7 +510,7 @@ namespace Roro.Activities
                         {
                             Name = row.Cells[0].Value.ToString(),
                             Type = row.Cells[1].Value.ToString(),
-                            Value = row.Cells[2].Value.ToString()
+                            Value = row.Cells[2].Value.ToString() ?? string.Empty
                         });
                     }
                     this.targetNode.Inputs = inputs;
@@ -522,7 +522,7 @@ namespace Roro.Activities
                         {
                             Name = row.Cells[0].Value.ToString(),
                             Type = row.Cells[1].Value.ToString(),
-                            Value = row.Cells[2].Value.ToString()
+                            Value = row.Cells[2].Value?.ToString() ?? string.Empty
                         });
                     }
                     this.targetNode.Outputs = outputs;

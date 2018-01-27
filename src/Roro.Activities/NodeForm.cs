@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Roro.Activities
@@ -19,9 +20,6 @@ namespace Roro.Activities
         private DataTypeColumn inputTypeColumn;
         private GhostTextBoxColumn inputValueColumn;
         private DataGridView outputGrid;
-        private GhostTextBoxColumn outputNameColumn;
-        private DataTypeColumn outputTypeColumn;
-        private GhostTextBoxColumn outputValueColumn;
         private TabPage valuesTab;
         private TextBox currentValueTextBox;
         private TextBox initialValueTextBox;
@@ -29,6 +27,9 @@ namespace Roro.Activities
         private Label initialValueLabel;
         private ComboBox typeComboBox;
         private Label typeLabel;
+        private GhostTextBoxColumn outputNameColumn;
+        private DataTypeColumn outputTypeColumn;
+        private VariableColumn outputValueColumn;
         private Label nameLabel;
 
         private void InitializeComponent()
@@ -49,7 +50,7 @@ namespace Roro.Activities
             this.outputGrid = new System.Windows.Forms.DataGridView();
             this.outputNameColumn = new Roro.Activities.GhostTextBoxColumn();
             this.outputTypeColumn = new Roro.Activities.DataTypeColumn();
-            this.outputValueColumn = new Roro.Activities.GhostTextBoxColumn();
+            this.outputValueColumn = new Roro.Activities.VariableColumn();
             this.valuesTab = new System.Windows.Forms.TabPage();
             this.currentValueLabel = new System.Windows.Forms.Label();
             this.initialValueLabel = new System.Windows.Forms.Label();
@@ -187,7 +188,7 @@ namespace Roro.Activities
             this.inputGrid.Location = new System.Drawing.Point(6, 6);
             this.inputGrid.Name = "inputGrid";
             this.inputGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.inputGrid.Size = new System.Drawing.Size(540, 200);
+            this.inputGrid.Size = new System.Drawing.Size(540, 214);
             this.inputGrid.TabIndex = 0;
             this.inputGrid.TabStop = false;
             // 
@@ -222,10 +223,10 @@ namespace Roro.Activities
             // 
             this.outputsTab.BackColor = System.Drawing.Color.White;
             this.outputsTab.Controls.Add(this.outputGrid);
-            this.outputsTab.Location = new System.Drawing.Point(4, 22);
+            this.outputsTab.Location = new System.Drawing.Point(4, 24);
             this.outputsTab.Name = "outputsTab";
             this.outputsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.outputsTab.Size = new System.Drawing.Size(552, 232);
+            this.outputsTab.Size = new System.Drawing.Size(552, 230);
             this.outputsTab.TabIndex = 1;
             this.outputsTab.Text = "Outputs";
             // 
@@ -249,7 +250,7 @@ namespace Roro.Activities
             this.outputGrid.Location = new System.Drawing.Point(6, 6);
             this.outputGrid.Name = "outputGrid";
             this.outputGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.outputGrid.Size = new System.Drawing.Size(540, 210);
+            this.outputGrid.Size = new System.Drawing.Size(540, 214);
             this.outputGrid.TabIndex = 1;
             this.outputGrid.TabStop = false;
             // 
@@ -275,10 +276,11 @@ namespace Roro.Activities
             // 
             // outputValueColumn
             // 
+            this.outputValueColumn.DisplayStyleForCurrentCellOnly = true;
             this.outputValueColumn.FillWeight = 50F;
             this.outputValueColumn.HeaderText = "Variable";
             this.outputValueColumn.Name = "outputValueColumn";
-            this.outputValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.outputValueColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // valuesTab
             // 
@@ -354,6 +356,7 @@ namespace Roro.Activities
             this.Name = "NodeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Activity Properties";
+            this.Load += new System.EventHandler(this.NodeForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -392,8 +395,8 @@ namespace Roro.Activities
             };
 
             this.InputsTab_Initialize();
-            this.OutputsTab_Initialize();
-            this.ValuesTab_Initialize();
+            this.OutputsTab_Initialize(page);
+            this.ValuesTab_Initialize(page);
       
         }
 
@@ -415,16 +418,28 @@ namespace Roro.Activities
             }
         }
 
-        private void OutputsTab_Initialize()
+        private void OutputsTab_Initialize(Page page)
         {
             if (this.targetNode.Outputs is List<Output> outputs && outputs.Count > 0)
             {
+                // Type ComboBox
                 this.outputTypeColumn.DataSource = DataType.GetCommonTypes();
+                // Value ComboBOx
+                var variableNames = new List<string>() { string.Empty };
+                variableNames.AddRange(page.VariableNodes.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+                this.outputValueColumn.DataSource = variableNames;
+                //
                 foreach (var output in outputs)
                 {
                     this.outputGrid.Rows.Add(output.Name, output.Type, output.Value);
                 }
-
+                this.outputGrid.DataError += (sender, e) =>
+                {
+                    if (this.outputGrid[e.ColumnIndex, e.RowIndex] is VariableCell variableCell)
+                    {
+                        variableCell.OnDataError(sender, e);
+                    }
+                };
                 this.outputsTab.Text = this.outputsTab.Text + " (" + outputs.Count + ")";
             }
             else
@@ -433,21 +448,26 @@ namespace Roro.Activities
             }
         }
 
-        private void ValuesTab_Initialize()
+        private void ValuesTab_Initialize(Page page)
         {
             if (this.targetNode is VariableNode variableNode)
             {
                 this.nameTextBox.Validating += (sender, e) =>
                 {
-                    if (this.nameTextBox.Text.Contains("["))
+                    if (page.VariableNodes.FirstOrDefault(x => x.Name == this.nameTextBox.Text && x != variableNode) != null)
                     {
                         e.Cancel = true;
-                        MessageBox.Show("'Name' should not contain [", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Variable name '" + this.nameTextBox.Text + "' already exists");
                     }
-                    else if (this.nameTextBox.Text.Contains("]"))
+                    else if (this.nameTextBox.Text.Contains(VariableNode.StartToken))
                     {
                         e.Cancel = true;
-                        MessageBox.Show("'Name' should not contain ]", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Variable name should not contain " + VariableNode.StartToken, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (this.nameTextBox.Text.Contains(VariableNode.EndToken))
+                    {
+                        e.Cancel = true;
+                        MessageBox.Show("Variable name should not contain " + VariableNode.EndToken, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 };
 
@@ -474,7 +494,7 @@ namespace Roro.Activities
                     catch
                     {
                         e.Cancel = true;
-                        var useDefaultValue = DialogResult.Yes == MessageBox.Show("'Initial Value' should be a valid " + this.typeComboBox.Text + ".\n\nDo you want to set the default value?", string.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                        var useDefaultValue = DialogResult.Yes == MessageBox.Show("Variable value should be a valid " + this.typeComboBox.Text + ".\n\nDo you want to set the default value?", string.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                         if (useDefaultValue)
                         {
                             this.initialValueTextBox.Text = data.GetValue().ToString();
@@ -538,6 +558,11 @@ namespace Roro.Activities
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+        }
+
+        private void NodeForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

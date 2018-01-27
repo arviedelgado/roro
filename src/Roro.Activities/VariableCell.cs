@@ -9,10 +9,10 @@ namespace Roro.Activities
     {
         public void OnDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            //this.DataSource = new List<Variable>(this.DataSource as List<Variable>)
-            //{
-            //    new Variable<Text>(Variable.Missing) { Id = (Guid)this.Value }
-            //};
+            this.DataSource = new List<string>(this.DataSource as List<string>)
+            {
+                this.Value.ToString()
+            };
             e.ThrowException = false;
         }
 

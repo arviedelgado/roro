@@ -53,9 +53,7 @@ namespace Roro.Activities
 
         public override void RenderText(Graphics g, Rectangle r, NodeStyle o)
         {
-            var value = this.InitialValue; // nope (TODO: use below once PageRunner is happy.)
-            //var value = page.DebugMode ? this.CurrentValue : this.InitialValue;
-            g.DrawString(this.Name + Environment.NewLine + value, o.Font, o.FontBrush, r, o.StringFormat);
+            g.DrawString(this.Name + Environment.NewLine + this.CurrentValue, o.Font, o.FontBrush, r, o.StringFormat);
         }
     }
 }

@@ -24,6 +24,10 @@ namespace Roro.Activities
                 this.Started = true;
                 Console.Clear();
                 Console.WriteLine("INFO: Start.");
+                foreach (var variableNode in this.VariableNodes)
+                {
+                    variableNode.CurrentValue = variableNode.InitialValue;
+                }
                 this.StepNext(this.Nodes.Find(x => x is StartNode));
             }
         }
@@ -70,14 +74,14 @@ namespace Roro.Activities
                     {
                         throw new Exception("Next activity not found.");
                     }
-            }
+                }
                 catch (Exception ex)
-            {
-                this.Started = false;
-                this.Stopping = false;
-                MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        });
+                {
+                    this.Started = false;
+                    this.Stopping = false;
+                    MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            });
         }
     }
 }

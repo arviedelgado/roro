@@ -457,7 +457,7 @@ namespace Roro.Activities
                 this.typeComboBox.DataSource = DataType.GetCommonTypes();
                 this.typeComboBox.ValueMember = "Id";
                 this.typeComboBox.DisplayMember = "Name";
-                this.typeComboBox.SelectedValue = variableNode.DataTypeId;
+                this.typeComboBox.SelectedValue = variableNode.Type;
 
                 this.initialValueTextBox.Text = variableNode.InitialValue?.ToString();
                 this.initialValueTextBox.Validating += (sender, e) =>
@@ -497,7 +497,7 @@ namespace Roro.Activities
                 this.targetNode.Name = this.nameTextBox.Text;
                 if (this.targetNode is VariableNode variableNode)
                 {
-                    variableNode.DataTypeId = this.typeComboBox.SelectedValue.ToString();
+                    variableNode.Type = this.typeComboBox.SelectedValue.ToString();
                     variableNode.InitialValue = this.initialValueTextBox.Text;
                     variableNode.CurrentValue = this.currentValueTextBox.Text;
                 }
@@ -510,7 +510,7 @@ namespace Roro.Activities
                         {
                             Name = row.Cells[0].Value.ToString(),
                             Type = row.Cells[1].Value.ToString(),
-                            Value = row.Cells[2].Value.ToString() ?? string.Empty
+                            Value = row.Cells[2].Value?.ToString() ?? string.Empty
                         });
                     }
                     this.targetNode.Inputs = inputs;

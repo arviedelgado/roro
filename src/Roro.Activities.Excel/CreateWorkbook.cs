@@ -4,22 +4,17 @@ namespace Roro.Activities.Excel
 {
     public class CreateWorkbook : ProcessNodeActivity
     {
-        public Output<Text> Path { get; set; }
+        public Output<Text> WorkbookName { get; set; }
 
         public override void Execute(ActivityContext context)
         {
             // inputs
             //
 
-            var bot = ExcelBot.Shared;
-            var xlApp = bot.Get();
-            var xlWbs = xlApp.Workbooks;
-            var xlWb = xlWbs.Add();
-            var path = xlWb.FullName;
-        //    bot.Release(xlWb, xlWbs);
+            var workbookName = ExcelBot.Shared.GetInstance().Workbooks.Add().Name.ToString();
 
             // outputs
-            context.Set(this.Path, path);
+            context.Set(this.WorkbookName, workbookName);
         }
     }
 }

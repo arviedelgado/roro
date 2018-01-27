@@ -16,9 +16,11 @@ namespace Roro.Activities
         [DataMember]
         public string Name { get; protected set; }
 
+        public abstract object GetValue();
+
         public abstract void SetValue(object value);
 
-        public abstract object GetValue();
+        public abstract string ToExpression();
 
         public static List<DataType> GetCommonTypes()
         {
@@ -96,6 +98,11 @@ namespace Roro.Activities
             }
         }
 
+        public override string ToExpression()
+        {
+            return string.Format("\"{0}\"", this.Value.Replace("\\", "\\\\").Replace("\"", "\\\""));
+        }
+
         public static implicit operator String(Text item) => item.Value;
 
         public static implicit operator Text(String item) => new Text(item);
@@ -117,6 +124,11 @@ namespace Roro.Activities
             {
                 throw;
             }
+        }
+
+        public override string ToExpression()
+        {
+            return string.Format("{0}", this.Value);
         }
 
         public static implicit operator Decimal(Number item) => item.Value;
@@ -144,6 +156,11 @@ namespace Roro.Activities
             }
         }
 
+        public override string ToExpression()
+        {
+            return string.Format("{0}", this.Value.ToString().ToLower());
+        }
+
         public static implicit operator Boolean(TrueFalse item) => item.Value;
 
         public static implicit operator TrueFalse(Boolean item) => new TrueFalse(item);
@@ -165,6 +182,11 @@ namespace Roro.Activities
             {
                 throw;
             }
+        }
+
+        public override string ToExpression()
+        {
+            return string.Format("DateTime.Parse(\"{0}\")", this.Value.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
         public static implicit operator System.DateTime(DateTime item) => item.Value;
@@ -190,6 +212,11 @@ namespace Roro.Activities
             }
         }
 
+        public override string ToExpression()
+        {
+            throw new NotImplementedException();
+        }
+
         public static implicit operator DataTable(Collection item) => item.Value;
 
         public static implicit operator Collection(DataTable item) => new Collection(item);
@@ -212,6 +239,11 @@ namespace Roro.Activities
             {
                 throw;
             }
+        }
+
+        public override string ToExpression()
+        {
+            throw new NotImplementedException();
         }
 
         public static implicit operator SecureString(Password item) => item.Value;

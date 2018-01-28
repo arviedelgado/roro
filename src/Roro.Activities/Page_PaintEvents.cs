@@ -7,12 +7,14 @@ namespace Roro.Activities
 {
     public partial class Page
     {
-        internal void Render()
+        public void Show(Panel parent)
         {
-            this.canvas.Invalidate();
+            parent.Controls.Clear();
+            this.Canvas.Parent = parent;
+            this.Canvas.Invalidate();
         }
 
-        private void OnPaint(object sender, PaintEventArgs e)
+        private void Canvas_Paint(object sender, PaintEventArgs e)
         {
             var g = e.Graphics;
 
@@ -86,8 +88,8 @@ namespace Roro.Activities
 
         private void RenderNodes(Graphics g)
         {
-            var width = this.canvas.Parent.ClientSize.Width;
-            var height = this.canvas.Parent.ClientSize.Height;
+            var width = this.Canvas.Parent.ClientSize.Width;
+            var height = this.Canvas.Parent.ClientSize.Height;
 
             this.RenderedNodes.Clear();
             foreach (var node in this.Nodes)
@@ -111,7 +113,7 @@ namespace Roro.Activities
                 height = Math.Max(height, r.Bottom + PageRenderOptions.GridSize * 5);
             }
 
-            this.canvas.Size = new Size(width, height);
+            this.Canvas.Size = new Size(width, height);
         }
     }
 }

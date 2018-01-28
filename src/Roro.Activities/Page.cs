@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Roro.Activities
 {
     [DataContract]
-    public partial class Page
+    public partial class Page : IDisposable
     {
         [DataMember]
         public Guid Id { get; private set; }
@@ -27,7 +27,9 @@ namespace Roro.Activities
 
         internal List<VariableNode> VariableNodes => this.Nodes.Where(x => x is VariableNode).Cast<VariableNode>().ToList();
 
-        public Page() => Initialize();
+        private Panel Canvas { get; set; }
+
+        private Page() => Initialize();
 
         [OnDeserializing]
         private void Initialize(StreamingContext context = default)
@@ -45,14 +47,23 @@ namespace Roro.Activities
             this.AddNode(typeof(EndNodeActivity).FullName,
                 PageRenderOptions.GridSize * 15,
                 PageRenderOptions.GridSize * 15);
+
+            this.Canvas = new Panel();
+            this.Canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.Canvas, true);
+            this.Canvas.Paint += Canvas_Paint;
+            this.Canvas.MouseDown += Canvas_MouseDown;
+            this.Canvas.KeyDown += Canvas_KeyDown;
+            this.Canvas.AllowDrop = true;
+            this.Canvas.DragEnter += Canvas_DragEnter;
+            this.Canvas.DragDrop += Canvas_DragDrop;
         }
 
-        public Node GetNodeById(Guid id)
+        private Node GetNodeById(Guid id)
         {
             return this.Nodes.FirstOrDefault(x => x.Id == id);
         }
 
-        public Node GetNodeFromPoint(Point pt)
+        private Node GetNodeFromPoint(Point pt)
         {
             if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt.X, pt.Y)) is KeyValuePair<Node, GraphicsPath> item)
             {
@@ -61,7 +72,7 @@ namespace Roro.Activities
             return null;
         }
 
-        public Node AddNode(string activityId, int x, int y)
+        private Node AddNode(string activityId, int x, int y)
         {
             if (this.Started)
             {
@@ -135,7 +146,7 @@ namespace Roro.Activities
             return node;
         }
 
-        public void RemoveNode(Node node)
+        private void RemoveNode(Node node)
         {
             if (node is StartNode)
             {
@@ -163,22 +174,9 @@ namespace Roro.Activities
             }
         }
 
-        #region Attach/Detach Events
-
-        private Control canvas;
-
-        public void AttachEvents(Panel canvas)
+        public void Dispose()
         {
-            this.canvas = canvas;
-            this.canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.canvas, true);
-            this.canvas.Paint += OnPaint;
-            this.canvas.MouseDown += Canvas_MouseDown;
-            this.canvas.KeyDown += Canvas_KeyDown;
-            this.canvas.AllowDrop = true;
-            this.canvas.DragEnter += Canvas_DragEnter;
-            this.canvas.DragDrop += Canvas_DragDrop;
+            throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

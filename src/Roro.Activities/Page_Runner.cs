@@ -52,7 +52,7 @@ namespace Roro.Activities
                 {
                     Console.WriteLine("Executing {0} - {1}", node.Id, node.Name);
                     this.DebugNode = node;
-                    this.Render();
+                    this.Canvas.Invalidate();
                     var nextNodeId = node.Execute(this.VariableNodes);
                     if (this.GetNodeById(nextNodeId) is Node nextNode)
                     {

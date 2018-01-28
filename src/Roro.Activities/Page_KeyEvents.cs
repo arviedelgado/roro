@@ -27,7 +27,7 @@ namespace Roro.Activities
                 this.RemoveNode(selectedNode);
             }
             this.SelectedNodes.Clear();
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         private void SelectAllNodes()
@@ -37,7 +37,7 @@ namespace Roro.Activities
             {
                 this.SelectedNodes.Add(node);
             }
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
     }
 }

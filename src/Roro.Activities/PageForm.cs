@@ -12,16 +12,14 @@ namespace Roro.Activities
         {
             this.activityPanel = new System.Windows.Forms.Panel();
             this.pagePanel = new System.Windows.Forms.Panel();
-            this.pageCanvas = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.saveButton = new System.Windows.Forms.Button();
+            this.newButton = new System.Windows.Forms.Button();
             this.openButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.stopButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
-            this.newButton = new System.Windows.Forms.Button();
-            this.pagePanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -40,19 +38,11 @@ namespace Roro.Activities
             // 
             this.pagePanel.AutoScroll = true;
             this.pagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pagePanel.Controls.Add(this.pageCanvas);
             this.pagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pagePanel.Location = new System.Drawing.Point(256, 41);
             this.pagePanel.Name = "pagePanel";
             this.pagePanel.Size = new System.Drawing.Size(722, 514);
             this.pagePanel.TabIndex = 0;
-            // 
-            // pageCanvas
-            // 
-            this.pageCanvas.Location = new System.Drawing.Point(0, 0);
-            this.pageCanvas.Name = "pageCanvas";
-            this.pageCanvas.Size = new System.Drawing.Size(538, 360);
-            this.pageCanvas.TabIndex = 2;
             // 
             // tableLayoutPanel1
             // 
@@ -95,6 +85,17 @@ namespace Roro.Activities
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            // 
+            // newButton
+            // 
+            this.newButton.Location = new System.Drawing.Point(3, 3);
+            this.newButton.Name = "newButton";
+            this.newButton.Size = new System.Drawing.Size(70, 23);
+            this.newButton.TabIndex = 2;
+            this.newButton.TabStop = false;
+            this.newButton.Text = "New";
+            this.newButton.UseVisualStyleBackColor = true;
+            this.newButton.Click += new System.EventHandler(this.NewButton_Click);
             // 
             // openButton
             // 
@@ -139,17 +140,6 @@ namespace Roro.Activities
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
-            // newButton
-            // 
-            this.newButton.Location = new System.Drawing.Point(3, 3);
-            this.newButton.Name = "newButton";
-            this.newButton.Size = new System.Drawing.Size(70, 23);
-            this.newButton.TabIndex = 2;
-            this.newButton.TabStop = false;
-            this.newButton.Text = "New";
-            this.newButton.UseVisualStyleBackColor = true;
-            this.newButton.Click += new System.EventHandler(this.NewButton_Click);
-            // 
             // PageForm
             // 
             this.ClientSize = new System.Drawing.Size(984, 561);
@@ -159,7 +149,6 @@ namespace Roro.Activities
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Roro - Free RPA Software";
             this.Load += new System.EventHandler(this.PageForm_Load);
-            this.pagePanel.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -174,13 +163,15 @@ namespace Roro.Activities
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel1;
         private Button startButton;
-        private Panel pageCanvas;
         private Button stopButton;
         private Panel panel2;
         private Button saveButton;
         private Button openButton;
         private Button newButton;
+
         private Page page;
+
+        private string Title = "Roro - Free RPA Software";
 
         public static PageForm Create()
         {
@@ -193,52 +184,52 @@ namespace Roro.Activities
             this.newButton.PerformClick();
         }
 
-        private void StartButton_Click(object sender, System.EventArgs e)
+        private void NewButton_Click(object sender, EventArgs e)
         {
-            this.page.Start();
+            if (this.page == null || this.page.Close())
+            {
+                this.page = Page.Create();
+                this.page.Show(this.pagePanel);
+                this.Text = string.Format("{0}", this.Title);
+            }
         }
-
-        private void StopButton_Click(object sender, EventArgs e)
-        {
-            this.page.Stop();
-        }
-
 
         private void OpenButton_Click(object sender, EventArgs e)
         {
-            using (var f = new OpenFileDialog())
+            if (this.page == null || this.page.Close())
             {
-                f.Filter = "Roro Workflow (*.xml)|*.xml";
-                if (f.ShowDialog() == DialogResult.OK)
+                if (Page.Open() is Page newPage)
                 {
-                    var xmlPath = f.FileName;
-                    var xmlData = File.ReadAllText(xmlPath);
-                    this.page = DataContractSerializerHelper.ToObject<Page>(xmlData);
-                    this.page.AttachEvents(this.pageCanvas);
-                    this.page.Render();
+                    this.page = newPage;
+                    this.page.Show(this.pagePanel);
+                    this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
                 }
             }
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            using (var f = new SaveFileDialog())
+            if (this.page != null)
             {
-                f.Filter = "Roro Workflow (*.xml)|*.xml";
-                if (f.ShowDialog() == DialogResult.OK)
-                {
-                    var xmlPath = f.FileName;
-                    var xmlData = DataContractSerializerHelper.ToString(this.page);
-                    File.WriteAllText(xmlPath, xmlData);
-                }
+                this.page.Save();
+                this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
             }
         }
 
-        private void NewButton_Click(object sender, EventArgs e)
+        private void StartButton_Click(object sender, System.EventArgs e)
         {
-            this.page = new Page();
-            this.page.AttachEvents(this.pageCanvas);
-            this.page.Render();
+            if (this.page != null)
+            {
+                this.page.Start();
+            }
+        }
+
+        private void StopButton_Click(object sender, EventArgs e)
+        {
+            if (this.page != null)
+            {
+                this.page.Stop();
+            }
         }
     }
 }

@@ -102,10 +102,16 @@ namespace Roro.Activities
                 .Where(x => !x.IsAbstract);
         }
 
-        public static Activity CreateInstance(string id)
+        public static Activity CreateInstance(string activityId)
         {
-            var activityType = Activity.GetAllActivities().Where(x => x.FullName == id).First();
-            return Activator.CreateInstance(activityType) as Activity;
+            if (Activity.GetAllActivities().Where(x => x.FullName == activityId).FirstOrDefault() is Type activityType)
+            {
+                return Activator.CreateInstance(activityType) as Activity;
+            }
+            else
+            {
+                throw new TypeLoadException(string.Format("Cannot create instance of '{0}' activity", activityId));
+            }
         }
     }
 }

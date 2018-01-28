@@ -23,18 +23,18 @@ namespace Roro.Activities
         {
             // Focus the Canvas to allow KeyEvents
             // Handle the scrollbar-resets-on-focus
-            var pagePanel = this.canvas.Parent as Panel;
+            var pagePanel = this.Canvas.Parent as Panel;
             var pagePanelScrollPosition = pagePanel.AutoScrollPosition;
-            this.canvas.Focus();
+            this.Canvas.Focus();
             pagePanel.AutoScrollPosition = new Point(-pagePanelScrollPosition.X, -pagePanelScrollPosition.Y);
 
             // Handle Double Click
-            this.canvas.MouseDoubleClick -= Canvas_MouseDoubleClick;
-            this.canvas.MouseDoubleClick += Canvas_MouseDoubleClick;
+            this.Canvas.MouseDoubleClick -= Canvas_MouseDoubleClick;
+            this.Canvas.MouseDoubleClick += Canvas_MouseDoubleClick;
 
             // Pick Node from Point
-            this.canvas.MouseMove += this.SelectNodeFromPointCancel;
-            this.canvas.MouseUp += this.SelectNodeFromPointEnd;
+            this.Canvas.MouseMove += this.SelectNodeFromPointCancel;
+            this.Canvas.MouseUp += this.SelectNodeFromPointEnd;
             if (this.GetNodeFromPoint(e.Location) is Node node)
             {
                 if (node.GetPortFromPoint(e.Location) is Port port)
@@ -42,8 +42,8 @@ namespace Roro.Activities
                     // Link Nodes
                     if (node.CanStartLink)
                     {
-                        this.canvas.MouseMove += this.LinkNodeStart;
-                        this.canvas.MouseUp += this.LinkNodeCancel;
+                        this.Canvas.MouseMove += this.LinkNodeStart;
+                        this.Canvas.MouseUp += this.LinkNodeCancel;
                         this.LinkNodeStartPort = port;
                         this.LinkNodeEndPoint = Point.Empty;
                     }
@@ -51,8 +51,8 @@ namespace Roro.Activities
                 else
                 {
                     // Move Nodes
-                    this.canvas.MouseMove += this.MoveNodeStart;
-                    this.canvas.MouseUp += this.MoveNodeCancel;
+                    this.Canvas.MouseMove += this.MoveNodeStart;
+                    this.Canvas.MouseUp += this.MoveNodeCancel;
                     this.MoveNodeStartPoint = e.Location;
                     this.MoveNodeOffsetPoint = Point.Empty;
                 }
@@ -60,8 +60,8 @@ namespace Roro.Activities
             else
             {
                 // Pick Nodes from Rectangle
-                this.canvas.MouseMove += this.SelectNodesFromRectStart;
-                this.canvas.MouseUp += this.SelectNodesFromRectCancel;
+                this.Canvas.MouseMove += this.SelectNodesFromRectStart;
+                this.Canvas.MouseUp += this.SelectNodesFromRectCancel;
                 this.SelectNodeStartPoint = e.Location;
                 this.SelectNodeRect = Rectangle.Empty;
             }
@@ -85,7 +85,7 @@ namespace Roro.Activities
                 var canvas = sender as Control;
                 var location = canvas.PointToClient(new Point(e.X, e.Y));
                 this.AddNode(treeNode.Name, location.X, location.Y);
-                this.canvas.Invalidate();
+                this.Canvas.Invalidate();
             }
         }
 
@@ -98,28 +98,28 @@ namespace Roro.Activities
 
         private void LinkNodeCancel(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseMove -= this.LinkNodeStart;
-            this.canvas.MouseUp -= this.LinkNodeCancel;
+            this.Canvas.MouseMove -= this.LinkNodeStart;
+            this.Canvas.MouseUp -= this.LinkNodeCancel;
         }
 
         private void LinkNodeStart(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseMove -= this.LinkNodeStart;
-            this.canvas.MouseUp -= this.LinkNodeCancel;
-            this.canvas.MouseMove += this.LinkingNode;
-            this.canvas.MouseUp += this.LinkNodeEnd;
+            this.Canvas.MouseMove -= this.LinkNodeStart;
+            this.Canvas.MouseUp -= this.LinkNodeCancel;
+            this.Canvas.MouseMove += this.LinkingNode;
+            this.Canvas.MouseUp += this.LinkNodeEnd;
         }
 
         private void LinkingNode(object sender, MouseEventArgs e)
         {
             this.LinkNodeEndPoint = e.Location;
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         private void LinkNodeEnd(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseMove -= this.LinkingNode;
-            this.canvas.MouseUp -= this.LinkNodeEnd;
+            this.Canvas.MouseMove -= this.LinkingNode;
+            this.Canvas.MouseUp -= this.LinkNodeEnd;
             this.LinkNodeEndPoint = Point.Empty;
             //
             if (this.GetNodeFromPoint(e.Location) is Node node && node.CanEndLink)
@@ -130,7 +130,7 @@ namespace Roro.Activities
             {
                 this.LinkNodeStartPort.NextNodeId = Guid.Empty;
             }
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         #endregion
@@ -139,17 +139,17 @@ namespace Roro.Activities
 
         private void MoveNodeCancel(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseMove -= this.MoveNodeStart;
-            this.canvas.MouseUp -= this.MoveNodeCancel;
+            this.Canvas.MouseMove -= this.MoveNodeStart;
+            this.Canvas.MouseUp -= this.MoveNodeCancel;
         }
 
         private void MoveNodeStart(object sender, MouseEventArgs e)
         {
-            this.canvas.Cursor = Cursors.SizeAll;
-            this.canvas.MouseMove -= this.MoveNodeStart;
-            this.canvas.MouseUp -= this.MoveNodeCancel;
-            this.canvas.MouseMove += this.MovingNode;
-            this.canvas.MouseUp += this.MoveNodeEnd;
+            this.Canvas.Cursor = Cursors.SizeAll;
+            this.Canvas.MouseMove -= this.MoveNodeStart;
+            this.Canvas.MouseUp -= this.MoveNodeCancel;
+            this.Canvas.MouseMove += this.MovingNode;
+            this.Canvas.MouseUp += this.MoveNodeEnd;
             //
             var nodeId = this.GetNodeFromPoint(this.MoveNodeStartPoint);
             if (this.SelectedNodes.Contains(nodeId))
@@ -161,7 +161,7 @@ namespace Roro.Activities
                 this.SelectedNodes.Clear();
                 this.SelectedNodes.Add(nodeId);
             }
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         private void MovingNode(object sender, MouseEventArgs e)
@@ -169,14 +169,14 @@ namespace Roro.Activities
             var offsetX = e.X - this.MoveNodeStartPoint.X;
             var offsetY = e.Y - this.MoveNodeStartPoint.Y;
             this.MoveNodeOffsetPoint = new Point(offsetX, offsetY);
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         private void MoveNodeEnd(object sender, MouseEventArgs e)
         {
-            this.canvas.Cursor = Cursors.Default;
-            this.canvas.MouseMove -= this.MovingNode;
-            this.canvas.MouseUp -= this.MoveNodeEnd;
+            this.Canvas.Cursor = Cursors.Default;
+            this.Canvas.MouseMove -= this.MovingNode;
+            this.Canvas.MouseUp -= this.MoveNodeEnd;
             //
             var offsetX = (int)Math.Round((double)(e.X - this.MoveNodeStartPoint.X) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
             var offsetY = (int)Math.Round((double)(e.Y - this.MoveNodeStartPoint.Y) / PageRenderOptions.GridSize) * PageRenderOptions.GridSize;
@@ -188,7 +188,7 @@ namespace Roro.Activities
                 node.SetBounds(rect);
             }
             this.MoveNodeOffsetPoint = Point.Empty;
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         #endregion
@@ -197,14 +197,14 @@ namespace Roro.Activities
 
         private void SelectNodeFromPointCancel(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseMove -= this.SelectNodeFromPointCancel;
-            this.canvas.MouseUp -= this.SelectNodeFromPointEnd;
+            this.Canvas.MouseMove -= this.SelectNodeFromPointCancel;
+            this.Canvas.MouseUp -= this.SelectNodeFromPointEnd;
         }
 
         private void SelectNodeFromPointEnd(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseMove -= this.SelectNodeFromPointCancel;
-            this.canvas.MouseUp -= this.SelectNodeFromPointEnd;
+            this.Canvas.MouseMove -= this.SelectNodeFromPointCancel;
+            this.Canvas.MouseUp -= this.SelectNodeFromPointEnd;
             //
             var node = this.GetNodeFromPoint(e.Location);
             var ctrl = Control.ModifierKeys.HasFlag(Keys.Control);
@@ -243,7 +243,7 @@ namespace Roro.Activities
                 }
                 this.SelectedNodes.Add(node);
             }
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         #endregion
@@ -252,21 +252,21 @@ namespace Roro.Activities
 
         private void SelectNodesFromRectCancel(object sender, MouseEventArgs e)
         {
-            this.canvas.MouseMove -= this.SelectNodesFromRectStart;
-            this.canvas.MouseUp -= this.SelectNodesFromRectCancel;
+            this.Canvas.MouseMove -= this.SelectNodesFromRectStart;
+            this.Canvas.MouseUp -= this.SelectNodesFromRectCancel;
         }
 
         private void SelectNodesFromRectStart(object sender, MouseEventArgs e)
         {
-            this.canvas.Cursor = Cursors.Cross;
-            this.canvas.MouseMove -= this.SelectNodesFromRectStart;
-            this.canvas.MouseUp -= this.SelectNodesFromRectCancel;
-            this.canvas.MouseMove += this.SelectingNodesFromRect;
-            this.canvas.MouseUp += this.SelectNodesFromRectEnd;
+            this.Canvas.Cursor = Cursors.Cross;
+            this.Canvas.MouseMove -= this.SelectNodesFromRectStart;
+            this.Canvas.MouseUp -= this.SelectNodesFromRectCancel;
+            this.Canvas.MouseMove += this.SelectingNodesFromRect;
+            this.Canvas.MouseUp += this.SelectNodesFromRectEnd;
             //
             this.SelectNodeStartPoint = e.Location;
             this.SelectNodeRect = Rectangle.Empty;
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         private void SelectingNodesFromRect(object sender, MouseEventArgs e)
@@ -276,14 +276,14 @@ namespace Roro.Activities
             var w = Math.Abs(this.SelectNodeStartPoint.X - e.X);
             var h = Math.Abs(this.SelectNodeStartPoint.Y - e.Y);
             this.SelectNodeRect = new Rectangle(x, y, w, h);
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         private void SelectNodesFromRectEnd(object sender, MouseEventArgs e)
         {
-            this.canvas.Cursor = Cursors.Default;
-            this.canvas.MouseMove -= this.SelectingNodesFromRect;
-            this.canvas.MouseUp -= this.SelectNodesFromRectEnd;
+            this.Canvas.Cursor = Cursors.Default;
+            this.Canvas.MouseMove -= this.SelectingNodesFromRect;
+            this.Canvas.MouseUp -= this.SelectNodesFromRectEnd;
             //
             if (!Control.ModifierKeys.HasFlag(Keys.Control))
             {
@@ -298,7 +298,7 @@ namespace Roro.Activities
                 }
             }
             this.SelectNodeRect = Rectangle.Empty;
-            this.canvas.Invalidate();
+            this.Canvas.Invalidate();
         }
 
         #endregion

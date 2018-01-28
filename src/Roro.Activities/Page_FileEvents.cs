@@ -8,7 +8,7 @@ namespace Roro.Activities
     {
         public string FilePath { get; private set; }
 
-        public string FileName => new FileInfo(this.FilePath).Name;
+        public string FileName => string.IsNullOrEmpty(this.FilePath) ? "New*" : new FileInfo(this.FilePath).Name;
 
         private const string FileDialogFilter = "Roro Workflow (*.xml)|*.xml";
 
@@ -71,6 +71,9 @@ namespace Roro.Activities
 
         public bool Close()
         {
+            // TODO: ask user to save if has changes.
+            // Show asterisks on filename as well to indicate there are unsaved changes.
+            // Add the mentioned features when we have Undo Redo feature.
             return true;
         }
     }

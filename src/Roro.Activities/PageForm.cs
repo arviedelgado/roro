@@ -7,7 +7,6 @@ namespace Roro.Activities
 {
     public class PageForm : Form
     {
-
         private void InitializeComponent()
         {
             this.activityPanel = new System.Windows.Forms.Panel();
@@ -149,6 +148,7 @@ namespace Roro.Activities
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Roro - Free RPA Software";
             this.Load += new System.EventHandler(this.PageForm_Load);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PageForm_KeyUp);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -190,7 +190,7 @@ namespace Roro.Activities
             {
                 this.page = Page.Create();
                 this.page.Show(this.pagePanel);
-                this.Text = string.Format("{0}", this.Title);
+                this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
             }
         }
 
@@ -229,6 +229,24 @@ namespace Roro.Activities
             if (this.page != null)
             {
                 this.page.Stop();
+            }
+        }
+
+        private void PageForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
+                case Keys.Control | Keys.N:
+                    this.newButton.PerformClick();
+                    break;
+
+                case Keys.Control | Keys.O:
+                    this.openButton.PerformClick();
+                    break;
+
+                case Keys.Control | Keys.S:
+                    this.saveButton.PerformClick();
+                    break;
             }
         }
     }

@@ -1,68 +1,49 @@
-﻿// BSD 2-Clause License
-
-// Copyright(c) 2017, Arvie Delgado
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-
-// * Redistributions of source code must retain the above copyright notice, this
-//   list of conditions and the following disclaimer.
-
-// * Redistributions in binary form must reproduce the above copyright notice,
-//   this list of conditions and the following disclaimer in the documentation
-//   and/or other materials provided with the distribution.
-
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+﻿
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.Linq;
 using System.Drawing;
+using System.Linq;
+using System.Windows.Automation;
 
 namespace Roro
 {
     public sealed class WinElement : Element
     {
-        private readonly IntPtr rawElement;
+        private readonly AutomationElement rawElement;
 
-        private WinElement(IntPtr rawElement)
+        private WinElement(AutomationElement rawElement)
         {
             this.rawElement = rawElement;
         }
 
-        [BotProperty]
-        public string Id => this.Invoke<string>();
+        [Property]
+        public string Id => this.rawElement.Current.AutomationId;
 
-        [BotProperty]
-        public string Class => this.Invoke<string>();
+        [Property]
+        public string Class => this.rawElement.Current.ClassName;
 
-        [BotProperty]
-        public string Name => this.Invoke<string>();
+        [Property]
+        public string Name => this.rawElement.Current.Name;
 
-        [BotProperty]
-        public string Type => this.Invoke<WinElementType>().ToString().ToLower();
+        [Property]
+        public string Type => this.rawElement.Current.ControlType.ToString().Split('.').Last().ToLower();
 
-        [BotProperty]
+        [Property]
         public override string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
 
-        public override Rectangle Bounds => this.Invoke<Rectangle>();
+        public override Rectangle Bounds
+        {
+            get
+            {
+                var r = this.rawElement.Current.BoundingRectangle;
+                return new Rectangle((int)r.X, (int)r.Y, (int)r.Width, (int)r.Height);
+            }
+        }
 
-        [BotProperty]
+        [Property]
         public int Index => (this.Parent is WinElement parent ? parent.Children.ToList().IndexOf(this) : 0);
 
-        public int ProcessId => this.Invoke<int>();
+        public int ProcessId => this.rawElement.Current.ProcessId;
 
         public WinElement MainWindow
         {
@@ -95,8 +76,11 @@ namespace Roro
         {
             get
             {
-                IntPtr value = this.Invoke<IntPtr>();
-                return value == IntPtr.Zero ? null : new WinElement(value);
+                if (TreeWalker.RawViewWalker.GetParent(this.rawElement) is AutomationElement rawParent)
+                {
+                    return new WinElement(rawParent);
+                }
+                return null;
             }
         }
 
@@ -105,11 +89,11 @@ namespace Roro
             get
             {
                 var children = new List<WinElement>();
-                IntPtr value = this.Invoke<IntPtr>();
-                while (value != IntPtr.Zero)
+                var rawChild = TreeWalker.RawViewWalker.GetFirstChild(this.rawElement);
+                while (rawChild != null)
                 {
-                    children.Add(new WinElement(value));
-                    value = this.Invoke<IntPtr>(value);
+                    children.Add(new WinElement(rawChild));
+                    rawChild = TreeWalker.RawViewWalker.GetNextSibling(rawChild);
                 }
                 return children;
             }
@@ -134,72 +118,32 @@ namespace Roro
             return null;
         }
 
-        public override bool Equals(object obj) => (obj is WinElement other && this.Invoke<bool>(other.rawElement));
+        public override bool Equals(object obj) => (obj is WinElement other && this.rawElement.Equals(other.rawElement));
 
-        public override int GetHashCode() => base.GetHashCode();
+        public override int GetHashCode() => this.rawElement.GetHashCode();
 
         internal static WinElement GetRoot()
         {
-            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
-            return value == null ? null : new WinElement(value);
+            return new WinElement(AutomationElement.RootElement);
         }
 
         internal static WinElement GetFromFocus()
         {
-            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>();
-            return value == null ? null : new WinElement(value);
+            if (AutomationElement.FocusedElement is AutomationElement rawElement)
+            {
+                return new WinElement(rawElement);
+            }
+            return null;
         }
 
         internal static WinElement GetFromPoint(int screenX, int screenY)
         {
-            IntPtr value = new WinElement(IntPtr.Zero).Invoke<IntPtr>((Int64)screenY << 32 | (Int64)screenX);
-            return value == null ? null : new WinElement(value);
-        }
-
-        [DllImport("WinDriver.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        private static extern void InvokeElement(IntPtr handle, string name, IntPtr result, IntPtr param);
-
-        private T Invoke<T>(object param = null, [CallerMemberName] string name = null)
-        {
-            T result;
-
-            param = param ?? IntPtr.Zero;
-
-            var paramType = param.GetType();
-            if (paramType.IsEnum) paramType = Enum.GetUnderlyingType(paramType);
-
-            var resultType = typeof(T);
-            if (resultType.IsEnum) resultType = Enum.GetUnderlyingType(resultType);
-
-            if (paramType == typeof(string))
+            if (AutomationElement.FromPoint(new System.Windows.Point(screenX, screenY)) is AutomationElement rawElement)
             {
-                IntPtr strParam = Marshal.StringToBSTR(param.ToString());
-                result = Invoke<T>(strParam, name);
-                Marshal.FreeBSTR(strParam);
-                return result;
+                return new WinElement(rawElement);
             }
-
-            if (resultType == typeof(string))
-            {
-                IntPtr strResult = Invoke<IntPtr>(param, name);
-                result = (T)(strResult == IntPtr.Zero ? string.Empty : (object)Marshal.PtrToStringBSTR(strResult));
-                Marshal.FreeBSTR(strResult);
-                return result;
-            }
-
-            IntPtr paramPtr = Marshal.AllocHGlobal(Marshal.SizeOf(paramType));
-            IntPtr resultPtr = Marshal.AllocHGlobal(Marshal.SizeOf(resultType));
-
-            Marshal.StructureToPtr(Convert.ChangeType(param, paramType), paramPtr, false);
-            InvokeElement(this.rawElement, name, resultPtr, paramPtr);
-            result = (T)Marshal.PtrToStructure(resultPtr, resultType);
-
-            Marshal.FreeHGlobal(paramPtr);
-            Marshal.FreeHGlobal(resultPtr);
-
-            return result;
+            return null;
         }
-
 
         //#region BotProperty Extensions
 

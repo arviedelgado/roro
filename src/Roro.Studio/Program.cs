@@ -13,8 +13,6 @@ namespace Roro.Studio
             using (var f = PageForm.Create())
             {
                 Application.EnableVisualStyles();
-                //Application.SetCompatibleTextRenderingDefault(false);
-                //Application.Run(new Form1());
                 f.ShowDialog();
             }
         }

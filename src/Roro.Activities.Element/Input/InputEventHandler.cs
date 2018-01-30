@@ -28,9 +28,5 @@ using System;
 
 namespace Roro
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class BotPropertyAttribute : Attribute
-    {
-
-    }
+    public delegate void InputEventHandler(InputEventArgs e);
 }

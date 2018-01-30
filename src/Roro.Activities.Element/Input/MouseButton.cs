@@ -24,37 +24,19 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 
 namespace Roro
 {
-    public sealed class Property
+    [Flags]
+    public enum MouseButton
     {
-        public string Name { get; }
+        None,
 
-        public object Value { get; }
+        Left,
 
-        public Property(string name, object value)
-        {
-            this.Name = name;
-            this.Value = value;
-        }
+        Right,
 
-        public bool Compare(object otherValue, Type otherType)
-        {
-            var value = this.Value;
-            if (otherType == typeof(string))
-            {
-                return LikeOperator.LikeString(
-                    value.ToString(),
-                    otherValue.ToString().Replace("[", "[[]").Replace("#", "[#]").Replace("?", "[?]"),
-                    Microsoft.VisualBasic.CompareMethod.Binary);
-            }
-            else
-            {
-                return otherValue.Equals(value);
-            }
-        }
+        Middle = 4
     }
 }

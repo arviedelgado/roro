@@ -16,11 +16,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -36,6 +38,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,52 +46,36 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebDriver, Version=3.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Selenium.WebDriver.3.6.0\lib\net45\WebDriver.dll</HintPath>
-    </Reference>
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BotPropertyAttribute.cs" />
-    <Compile Include="Core\ChromeContext.cs" />
-    <Compile Include="Core\Context.cs" />
-    <Compile Include="Core\ElementBot.cs" />
-    <Compile Include="Core\EdgeContext.cs" />
-    <Compile Include="Core\Element.cs" />
-    <Compile Include="Core\Highlighter.cs" />
-    <Compile Include="Core\IEContext.cs" />
-    <Compile Include="Core\Property.cs" />
-    <Compile Include="Core\Query.cs" />
-    <Compile Include="Core\SapContext.cs" />
-    <Compile Include="Core\SapElement.cs" />
-    <Compile Include="Core\SapElementType.cs" />
-    <Compile Include="Core\WebContext.cs" />
-    <Compile Include="Core\WebElement.cs" />
-    <Compile Include="Core\WinContext.cs" />
-    <Compile Include="Core\WinElement.cs" />
-    <Compile Include="Core\WinElementType.cs" />
-    <Compile Include="Core\XObject.cs" />
-    <Compile Include="Press.cs" />
-    <Compile Include="Write.cs" />
-    <Compile Include="GetValue.cs" />
-    <Compile Include="Click.cs" />
-    <Compile Include="SetValue.cs" />
-    <Compile Include="FromPoint.cs" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
       <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
-      <Name>Roro.Core.Activities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roro\Roro.csproj">
-      <Project>{98ecd238-1fdd-40de-a44b-8eb5ff45d16b}</Project>
-      <Name>Roro.Core</Name>
+      <Name>Roro.Activities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
+    <Compile Include="Core\Context.cs" />
+    <Compile Include="Core\Highlighter.cs" />
+    <Compile Include="Core\PropertyAttribute.cs" />
+    <Compile Include="Core\Element.cs" />
+    <Compile Include="Core\Condition.cs" />
+    <Compile Include="Core\Query.cs" />
+    <Compile Include="Core\WinContext.cs" />
+    <Compile Include="Core\WinElement.cs" />
+    <Compile Include="Input\Input_OnInputStateChanged.cs" />
+    <Compile Include="Input\Input_SetInputState.cs" />
+    <Compile Include="Input\Input.cs" />
+    <Compile Include="Input\InputEventArgs.cs" />
+    <Compile Include="Input\InputEventHandler.cs" />
+    <Compile Include="Input\InputEventType.cs" />
+    <Compile Include="Input\KeyboardKey.cs" />
+    <Compile Include="Input\MouseButton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

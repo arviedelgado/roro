@@ -11,18 +11,18 @@ namespace Roro
 
         public abstract Rectangle Bounds { get; }
 
-        public Query GetQuery()
+        public ElementQuery GetQuery()
         {
-            var query = new Query();
+            var query = new ElementQuery();
             var props = this.GetType().GetProperties().Where(attr => Attribute.IsDefined(attr, typeof(Property)));
             foreach (var prop in props)
             {
-                query.Append(prop.Name, prop.GetValue(this));
+                query.Add(prop.Name, prop.GetValue(this));
             }
             return query;
         }
 
-        public bool TryQuery(Query query)
+        public bool TryQuery(ElementQuery query)
         {
             foreach (var condition in query)
             {

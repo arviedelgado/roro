@@ -11,8 +11,10 @@ namespace Roro
 
         public virtual int ProcessId { get; protected set; }
 
+        public abstract Element GetElementFromFocus();
+
         public abstract Element GetElementFromPoint(int screenX, int screenY);
 
-        public abstract IEnumerable<Element> GetElementsFromQuery(Query query);
+        public abstract IEnumerable<Element> GetElementsFromQuery(ElementQuery query);
     }
 }

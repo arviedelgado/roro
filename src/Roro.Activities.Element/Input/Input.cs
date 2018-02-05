@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace Roro
 {
-    public sealed partial class Input
+    public sealed partial class InputDriver
     {
         public event InputEventHandler OnKeyUp = delegate { };
 

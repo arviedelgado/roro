@@ -4,23 +4,23 @@ using System.Data;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security;
+using System.Windows.Forms;
 
 namespace Roro.Activities
 {
-    [DataContract]
     public abstract class DataType
     {
-        [DataMember]
-        public string Id { get; protected set; }
+        public abstract string Id { get; }
 
-        [DataMember]
-        public string Name { get; protected set; }
+        public abstract string Name { get; }
 
         public abstract object GetValue();
 
         public abstract void SetValue(object value);
 
         public abstract string ToExpression();
+
+        public abstract DataGridViewCell CellTemplate { get; }
 
         public static List<DataType> GetCommonTypes()
         {
@@ -51,16 +51,18 @@ namespace Roro.Activities
         }
     }
 
-    [DataContract]
     public abstract class DataType<T> : DataType
     {
-        [DataMember]
+        public override string Id => typeof(T).FullName;
+
+        public override string Name => this.GetType().Name;
+
+        public override DataGridViewCell CellTemplate => new GhostTextBoxCell();
+
         protected T Value { get; set; }
 
         protected DataType(T value)
         {
-            this.Id = typeof(T).FullName;
-            this.Name = this.GetType().Name;
             this.Value = value;
         }
 

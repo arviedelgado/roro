@@ -408,8 +408,21 @@ namespace Roro.Activities
                 foreach (var input in inputs)
                 {
                     this.inputGrid.Rows.Add(input.Name, input.Type, input.Value);
+                    this.inputGrid[this.inputGrid.ColumnCount - 1, this.inputGrid.RowCount - 1] = DataType.GetFromId(input.Type).CellTemplate;
+                    this.inputGrid[this.inputGrid.ColumnCount - 1, this.inputGrid.RowCount - 1].Value = input.Value;
                 }
 
+                this.inputGrid.DataError += (sender, e) =>
+                {
+                    if (this.inputGrid[e.ColumnIndex, e.RowIndex] is VariableCell variableCell)
+                    {
+                        variableCell.OnDataError(sender, e);
+                    }
+                    if (this.inputGrid[e.ColumnIndex, e.RowIndex] is DataTypeCell dataTypeCell)
+                    {
+                        dataTypeCell.OnDataError(sender, e);
+                    }
+                };
                 this.inputsTab.Text = this.inputsTab.Text + " (" + inputs.Count + ")";
             }
             else
@@ -438,6 +451,10 @@ namespace Roro.Activities
                     if (this.outputGrid[e.ColumnIndex, e.RowIndex] is VariableCell variableCell)
                     {
                         variableCell.OnDataError(sender, e);
+                    }
+                    if (this.outputGrid[e.ColumnIndex, e.RowIndex] is DataTypeCell dataTypeCell)
+                    {
+                        dataTypeCell.OnDataError(sender, e);
                     }
                 };
                 this.outputsTab.Text = this.outputsTab.Text + " (" + outputs.Count + ")";

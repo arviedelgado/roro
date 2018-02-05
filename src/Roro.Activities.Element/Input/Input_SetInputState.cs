@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 
 namespace Roro
 {
-    public sealed partial class Input
+    public sealed partial class InputDriver
     {
         #region Native
 

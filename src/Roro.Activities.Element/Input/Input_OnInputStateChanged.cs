@@ -31,7 +31,7 @@ using System.Windows.Forms;
 
 namespace Roro
 {
-    public sealed partial class Input : IDisposable
+    public sealed partial class InputDriver : IDisposable
     {
         #region Native
 
@@ -247,7 +247,7 @@ namespace Roro
             return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
-        public Input()
+        public InputDriver()
         {
             Task.Run(() =>
             {

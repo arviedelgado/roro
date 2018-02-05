@@ -9,19 +9,24 @@ namespace Roro
     {
         public static readonly WinContext Shared = new WinContext();
 
-        public static WinElement Target { get; private set; }
+        public WinElement Target { get; private set; }
 
         private WinContext()
         {
             this.ProcessId = WinElement.GetRoot().ProcessId;
         }
 
-        public override Element GetElementFromPoint(int screenX, int screenY)
+        public override Element GetElementFromFocus()
         {
-            return WinContext.Target = WinElement.GetFromPoint(screenX, screenY);
+            return this.Target = WinElement.GetFromFocus();
         }
 
-        public override IEnumerable<Element> GetElementsFromQuery(Query query)
+        public override Element GetElementFromPoint(int screenX, int screenY)
+        {
+            return this.Target = WinElement.GetFromPoint(screenX, screenY);
+        }
+
+        public override IEnumerable<Element> GetElementsFromQuery(ElementQuery query)
         {
             var result = new List<WinElement>();
             var candidates = new Queue<WinElement>();

@@ -26,7 +26,7 @@ namespace Roro
         public string Name => this.rawElement.Current.Name;
 
         [Property]
-        public string Type => this.rawElement.Current.ControlType.ToString().Split('.').Last().ToLower();
+        public string Type => this.rawElement.Current.ControlType.ProgrammaticName.Split('.').Last().ToLower();
 
         [Property]
         public override string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);

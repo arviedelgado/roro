@@ -12,7 +12,7 @@ namespace Roro
         public bool Enabled { get; set; }
 
         [DataMember]
-        public string Name { get; }
+        public string Name { get; private set; }
 
         [DataMember]
         public object Value { get; set; }

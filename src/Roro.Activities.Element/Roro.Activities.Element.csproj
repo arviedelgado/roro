@@ -60,14 +60,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Click.cs" />
     <Compile Include="Core\Context.cs" />
-    <Compile Include="Core\Highlighter.cs" />
+    <Compile Include="Core\ElementPickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\ElementHighlighterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core\PropertyAttribute.cs" />
     <Compile Include="Core\Element.cs" />
     <Compile Include="Core\Condition.cs" />
-    <Compile Include="Core\Query.cs" />
+    <Compile Include="Core\ElementQuery.cs" />
     <Compile Include="Core\WinContext.cs" />
     <Compile Include="Core\WinElement.cs" />
+    <Compile Include="Core\ElementPickerLinkCell.cs" />
     <Compile Include="Input\Input_OnInputStateChanged.cs" />
     <Compile Include="Input\Input_SetInputState.cs" />
     <Compile Include="Input\Input.cs" />
@@ -76,6 +83,14 @@
     <Compile Include="Input\InputEventType.cs" />
     <Compile Include="Input\KeyboardKey.cs" />
     <Compile Include="Input\MouseButton.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Core\ElementHighlighterForm.resx">
+      <DependentUpon>ElementHighlighterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\ElementPickerForm.resx">
+      <DependentUpon>ElementPickerForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

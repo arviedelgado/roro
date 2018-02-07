@@ -17,7 +17,9 @@ namespace Roro
             var props = this.GetType().GetProperties().Where(attr => Attribute.IsDefined(attr, typeof(Property)));
             foreach (var prop in props)
             {
-                query.Add(prop.Name, prop.GetValue(this));
+                var attr = prop.GetCustomAttributes(typeof(Property), false).First() as Property;
+                var condition = new Condition(prop.Name, prop.GetValue(this), attr.Enabled, attr.Required);
+                query.Add(condition);
             }
             return query;
         }
@@ -26,12 +28,15 @@ namespace Roro
         {
             foreach (var condition in query)
             {
-                var prop = this.GetType().GetProperty(condition.Name);
-                if (condition.Compare(prop.GetValue(this), prop.PropertyType))
+                if (condition.Required || condition.Enabled)
                 {
-                    continue;
+                    var prop = this.GetType().GetProperty(condition.Name);
+                    if (condition.Compare(prop.GetValue(this), prop.PropertyType))
+                    {
+                        continue;
+                    }
+                    return false;
                 }
-                return false;
             }
             return true;
         }

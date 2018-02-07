@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Roro.Activities.Element
 {
@@ -6,17 +7,22 @@ namespace Roro.Activities.Element
     {
         public Input<ElementQuery> Element { get; set; }
 
-        public Input<Number> X { get; set; }
-
-        public Input<Number> Y { get; set; }
-
         public override void Execute(ActivityContext context)
         {
-            var x = context.Get(this.X);
-            var y = context.Get(this.Y);
+            var query = ElementQuery.Get(this.Element);
+            if (query == null)
+                return;
+
+            var elements = WinContext.Shared.GetElementsFromQuery(query);
+            if (elements.Count() == 0)
+                throw new Exception("Element not found.");
+            if (elements.Count() > 1)
+                throw new Exception("Too many elements found.");
+
             using (var input = new InputDriver())
             {
-                input.MouseMove(x, y);
+                var p = elements.First().Bounds.Center();
+                input.MouseMove(p.X, p.Y);
                 input.Click(MouseButton.Left);
             }
         }

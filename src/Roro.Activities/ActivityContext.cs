@@ -28,7 +28,7 @@ namespace Roro.Activities
             return t;
         }
 
-        internal object InternalGet(Input input)
+        private object InternalGet(Input input)
         {
             return Expression.Evaluate(input.Value, this.InVariables);
         }
@@ -38,7 +38,7 @@ namespace Roro.Activities
             this.InternalSet(output, value);
         }
 
-        internal void InternalSet(Output output, object value)
+        private void InternalSet(Output output, object value)
         {
             if (output.Value.Length == 0)
             {

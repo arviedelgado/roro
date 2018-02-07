@@ -6,16 +6,14 @@ namespace Roro
     [AttributeUsage(AttributeTargets.Property)]
     public class Property : Attribute
     {
-        private bool Enabled { get; set; }
+        public bool Enabled { get; }
 
-        public Property() : this(false)
-        {
+        public bool Required { get; }
 
-        }
-
-        public Property(bool Enabled)
+        public Property(bool Enabled = false, bool Required = false)
         {
             this.Enabled = Enabled;
+            this.Required = Required;
         }
     }
 }

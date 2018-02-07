@@ -8,8 +8,11 @@ namespace Roro
     [DataContract]
     public sealed class Condition
     {
-        [DataMember]
-        public bool Enabled { get; set; }
+        public bool Use
+        {
+            get => this.Required || this.Enabled;
+            set => this.Enabled = value;
+        }
 
         [DataMember]
         public string Name { get; private set; }
@@ -17,10 +20,18 @@ namespace Roro
         [DataMember]
         public object Value { get; set; }
 
-        public Condition(string name, object value)
+        [DataMember]
+        public bool Enabled { get; private set; }
+
+        [DataMember]
+        public bool Required { get; private set; }
+
+        public Condition(string name, object value, bool enabled, bool required)
         {
             this.Name = name;
             this.Value = value;
+            this.Enabled = enabled;
+            this.Required = required;
         }
 
         public bool Compare(object otherValue, Type otherType)

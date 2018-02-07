@@ -3,10 +3,10 @@ using Roro.Activities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace Roro
 {
@@ -23,9 +23,9 @@ namespace Roro
 
         public ElementQuery(IEnumerable<Condition> conditions) : base(new List<Condition>(conditions)) { }
 
-        public void Add(string name, object value)
+        public void Add(Condition condition)
         {
-            this.Value.Add(new Condition(name, value));
+            this.Value.Add(condition);
         }
 
         public void Clear()
@@ -56,6 +56,15 @@ namespace Roro
         public override string ToString()
         {
             return DataContractSerializerHelper.ToString(this.Value);
+        }
+
+        public static ElementQuery Get(Input<ElementQuery> input)
+        {
+            var value = input.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(input).ToString();
+            if (value == string.Empty) return null;
+
+            var query = new ElementQuery(DataContractSerializerHelper.ToObject<List<Condition>>(value));
+            return query;
         }
 
     }

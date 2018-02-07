@@ -22,13 +22,13 @@ namespace Roro
         [Property]
         public string Class => this.rawElement.Current.ClassName;
 
-        [Property]
+        [Property(Enabled: true)]
         public string Name => this.rawElement.Current.Name;
 
-        [Property]
+        [Property(Required: true)]
         public string Type => this.rawElement.Current.ControlType.ProgrammaticName.Split('.').Last().ToLower();
 
-        [Property]
+        [Property(Required: true)]
         public override string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
 
         public override Rectangle Bounds

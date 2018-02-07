@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace Roro
@@ -28,7 +26,7 @@ namespace Roro
             {
                 if (p.ShowDialog() == DialogResult.OK)
                 {
-                    this.Value = p.Query;
+                    this.Value = p.Query.ToString();
                 }
             }
         }

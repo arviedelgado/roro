@@ -169,5 +169,11 @@ namespace Roro
         //public int Parent_Height => this.Parent.Height;
 
         //#endregion
+
+
+        public void Focus()
+        {
+            this.rawElement.SetFocus();
+        }
     }
 }

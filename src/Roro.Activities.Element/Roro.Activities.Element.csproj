@@ -60,6 +60,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Write.cs" />
+    <Compile Include="Exists.cs" />
     <Compile Include="Click.cs" />
     <Compile Include="Core\Context.cs" />
     <Compile Include="Core\ElementPickerForm.cs">

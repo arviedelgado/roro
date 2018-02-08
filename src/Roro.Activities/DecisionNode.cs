@@ -24,11 +24,11 @@ namespace Roro.Activities
             activity.Outputs = this.ActivityOutputs;
             if (activity.Execute(new ActivityContext(variables)))
             {
-                return this.Ports.Where(x => x is TruePort).First().Id;
+                return this.Ports.Where(x => x is TruePort).First().NextNodeId;
             }
             else
             {
-                return this.Ports.Where(x => x is FalsePort).First().Id;
+                return this.Ports.Where(x => x is FalsePort).First().NextNodeId;
             }
         }
 

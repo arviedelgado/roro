@@ -22,12 +22,13 @@ namespace Roro
 
         protected override void OnClick(DataGridViewCellEventArgs e)
         {
-            using (var p = new ElementPickerForm(this.Value))
+            using (var f = new ElementPickerForm(this.Value))
             {
-                if (p.ShowDialog() == DialogResult.OK)
+                if (f.ShowDialog() == DialogResult.OK)
                 {
-                    this.Value = p.Query.ToString();
+                    this.Value = f.Query.ToString();
                 }
+                this.DataGridView.FindForm().Activate();
             }
         }
     }

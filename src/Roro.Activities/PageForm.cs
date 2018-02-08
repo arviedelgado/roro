@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Roro.Activities
@@ -17,6 +18,7 @@ namespace Roro.Activities
             this.newButton = new System.Windows.Forms.Button();
             this.openButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.consoleButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
@@ -109,6 +111,7 @@ namespace Roro.Activities
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.consoleButton);
             this.panel1.Controls.Add(this.stopButton);
             this.panel1.Controls.Add(this.startButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -116,6 +119,19 @@ namespace Roro.Activities
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(722, 29);
             this.panel1.TabIndex = 1;
+            // 
+            // consoleButton
+            // 
+            this.consoleButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.consoleButton.Location = new System.Drawing.Point(649, 3);
+            this.consoleButton.Name = "consoleButton";
+            this.consoleButton.Size = new System.Drawing.Size(70, 23);
+            this.consoleButton.TabIndex = 2;
+            this.consoleButton.TabStop = false;
+            this.consoleButton.Tag = "";
+            this.consoleButton.Text = "Console";
+            this.consoleButton.UseVisualStyleBackColor = true;
+            this.consoleButton.Click += new System.EventHandler(this.ConsoleButton_Click);
             // 
             // stopButton
             // 
@@ -170,7 +186,7 @@ namespace Roro.Activities
         private Button newButton;
 
         private Page page;
-
+        private Button consoleButton;
         private string Title = "Roro - Free RPA Software";
 
         public static PageForm Create()
@@ -180,6 +196,7 @@ namespace Roro.Activities
 
         private void PageForm_Load(object sender, System.EventArgs e)
         {
+            this.consoleButton.PerformClick();
             ActivityForm.Create().Parent = this.activityPanel;
             this.newButton.PerformClick();
         }
@@ -248,6 +265,22 @@ namespace Roro.Activities
                     this.saveButton.PerformClick();
                     break;
             }
+        }
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+
+        private void ConsoleButton_Click(object sender, EventArgs e)
+        {
+            var visible = this.consoleButton.Tag is bool tag ? tag : true;
+            ShowWindow(GetConsoleWindow(), visible ? SW_HIDE : SW_SHOW);
+            this.consoleButton.Tag = !visible;
         }
     }
 }

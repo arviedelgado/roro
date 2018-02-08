@@ -52,6 +52,8 @@
     <Compile Include="ActivityOutput.cs" />
     <Compile Include="DataType.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="LabelCell.cs" />
+    <Compile Include="LabelColumn.cs" />
     <Compile Include="Page_FileEvents.cs" />
     <Compile Include="VariableNodeForm.cs">
       <SubType>Form</SubType>

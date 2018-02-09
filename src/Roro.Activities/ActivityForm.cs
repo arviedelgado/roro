@@ -141,12 +141,8 @@ namespace Roro.Activities
                     {
                         nodeText += "?";
                     }
-                    this.activityTreeView.Nodes[groupKey].Nodes.Add(type.FullName, nodeText).EnsureVisible();
+                    this.activityTreeView.Nodes[groupKey].Nodes.Add(type.FullName, nodeText);
                 }
-            }
-            if (this.activityTreeView.Nodes.Count > 0)
-            {
-                this.activityTreeView.Nodes[0].EnsureVisible();
             }
             this.activityTreeView.EndUpdate();
         }

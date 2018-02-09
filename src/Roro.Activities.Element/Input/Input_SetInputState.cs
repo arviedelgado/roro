@@ -125,12 +125,12 @@ namespace Roro
                     {
                         input.ki.wScan = (UInt16)(-(Int16)(e.Key));
                         input.ki.dwFlags = KEYEVENTF.KEYEVENTF_UNICODE;
-                        input.ki.wVk = (UInt16)(VkKeyScanEx((Char)input.ki.wScan, GetKeyboardLayout(0)) & 0xFF);
+                    //  input.ki.wVk = (UInt16)(VkKeyScanEx((Char)input.ki.wScan, GetKeyboardLayout(0)) & 0xFF);
                     }
                     else
                     {
-                        input.ki.wVk = (UInt16)((Int16)e.Key & 0xFF); // LOBYTE
-                        if (((Int16)(e.Key) >> 8) > 0) // HIBYTE
+                        input.ki.wVk = (UInt16)LOBYTE((Int16)e.Key);
+                        if (HIBYTE((Int16)(e.Key)) > 0)
                         {
                             input.ki.dwFlags |= KEYEVENTF.KEYEVENTF_EXTENDEDKEY;
                         }

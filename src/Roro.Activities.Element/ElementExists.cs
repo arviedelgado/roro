@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Roro.Activities.Element
 {
-    public sealed class Exists : DecisionNodeActivity
+    public sealed class ElementExists : DecisionNodeActivity
     {
         public Input<ElementQuery> Element { get; set; }
 

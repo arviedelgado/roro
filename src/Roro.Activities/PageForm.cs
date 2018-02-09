@@ -215,34 +215,34 @@ namespace Roro.Activities
             this.consoleButton.PerformClick();
             ActivityForm.Create().Parent = this.activityPanel;
             this.newButton.PerformClick();
-            this.page.OnStateChanged += (ss, ee) =>
+            this.page.OnStateChanged += Page_OnStateChanged;
+        }
+
+        private void Page_OnStateChanged(object sender, EventArgs e)
+        {
+            this.Invoke(new Action(() =>
             {
-                this.Invoke(new Action(() =>
+                this.Text = string.Format("{0} - {1} [{2}]", this.page.FileName, this.Title, this.page.State);
+                switch (this.page.State)
                 {
-                    this.Text = string.Format("{0} - {1} [{2}]", this.page.FileName, this.Title, this.page.State);
-                    switch (this.page.State)
-                    {
-                        case PageState.Running:
-                            this.runButton.Enabled = false;
-                            this.pauseButton.Enabled = true;
-                            this.stopButton.Enabled = true;
-                            break;
-                        case PageState.Paused:
-                            this.runButton.Enabled = true;
-                            this.pauseButton.Enabled = false;
-                            this.stopButton.Enabled = true;
-                            break;
-                        case PageState.Stopped:
-                        case PageState.Completed:
-                            this.runButton.Enabled = true;
-                            this.pauseButton.Enabled = false;
-                            this.stopButton.Enabled = false;
-                            break;
-                    }
-
-
-                }));
-            };
+                    case PageState.Running:
+                        this.runButton.Enabled = false;
+                        this.pauseButton.Enabled = true;
+                        this.stopButton.Enabled = true;
+                        break;
+                    case PageState.Paused:
+                        this.runButton.Enabled = true;
+                        this.pauseButton.Enabled = false;
+                        this.stopButton.Enabled = true;
+                        break;
+                    case PageState.Stopped:
+                    case PageState.Completed:
+                        this.runButton.Enabled = true;
+                        this.pauseButton.Enabled = false;
+                        this.stopButton.Enabled = false;
+                        break;
+                }
+            }));
         }
 
         private void NewButton_Click(object sender, EventArgs e)
@@ -251,6 +251,7 @@ namespace Roro.Activities
             {
                 this.page = Page.Create();
                 this.page.Show(this.pagePanel);
+                this.page.OnStateChanged += Page_OnStateChanged;
                 this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
             }
         }
@@ -263,6 +264,7 @@ namespace Roro.Activities
                 {
                     this.page = newPage;
                     this.page.Show(this.pagePanel);
+                    this.page.OnStateChanged += Page_OnStateChanged;
                     this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
                 }
             }

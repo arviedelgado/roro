@@ -18,13 +18,22 @@ namespace Roro.Activities
     {
         public PageState State { get; private set; }
 
-        public event EventHandler OnStateChanged = delegate { };
-
-        private CancellationTokenSource ctsPause = new CancellationTokenSource();
-
-        private CancellationTokenSource ctsStop = new CancellationTokenSource();
+        public event EventHandler OnStateChanged;
 
         private Node currentNode = null;
+
+        private CancellationTokenSource ctsPause;
+
+        private CancellationTokenSource ctsStop;
+
+        private void Initialize_PageRunner()
+        {
+            this.State = PageState.Stopped;
+            this.OnStateChanged = delegate { };
+            this.currentNode = null;
+            this.ctsPause = new CancellationTokenSource();
+            this.ctsStop = new CancellationTokenSource();
+        }
 
         public void Run()
         {

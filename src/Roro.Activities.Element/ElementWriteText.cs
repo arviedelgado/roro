@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Roro.Activities.Element
 {
-    public sealed class Write : ProcessNodeActivity
+    public sealed class ElementSendKeys : ProcessNodeActivity
     {
         public Input<ElementQuery> Element { get; set; }
 
@@ -24,12 +25,10 @@ namespace Roro.Activities.Element
 
             var text = context.Get(this.Text);
 
-            using (var input = new InputDriver())
-            {
-                var e = elements.First() as WinElement;
-                e.Focus();
-                input.Write(text);
-            }
+            var e = elements.First() as WinElement;
+            e.Focus();
+            SendKeys.SendWait(text);
+
         }
     }
 }

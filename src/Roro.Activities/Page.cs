@@ -56,6 +56,8 @@ namespace Roro.Activities
             this.Canvas.AllowDrop = true;
             this.Canvas.DragEnter += Canvas_DragEnter;
             this.Canvas.DragDrop += Canvas_DragDrop;
+
+            this.Initialize_PageRunner();
         }
 
         private Node GetNodeById(Guid id)

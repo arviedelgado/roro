@@ -15,28 +15,28 @@ namespace Roro
         private Button okButton;
         private Button cancelButton;
         private DataGridView conditionGrid;
-        private DataGridViewCheckBoxColumn conditionEnabledColumn;
-        private DataGridViewTextBoxColumn conditionNameColumn;
         private Button clearButton;
         private Button testButton;
         private SplitContainer splitContainer1;
-        private Label label1;
+        private DataGridViewCheckBoxColumn conditionEnabledColumn;
+        private Activities.LabelColumn conditionNameColumn;
         private DataGridViewTextBoxColumn conditionValueColumn;
+        private Label label1;
 
         private void InitializeComponent()
         {
             this.pickButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.conditionGrid = new System.Windows.Forms.DataGridView();
-            this.conditionEnabledColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.conditionNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.conditionValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.okButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
             this.testButton = new System.Windows.Forms.Button();
             this.clearButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.conditionEnabledColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.conditionNameColumn = new Roro.Activities.LabelColumn();
+            this.conditionValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.conditionGrid)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -87,30 +87,6 @@ namespace Roro
             this.conditionGrid.Size = new System.Drawing.Size(510, 220);
             this.conditionGrid.TabIndex = 2;
             this.conditionGrid.TabStop = false;
-            // 
-            // conditionEnabledColumn
-            // 
-            this.conditionEnabledColumn.DataPropertyName = "Use";
-            this.conditionEnabledColumn.FillWeight = 10F;
-            this.conditionEnabledColumn.HeaderText = "Use";
-            this.conditionEnabledColumn.Name = "conditionEnabledColumn";
-            this.conditionEnabledColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.conditionEnabledColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // conditionNameColumn
-            // 
-            this.conditionNameColumn.DataPropertyName = "Name";
-            this.conditionNameColumn.FillWeight = 30F;
-            this.conditionNameColumn.HeaderText = "Name";
-            this.conditionNameColumn.Name = "conditionNameColumn";
-            // 
-            // conditionValueColumn
-            // 
-            this.conditionValueColumn.DataPropertyName = "Value";
-            this.conditionValueColumn.FillWeight = 60F;
-            this.conditionValueColumn.HeaderText = "Value";
-            this.conditionValueColumn.Name = "conditionValueColumn";
-            this.conditionValueColumn.ReadOnly = true;
             // 
             // okButton
             // 
@@ -163,6 +139,17 @@ namespace Roro
             this.splitContainer1.TabIndex = 6;
             this.splitContainer1.TabStop = false;
             // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.Yellow;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(510, 34);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Press CTRL key to pick the highlighted element";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // testButton
             // 
             this.testButton.Location = new System.Drawing.Point(93, 12);
@@ -185,16 +172,31 @@ namespace Roro
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
-            // label1
+            // conditionEnabledColumn
             // 
-            this.label1.BackColor = System.Drawing.Color.Yellow;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(510, 34);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Press CTRL key to pick the highlighted element";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.conditionEnabledColumn.DataPropertyName = "Use";
+            this.conditionEnabledColumn.FillWeight = 10F;
+            this.conditionEnabledColumn.HeaderText = "Use";
+            this.conditionEnabledColumn.Name = "conditionEnabledColumn";
+            this.conditionEnabledColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.conditionEnabledColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // conditionNameColumn
+            // 
+            this.conditionNameColumn.DataPropertyName = "Name";
+            this.conditionNameColumn.FillWeight = 30F;
+            this.conditionNameColumn.HeaderText = "Name";
+            this.conditionNameColumn.Name = "conditionNameColumn";
+            this.conditionNameColumn.ReadOnly = true;
+            this.conditionNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // conditionValueColumn
+            // 
+            this.conditionValueColumn.DataPropertyName = "Value";
+            this.conditionValueColumn.FillWeight = 60F;
+            this.conditionValueColumn.HeaderText = "Value";
+            this.conditionValueColumn.Name = "conditionValueColumn";
+            this.conditionValueColumn.ReadOnly = true;
             // 
             // ElementPickerForm
             // 

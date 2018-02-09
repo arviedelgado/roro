@@ -30,7 +30,8 @@ namespace Roro
         {
             var result = new List<WinElement>();
             var candidates = new Queue<WinElement>();
-            var targetPath = query.First(x => x.Name == "Path").Value.ToString();
+            var targetPath = query.FirstOrDefault(x => x.Name == "Path")?.Value.ToString();
+            if (targetPath == null) return result;
 
             candidates.Enqueue(WinElement.GetRoot());
             while (candidates.Count > 0)

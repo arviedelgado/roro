@@ -23,25 +23,15 @@ namespace Roro
 
         public ElementQuery(IEnumerable<Condition> conditions) : base(new List<Condition>(conditions)) { }
 
-        public void Add(Condition condition)
-        {
-            this.Value.Add(condition);
-        }
+        public void Add(Condition condition) => this.Value.Add(condition);
 
-        public void Clear()
-        {
-            this.Value.Clear();
-        }
+        public void Clear() => this.Value.Clear();
 
-        public IEnumerator<Condition> GetEnumerator()
-        {
-            return this.Value.GetEnumerator();
-        }
+        public int Count => this.Value.Count;
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        public IEnumerator<Condition> GetEnumerator() => this.Value.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         public override void SetValue(object value)
         {

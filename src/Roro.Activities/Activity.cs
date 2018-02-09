@@ -91,7 +91,8 @@ namespace Roro.Activities
                 .SelectMany(x => x.GetTypes())
                 .Where(x => !x.IsAbstract
                     && (typeof(ProcessNodeActivity).IsAssignableFrom(x)
-                        || typeof(DecisionNodeActivity).IsAssignableFrom(x)));
+                        || typeof(DecisionNodeActivity).IsAssignableFrom(x)))
+                .OrderBy(x => x.FullName);
         }
 
         private static IEnumerable<Type> GetAllActivities()
@@ -99,7 +100,8 @@ namespace Roro.Activities
             Activity.GetExternalActivities();
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
-                .Where(x => !x.IsAbstract);
+                .Where(x => !x.IsAbstract)
+                .OrderBy(x => x.FullName);
         }
 
         public static Activity CreateInstance(string activityId)

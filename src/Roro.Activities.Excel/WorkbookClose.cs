@@ -2,7 +2,7 @@
 
 namespace Roro.Activities.Excel
 {
-    public class CloseWorkbook : ProcessNodeActivity
+    public class WorkbookClose : ProcessNodeActivity
     {
         public Input<Text> WorkbookName { get; set; }
 

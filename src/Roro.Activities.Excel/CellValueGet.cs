@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Roro.Activities.Excel
 {
-    public class SetCellValue : ProcessNodeActivity
+    public class CellValueGet : ProcessNodeActivity
     {
         public Input<Text> WorkbookName { get; set; }
 
@@ -12,7 +13,7 @@ namespace Roro.Activities.Excel
 
         public Input<Number> ColumnIndex { get; set; }
 
-        public Input<Text> CellValue { get; set; }
+        public Output<Text> CellValue { get; set; }
 
         public override void Execute(ActivityContext context)
         {
@@ -21,15 +22,14 @@ namespace Roro.Activities.Excel
             var worksheetName = (string)context.Get(this.WorksheetName);
             var rowIndex = (int)context.Get(this.RowIndex);
             var columnIndex = (int)context.Get(this.ColumnIndex);
-            var cellValue = (string)context.Get(this.CellValue);
-
+       
             var xlApp = ExcelBot.Shared.GetInstance();
             var xlWb = ExcelBot.Shared.GetWorkbook(xlApp, workbookName);
             var xlWs = ExcelBot.Shared.GetWorksheet(xlWb, worksheetName);
-            xlWs.Cells(rowIndex, columnIndex).Value = cellValue;
+            var cellValue = xlWs.Cells(rowIndex, columnIndex).Value?.ToString() ?? string.Empty;
 
             // outputs
-            //
+            context.Set(this.CellValue, cellValue);
         }
     }
 }

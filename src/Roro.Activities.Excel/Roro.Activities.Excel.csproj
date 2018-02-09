@@ -38,10 +38,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CloseWorkbook.cs" />
-    <Compile Include="GetCellValue.cs" />
-    <Compile Include="SetCellValue.cs" />
-    <Compile Include="CreateWorkbook.cs" />
+    <Compile Include="RangeValuePaste.cs" />
+    <Compile Include="RangeValueCopy.cs" />
+    <Compile Include="WorkbookSaveAs.cs" />
+    <Compile Include="WorkbookSave.cs" />
+    <Compile Include="WorksheetCount.cs" />
+    <Compile Include="WorksheetDelete.cs" />
+    <Compile Include="WorksheetCreate.cs" />
+    <Compile Include="WorksheetExists.cs" />
+    <Compile Include="RangeValueGet.cs" />
+    <Compile Include="RangeValueSet.cs" />
+    <Compile Include="WorkbookClose.cs" />
+    <Compile Include="CellValueGet.cs" />
+    <Compile Include="CellValueSet.cs" />
+    <Compile Include="WorkbookCreate.cs" />
     <Compile Include="ExcelBot.cs" />
   </ItemGroup>
   <ItemGroup>

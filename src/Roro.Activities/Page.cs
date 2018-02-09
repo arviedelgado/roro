@@ -74,9 +74,9 @@ namespace Roro.Activities
 
         private Node AddNode(string activityId, int x, int y)
         {
-            if (this.Started)
+            if (this.State == PageState.Running)
             {
-                MessageBox.Show("Cannot add activities while the robot is running.");
+                MessageBox.Show("The robot is currently running.");
                 return null;
             }
 

@@ -20,9 +20,9 @@ namespace Roro.Activities
         {
             foreach (var selectedNode in this.SelectedNodes)
             {
-                if (selectedNode == this.DebugNode)
+                if (selectedNode == this.currentNode)
                 {
-                    this.DebugNode = null;
+                    this.currentNode = null;
                 }
                 this.RemoveNode(selectedNode);
             }

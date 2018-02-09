@@ -18,9 +18,10 @@ namespace Roro.Activities
             this.newButton = new System.Windows.Forms.Button();
             this.openButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pauseButton = new System.Windows.Forms.Button();
             this.consoleButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
-            this.startButton = new System.Windows.Forms.Button();
+            this.runButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -111,14 +112,27 @@ namespace Roro.Activities
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pauseButton);
             this.panel1.Controls.Add(this.consoleButton);
             this.panel1.Controls.Add(this.stopButton);
-            this.panel1.Controls.Add(this.startButton);
+            this.panel1.Controls.Add(this.runButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(256, 6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(722, 29);
             this.panel1.TabIndex = 1;
+            // 
+            // pauseButton
+            // 
+            this.pauseButton.Enabled = false;
+            this.pauseButton.Location = new System.Drawing.Point(79, 3);
+            this.pauseButton.Name = "pauseButton";
+            this.pauseButton.Size = new System.Drawing.Size(70, 23);
+            this.pauseButton.TabIndex = 3;
+            this.pauseButton.TabStop = false;
+            this.pauseButton.Text = "Pause";
+            this.pauseButton.UseVisualStyleBackColor = true;
+            this.pauseButton.Click += new System.EventHandler(this.PauseButton_Click);
             // 
             // consoleButton
             // 
@@ -135,7 +149,8 @@ namespace Roro.Activities
             // 
             // stopButton
             // 
-            this.stopButton.Location = new System.Drawing.Point(79, 3);
+            this.stopButton.Enabled = false;
+            this.stopButton.Location = new System.Drawing.Point(155, 3);
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(70, 23);
             this.stopButton.TabIndex = 1;
@@ -144,16 +159,16 @@ namespace Roro.Activities
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
             // 
-            // startButton
+            // runButton
             // 
-            this.startButton.Location = new System.Drawing.Point(3, 3);
-            this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(70, 23);
-            this.startButton.TabIndex = 0;
-            this.startButton.TabStop = false;
-            this.startButton.Text = "Start";
-            this.startButton.UseVisualStyleBackColor = true;
-            this.startButton.Click += new System.EventHandler(this.StartButton_Click);
+            this.runButton.Location = new System.Drawing.Point(3, 3);
+            this.runButton.Name = "runButton";
+            this.runButton.Size = new System.Drawing.Size(70, 23);
+            this.runButton.TabIndex = 0;
+            this.runButton.TabStop = false;
+            this.runButton.Text = "Run";
+            this.runButton.UseVisualStyleBackColor = true;
+            this.runButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
             // PageForm
             // 
@@ -178,7 +193,7 @@ namespace Roro.Activities
         private Panel activityPanel;
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel1;
-        private Button startButton;
+        private Button runButton;
         private Button stopButton;
         private Panel panel2;
         private Button saveButton;
@@ -187,6 +202,7 @@ namespace Roro.Activities
 
         private Page page;
         private Button consoleButton;
+        private Button pauseButton;
         private string Title = "Roro - Free RPA Software";
 
         public static PageForm Create()
@@ -199,6 +215,34 @@ namespace Roro.Activities
             this.consoleButton.PerformClick();
             ActivityForm.Create().Parent = this.activityPanel;
             this.newButton.PerformClick();
+            this.page.OnStateChanged += (ss, ee) =>
+            {
+                this.Invoke(new Action(() =>
+                {
+                    this.Text = string.Format("{0} - {1} [{2}]", this.page.FileName, this.Title, this.page.State);
+                    switch (this.page.State)
+                    {
+                        case PageState.Running:
+                            this.runButton.Enabled = false;
+                            this.pauseButton.Enabled = true;
+                            this.stopButton.Enabled = true;
+                            break;
+                        case PageState.Paused:
+                            this.runButton.Enabled = true;
+                            this.pauseButton.Enabled = false;
+                            this.stopButton.Enabled = true;
+                            break;
+                        case PageState.Stopped:
+                        case PageState.Completed:
+                            this.runButton.Enabled = true;
+                            this.pauseButton.Enabled = false;
+                            this.stopButton.Enabled = false;
+                            break;
+                    }
+
+
+                }));
+            };
         }
 
         private void NewButton_Click(object sender, EventArgs e)
@@ -233,11 +277,20 @@ namespace Roro.Activities
             }
         }
 
-        private void StartButton_Click(object sender, System.EventArgs e)
+        private void RunButton_Click(object sender, System.EventArgs e)
         {
             if (this.page != null)
             {
-                this.page.Start();
+                this.page.Run();
+            }
+        }
+
+
+        private void PauseButton_Click(object sender, EventArgs e)
+        {
+            if (this.page != null)
+            {
+                this.page.Pause();
             }
         }
 

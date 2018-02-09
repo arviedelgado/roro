@@ -1,85 +1,172 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Roro.Activities
 {
+    public enum PageState
+    {
+        Stopped = 0,
+        Running,
+        Paused,
+        Completed
+    }
+
     public partial class Page
     {
-        private Node DebugNode { get; set; }
+        public PageState State { get; private set; }
 
-        private bool Started { get; set; }
+        public event EventHandler OnStateChanged = delegate { };
 
-        private bool Stopping { get; set; }
+        private CancellationTokenSource ctsPause = new CancellationTokenSource();
 
-        public void Start()
+        private CancellationTokenSource ctsStop = new CancellationTokenSource();
+
+        private Node currentNode = null;
+
+        public void Run()
         {
-            if (this.Started)
+            switch (this.State)
             {
-                MessageBox.Show("The robot is already running.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                case PageState.Running:
+                    MessageBox.Show("The robot is already running.");
+                    Console.WriteLine("The robot is already running.");
+                    break;
+
+                case PageState.Paused:
+                    this.ctsPause = new CancellationTokenSource();
+                    this.ctsStop = new CancellationTokenSource();
+                    this.State = PageState.Running;
+                    this.OnStateChanged.Invoke(null, null);
+                    this.RunNextAsync();
+                    break;
+
+                case PageState.Stopped:
+                case PageState.Completed:
+                    this.currentNode = this.Nodes.First(x => x is StartNode);
+                    this.ctsPause = new CancellationTokenSource();
+                    this.ctsStop = new CancellationTokenSource();
+                    this.State = PageState.Running;
+                    this.OnStateChanged.Invoke(null, null);
+                    this.RunNextAsync();
+                    break;
             }
-            else
+        }
+
+        public void Pause()
+        {
+            switch (this.State)
             {
-                this.Started = true;
-                Console.Clear();
-                Console.WriteLine("INFO: Start.");
-                foreach (var variableNode in this.VariableNodes)
-                {
-                    variableNode.CurrentValue = variableNode.InitialValue;
-                }
-                this.StepNext(this.Nodes.Find(x => x is StartNode));
+                case PageState.Running:
+                    if (this.ctsPause.IsCancellationRequested)
+                    {
+                        MessageBox.Show("The robot is already pausing.");
+                        Console.WriteLine("The robot is already pausing.");
+                    }
+                    else
+                    {
+                        this.ctsPause.Cancel();
+                    }
+                    break;
+
+                case PageState.Paused:
+                    MessageBox.Show("The robot is not running.");
+                    Console.WriteLine("The robot is not running.");
+                    break;
+
+                case PageState.Stopped:
+                case PageState.Completed:
+                    MessageBox.Show("The robot is not running.");
+                    Console.WriteLine("The robot is not running.");
+                    break;
             }
         }
 
         public void Stop()
         {
-            if (this.Started && this.Stopping)
+            switch (this.State)
             {
-                MessageBox.Show("The robot will stop after completing the current activity.. please wait.");
-            }
-            else if (this.Started)
-            {
-                this.Stopping = true;
+                case PageState.Running:
+                    if (this.ctsStop.IsCancellationRequested)
+                    {
+                        MessageBox.Show("The robot is already stopping.");
+                        Console.WriteLine("The robot is already stopping.");
+                    }
+                    else
+                    {
+                        this.ctsStop.Cancel();
+                    }
+                    break;
+
+                case PageState.Paused:
+                    this.State = PageState.Stopped;
+                    this.OnStateChanged.Invoke(null, null);
+                    break;
+
+                case PageState.Stopped:
+                case PageState.Completed:
+                    MessageBox.Show("The robot is not running.");
+                    Console.WriteLine("The robot is not running.");
+                    break;
             }
         }
 
-        private void StepNext(Node node)
+        private void RunNextAsync()
         {
             Task.Run(() =>
             {
                 try
                 {
-                    Console.WriteLine("Executing {0} - {1}", node.Id, node.Name);
-                    this.DebugNode = node;
                     this.Canvas.Invalidate();
-                    var nextNodeId = node.Execute(this.VariableNodes);
+                    this.ctsStop.Token.ThrowIfCancellationRequested();
+                    this.ctsPause.Token.ThrowIfCancellationRequested();
+                    if (this.currentNode == null)
+                    {
+                        MessageBox.Show("The robot cannot find the current activity.");
+                        throw new OperationCanceledException("The robot cannot find the current activity.", this.ctsPause.Token);
+                    }
+                    var nextNodeId = this.currentNode.Execute(this.VariableNodes);
+                    if (this.currentNode is EndNode endNode)
+                    {
+                        throw new OperationCanceledException("The robot completed successfully.", null);
+                    }
                     if (this.GetNodeById(nextNodeId) is Node nextNode)
                     {
-                        if (this.Stopping)
-                        {
-                            throw new Exception("Stopped by user.");
-                        }
-                        Thread.Sleep(500);
-                        StepNext(nextNode);
-                    }
-                    else if (node is EndNode endNode)
-                    {
-                        this.Started = false;
-                        this.Stopping = false;
-                        Console.WriteLine("INFO: End.");
-                        MessageBox.Show("The robot completed the activities successfully.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.currentNode = nextNode;
+                        this.RunNextAsync();
                     }
                     else
                     {
-                        throw new Exception("Next activity not found.");
+                        MessageBox.Show("The robot cannot find the next activity.");
+                        throw new OperationCanceledException("The robot cannot find the next activity.", this.ctsPause.Token);
+                    }
+                }
+                catch (OperationCanceledException opex)
+                {
+                    if (opex.CancellationToken == this.ctsPause.Token)
+                    {
+                        this.State = PageState.Paused;
+                        this.OnStateChanged.Invoke(null, null);
+                    }
+                    else if (opex.CancellationToken == this.ctsStop.Token)
+                    {
+                        this.State = PageState.Stopped;
+                        this.OnStateChanged.Invoke(null, null);
+                    }
+                    else
+                    {
+                        this.State = PageState.Completed;
+                        this.OnStateChanged.Invoke(null, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    this.Started = false;
-                    this.Stopping = false;
-                    MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.State = PageState.Paused;
+                    this.OnStateChanged.Invoke(null, null);
+                    Console.WriteLine(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
             });
         }

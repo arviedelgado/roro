@@ -153,14 +153,14 @@ namespace Roro
         //[BotProperty]
         //public int Height => this.Bounds.Height;
 
-        //[BotProperty]
-        //public string Window_Title => this.Type == "window" ? this.Name : this.Window.Name;
+        [Property(Enabled: true)]
+        public string WindowName => this.Type == "window" ? this.Name : this.Window.Name;
 
-        //[BotProperty]
-        //public string Parent_Name => this.Parent.Name;
+        [Property]
+        public string ParentName => this.Parent.Name;
 
-        //[BotProperty]
-        //public int Parent_Index => this.Parent.Index;
+        [Property]
+        public int ParentIndex => this.Parent.Index;
 
         //[BotProperty]
         //public int Parent_Width => this.Parent.Width;

@@ -2,13 +2,13 @@
 
 namespace Roro.Activities.Excel
 {
-    public class HasWorksheet : DecisionNodeActivity
+    public class WorksheetCreate : ProcessNodeActivity
     {
-        public Input<Text> WorkbookPath { get; set; }
+        public Input<Text> WorkbookName { get; set; }
 
         public Input<Text> WorksheetName { get; set; }
 
-        public override bool Execute(ActivityContext context)
+        public override void Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }

@@ -2,7 +2,7 @@
 
 namespace Roro.Activities.Excel
 {
-    public class CreateWorkbook : ProcessNodeActivity
+    public class WorkbookCreate : ProcessNodeActivity
     {
         public Output<Text> WorkbookName { get; set; }
 

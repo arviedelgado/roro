@@ -101,7 +101,7 @@ namespace Roro.Activities
                     o.BorderPen = PageRenderOptions.SelectedNodeBorderPen;
                     r.Offset(this.MoveNodeOffsetPoint);
                 }
-                if (this.DebugNode == node)
+                if (this.currentNode == node)
                 {
                     o.BackBrush = PageRenderOptions.DebugNodeBackBrush;
                 }

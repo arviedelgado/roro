@@ -6,9 +6,9 @@ The software is released under BSD 2-Clause open-source [license](LICENSE).
 
 The C# source files are available [here](src) and the compiled binaries [here](bin).
 
-See how it works!
+Watch our "Hello Automation!" example and see how it works!
 
-[![http://roroscript.com](http://roroscript.com/media/roro-notepad.gif)](http://roroscript.com)
+[![http://roroscript.com](http://roroscript.com/media/roro-notepad-hello-automation.gif?maxAge=2592000)](http://roroscript.com)
 
 ## Platforms
 - [x] Windows 10
@@ -18,11 +18,11 @@ See how it works!
 - [x] Windows app - Win32, WinForms, WPF
 - [ ] Windows app - UWP
 - [ ] Windows app - Qt
-- [ ] Web browser - IE, Edge, Chrome `using Selenium`
-- [x] Business app - SAP + NetWeaver `using SapGuiScripting`
-- [ ] Business app - MainFrame `using hllapi`
-- [x] Business app - Excel `using Office Interop`
-- [ ] Business app - Outlook `using Office Interop`
+- [ ] Browser app - IE, Edge, Chrome
+- [x] Business app - SAP
+- [ ] Business app - MainFrame
+- [x] Business app - Excel
+- [ ] Business app - Outlook
 
 ## Cognitive services
 - [ ] Image to Text or OCR
@@ -32,4 +32,4 @@ See how it works!
 - [ ] Natural Language Processing
 
 ## Need help?
-> Message me on [LinkedIn](https://linkedin.com/in/arviedelgado).
+> Message me on [LinkedIn](https://linkedin.com/in/arviedelgado)

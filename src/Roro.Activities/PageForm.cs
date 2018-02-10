@@ -216,6 +216,35 @@ namespace Roro.Activities
             ActivityForm.Create().Parent = this.activityPanel;
             this.newButton.PerformClick();
             this.page.OnStateChanged += Page_OnStateChanged;
+            if (Environment.GetCommandLineArgs().ElementAtOrDefault(1) is string xmlFile)
+            {
+                if (Page.Open(xmlFile) is Page xPage)
+                {
+                    this.page = xPage;
+                    this.page.Show(this.pagePanel);
+                    this.page.OnStateChanged += Page_OnStateChanged;
+                    this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
+                    this.runButton.PerformClick();
+                    var exitOnComplete = true;
+                    xPage.OnStateChanged += (ss, ee) =>
+                    {
+                        switch (xPage.State)
+                        {
+                            case PageState.Completed:
+                                if (exitOnComplete)
+                                {
+                                    Environment.Exit(0);
+                                }
+                                break;
+
+                            case PageState.Paused:
+                            case PageState.Stopped:
+                                exitOnComplete = false;
+                                break;
+                        }
+                    };
+                }
+            }
         }
 
         private void Page_OnStateChanged(object sender, EventArgs e)

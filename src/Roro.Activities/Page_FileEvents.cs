@@ -35,10 +35,18 @@ namespace Roro.Activities
 
         public static Page Open(string path)
         {
-            var data = File.ReadAllText(path);
-            var page = DataContractSerializerHelper.ToObject<Page>(data);
-            page.FilePath = path;
-            return page;
+            try
+            {
+                var data = File.ReadAllText(path);
+                var page = DataContractSerializerHelper.ToObject<Page>(data);
+                page.FilePath = path;
+                return page;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
 
         public bool Save()

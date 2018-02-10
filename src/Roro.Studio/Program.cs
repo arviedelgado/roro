@@ -16,6 +16,7 @@ namespace Roro.Studio
         {
             SetProcessDPIAware();
             Application.EnableVisualStyles();
+            Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             using (var f = PageForm.Create())
             {
                 f.ShowDialog();

@@ -2,41 +2,34 @@
 
 Roro is a free open-source [Robotic Process Automation](https://en.wikipedia.org/wiki/Robotic_process_automation) software.
 
-This repository houses the newer *business-users-friendly* version of the app.
+The software is released under BSD 2-Clause open-source [license](LICENSE).
 
-The older *developer-friendly* version is now discontinued - http://roroscript.com
+The C# source files are available [here](src) and the compiled binaries [here](bin).
 
-See [src](src) folder for the C# source files.
+Watch our "Hello Automation!" example and see how it works!
 
-See [bin](bin) folder for the compiled binaries.
-
-> The developer is in Malaysia from November 2017 to April 2018 for an RPA project.
-> <BR>Expect fewer commits during this time.
-> You may connect via [LinkedIn](https://linkedin.com/in/arviedelgado).
-
+[![http://roroscript.com](http://roroscript.com/media/roro-notepad-hello-automation.gif?maxAge=2592000)](http://roroscript.com)
 
 ## Platforms
 - [x] Windows 10
 - [ ] Windows Server
-## Automation
-- [x] Windows app - Win32
+
+## Supported apps
+- [x] Windows app - Win32, WinForms, WPF
 - [ ] Windows app - UWP
 - [ ] Windows app - Qt
-- [x] Web browser - IE, Edge, Chrome `using Selenium`
-- [x] Business app - SAP + NetWeaver `using SapGuiScripting`
-- [ ] Business app - MainFrame `using hllapi`
-- [ ] Business app - Excel `using Office Interop`
-- [ ] Business app - Outlook `using Office Interop`
-## AI
-- [ ] Image to Text or OCR `in progress, with working draft`
-- [ ] Speech to Text or STT `in progress, with working draft`
-- [ ] Text to Speech or TTS `in progress, with working draft`
-- [ ] Face Detection `in progress, with working draft`
-- [ ] Natural Language Processing `not started, will use LUIS`
-## Studio
-- [ ] Control Room `not started`
-- [ ] Bot Creator `in progress, current priority`
-- [ ] Bot Runners `not started`
+- [ ] Browser app - IE, Edge, Chrome
+- [x] Business app - SAP
+- [ ] Business app - MainFrame
+- [x] Business app - Excel
+- [ ] Business app - Outlook
 
-## Roro uses the following projects
-- [x] [Selenium](https://github.com/SeleniumHQ/selenium) for web browser automation
+## Cognitive services
+- [ ] Image to Text or OCR
+- [ ] Speech to Text or STT
+- [ ] Text to Speech or TTS
+- [ ] Face Detection
+- [ ] Natural Language Processing
+
+## Need help?
+> Message me on [LinkedIn](https://linkedin.com/in/arviedelgado)

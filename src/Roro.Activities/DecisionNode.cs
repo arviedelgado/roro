@@ -17,12 +17,12 @@ namespace Roro.Activities
             this.Ports.Add(new FalsePort());
         }
 
-        public override Guid Execute(IEnumerable<VariableNode> variables)
+        public override Guid Execute(ActivityContext context)
         {
             var activity = Activity.CreateInstance(this.ActivityId) as DecisionNodeActivity;
             activity.Inputs = this.ActivityInputs;
             activity.Outputs = this.ActivityOutputs;
-            if (activity.Execute(new ActivityContext(variables)))
+            if (activity.Execute(context))
             {
                 return this.Ports.Where(x => x is TruePort).First().NextNodeId;
             }

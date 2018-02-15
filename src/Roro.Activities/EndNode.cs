@@ -15,10 +15,10 @@ namespace Roro.Activities
             this.Ports.Clear();
         }
 
-        public override Guid Execute(IEnumerable<VariableNode> variableNodes)
+        public override Guid Execute(ActivityContext context)
         {
             var activity = Activity.CreateInstance(this.ActivityId) as EndNodeActivity;
-            activity.Execute(new ActivityContext(variableNodes));
+            activity.Execute(context);
             return Guid.Empty;
         }
 

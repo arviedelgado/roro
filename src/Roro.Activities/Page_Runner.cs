@@ -136,7 +136,9 @@ namespace Roro.Activities
                         MessageBox.Show("The robot cannot find the current activity.");
                         throw new OperationCanceledException("The robot cannot find the current activity.", this.ctsPause.Token);
                     }
-                    var nextNodeId = this.currentNode.Execute(this.VariableNodes);
+
+                    var actContext = new ActivityContext(this.ctsStop.Token, this.VariableNodes);
+                    var nextNodeId = this.currentNode.Execute(actContext);
                     if (this.currentNode is EndNode endNode)
                     {
                         throw new OperationCanceledException("The robot completed successfully.", null);

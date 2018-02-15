@@ -16,12 +16,12 @@ namespace Roro.Activities
             this.Ports.Add(new NextPort());
         }
 
-        public override Guid Execute(IEnumerable<VariableNode> variables)
+        public override Guid Execute(ActivityContext context)
         {
             var activity = Activity.CreateInstance(this.ActivityId) as ProcessNodeActivity;
             activity.Inputs = this.ActivityInputs;
             activity.Outputs = this.ActivityOutputs;
-            activity.Execute(new ActivityContext(variables));
+            activity.Execute(context);
             return this.Ports.First().NextNodeId;
         }
 

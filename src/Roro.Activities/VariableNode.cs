@@ -32,7 +32,7 @@ namespace Roro.Activities
             this.Type = DataType.GetDefault().Id;
         }
 
-        public override Guid Execute(IEnumerable<VariableNode> variables)
+        public override Guid Execute(ActivityContext context)
         {
             throw new NotImplementedException();
         }

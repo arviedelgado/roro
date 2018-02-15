@@ -85,7 +85,7 @@ namespace Roro.Activities
             return null;
         }
 
-        public abstract Guid Execute(IEnumerable<VariableNode> variableNodes);
+        public abstract Guid Execute(ActivityContext context);
 
         public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
 

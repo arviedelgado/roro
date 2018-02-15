@@ -19,7 +19,7 @@ namespace Roro.Activities
             this.Ports.Add(new NextPort());
         }
 
-        public override Guid Execute(IEnumerable<VariableNode> variables)
+        public override Guid Execute(ActivityContext context)
         {
             return this.Ports.First().NextNodeId;
         }

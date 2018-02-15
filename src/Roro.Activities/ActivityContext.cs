@@ -1,35 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Roro.Activities
 {
     public sealed class ActivityContext
     {
+        private CancellationToken CancellationToken { get; }
+
         private IEnumerable<VariableNode> InVariables { get; }
 
         private IEnumerable<VariableNode> OutVariables { get; }
 
-        public ActivityContext(IEnumerable<VariableNode> variables) : this(variables, variables)
+        public ActivityContext(CancellationToken token, IEnumerable<VariableNode> variables) : this(token, variables, variables)
         {
             ;
         }
 
-        public ActivityContext(IEnumerable<VariableNode> inVariables, IEnumerable<VariableNode> outVariables)
+        public ActivityContext(CancellationToken token, IEnumerable<VariableNode> inVariables, IEnumerable<VariableNode> outVariables)
         {
             this.InVariables = inVariables;
             this.OutVariables = outVariables;
         }
 
+        public void ThrowIfCancellationRequested()
+        {
+            this.CancellationToken.ThrowIfCancellationRequested();
+        }
+
         public T Get<T>(Input<T> input) where T : DataType, new()
         {
-            var t = new T();
-            t.SetValue(this.InternalGet(input));
-            return t;
+            if (this.InternalGet(input) is object value)
+            {
+                var t = new T();
+                t.SetValue(value);
+                return t;
+            }
+            return null;
         }
 
         private object InternalGet(Input input)
         {
+            if (string.IsNullOrWhiteSpace(input.Value))
+            {
+                return null;
+            }
             return Expression.Evaluate(input.Value, this.InVariables);
         }
 
@@ -40,7 +56,7 @@ namespace Roro.Activities
 
         private void InternalSet(Output output, object value)
         {
-            if (output.Value.Length == 0)
+            if (string.IsNullOrWhiteSpace(output.Value))
             {
                 return;
             }

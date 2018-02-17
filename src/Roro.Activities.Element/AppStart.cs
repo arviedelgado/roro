@@ -12,12 +12,13 @@ namespace Roro.Activities.Element
 
         public override void Execute(ActivityContext context)
         {
-            var appPath = context.Get(this.AppPath);
-            var appArgs = context.Get(this.Arguments);
+            var appPath = context.Get(this.AppPath) ?? throw new ArgumentNullException();
+            var appArgs = context.Get(this.Arguments) ?? string.Empty;
 
             var p = Process.Start(appPath, appArgs);
             while (p.MainWindowHandle == IntPtr.Zero)
             {
+                context.ThrowIfCancellationRequested();
                 try
                 {
                     p.WaitForInputIdle(1000);

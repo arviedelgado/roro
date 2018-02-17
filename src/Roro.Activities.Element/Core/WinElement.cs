@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Automation;
@@ -25,10 +26,8 @@ namespace Roro
         [Property(Enabled: true)]
         public string Name => this.rawElement.Current.Name;
 
-        [Property(Required: true)]
-        public string Type => this.rawElement.Current.ControlType.ProgrammaticName.Split('.').Last().ToLower();
+        public override string Type => this.rawElement.Current.ControlType.ProgrammaticName.Split('.').Last().ToLower();
 
-        [Property(Required: true)]
         public override string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
 
         public override Rectangle Bounds
@@ -145,16 +144,9 @@ namespace Roro
             return null;
         }
 
-        //#region BotProperty Extensions
+        public override string MainWindowName => this.MainWindow?.Name;
 
-        //[BotProperty]
-        //public int Width => this.Bounds.Width;
-
-        //[BotProperty]
-        //public int Height => this.Bounds.Height;
-
-        [Property(Enabled: true)]
-        public string WindowName => this.Type == "window" ? this.Name : this.Window.Name;
+        public override string WindowName => this.Type == "window" ? this.Name : this.Window?.Name;
 
         [Property]
         public string ParentName => this.Parent.Name;
@@ -162,17 +154,13 @@ namespace Roro
         [Property]
         public int ParentIndex => this.Parent.Index;
 
-        //[BotProperty]
-        //public int Parent_Width => this.Parent.Width;
-
-        //[BotProperty]
-        //public int Parent_Height => this.Parent.Height;
-
-        //#endregion
-
-
-        public void Focus()
+        public override void Focus()
         {
+            var process = Process.GetProcessById(this.ProcessId);
+            while (!process.Responding)
+            {
+                Console.WriteLine("Not responding");
+            }
             this.rawElement.SetFocus();
         }
     }

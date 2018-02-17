@@ -174,6 +174,7 @@ namespace Roro.Activities
                 }
                 catch (Exception ex)
                 {
+                    throw ex;
                     this.State = PageState.Paused;
                     this.OnStateChanged.Invoke(null, null);
                     Console.WriteLine(ex.Message);

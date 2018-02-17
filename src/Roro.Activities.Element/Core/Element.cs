@@ -7,9 +7,21 @@ namespace Roro
 {
     public abstract class Element
     {
+        [Property(Required: true)]
+        public abstract string Type { get; }
+
+        [Property(Required: true)]
         public abstract string Path { get; }
 
+        [Property(Required: true)]
+        public abstract string MainWindowName { get; }
+
+        [Property(Required: true)]
+        public abstract string WindowName { get; }
+
         public abstract Rectangle Bounds { get; }
+
+        public abstract void Focus();
 
         public ElementQuery GetQuery()
         {
@@ -17,7 +29,7 @@ namespace Roro
             var props = this.GetType().GetProperties().Where(attr => Attribute.IsDefined(attr, typeof(Property)));
             foreach (var prop in props)
             {
-                var attr = prop.GetCustomAttributes(typeof(Property), false).First() as Property;
+                var attr = Attribute.GetCustomAttribute(prop, typeof(Property), true) as Property;
                 var condition = new Condition(prop.Name, prop.GetValue(this), attr.Enabled, attr.Required);
                 query.Add(condition);
             }

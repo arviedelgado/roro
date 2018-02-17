@@ -3,7 +3,7 @@ using System;
 
 namespace Roro
 {
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class Property : Attribute
     {
         public bool Enabled { get; }

@@ -37,7 +37,18 @@ namespace Roro.Activities
                 t.SetValue(value);
                 return t;
             }
-            return null;
+            throw new Exception(string.Format("Input '{0}' is required", input.Name.Humanize()));
+        }
+
+        public T Get<T>(Input<T> input, T valueIfNull) where T : DataType, new()
+        {
+            if (this.InternalGet(input) is object value)
+            {
+                var t = new T();
+                t.SetValue(value);
+                return t;
+            }
+            return valueIfNull;
         }
 
         private object InternalGet(Input input)

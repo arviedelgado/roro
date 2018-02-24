@@ -12,6 +12,7 @@ namespace Roro.Activities.Storage
         public override void Execute(ActivityContext context)
         {
             var fromFilePath = context.Get(this.FromFilePath);
+
             var toFilePath = context.Get(this.ToFilePath);
 
             File.Copy(fromFilePath, toFilePath, true);

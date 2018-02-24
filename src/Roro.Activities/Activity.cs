@@ -40,6 +40,7 @@ namespace Roro.Activities
                 foreach (var inputProp in this.GetInputProperties())
                 {
                     var input = Activator.CreateInstance(inputProp.PropertyType) as Input;
+                    input.Name = inputProp.Name;
                     input.Value = inputs.First(x => x.Name == inputProp.Name && x.Type == input.Type).Value;
                     inputProp.SetValue(this, input);
                 }
@@ -75,6 +76,7 @@ namespace Roro.Activities
                 foreach (var outputProp in this.GetOutputProperties())
                 {
                     var output = Activator.CreateInstance(outputProp.PropertyType) as Output;
+                    output.Name = outputProp.Name;
                     output.Value = outputs.First(x => x.Name == outputProp.Name && x.Type == output.Type).Value;
                     outputProp.SetValue(this, output);
                 }

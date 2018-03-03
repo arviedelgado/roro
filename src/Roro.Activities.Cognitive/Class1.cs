@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Roro.Activities.Outlook
+namespace Roro.Activities.Cognitive
 {
     public class Class1
     {

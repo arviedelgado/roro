@@ -1,17 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Roro.Activities
 {
     public partial class Page
     {
+        private Panel Canvas { get; set; }
+
+        private HashSet<Node> SelectedNodes { get; set; }
+
+        private Dictionary<Node, GraphicsPath> RenderedNodes { get; set; }
+
+        private Node GetNodeFromPoint(Point pt)
+        {
+            if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt.X, pt.Y)) is KeyValuePair<Node, GraphicsPath> item)
+            {
+                return item.Key;
+            }
+            return null;
+        }
+
         public void Show(Panel parent)
         {
             parent.Controls.Clear();
             this.Canvas.Parent = parent;
             this.Canvas.Invalidate();
+        }
+
+        private void Initialize_Events()
+        {
+            this.Canvas = new Panel();
+            this.Canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.Canvas, true);
+            this.Canvas.Paint += Canvas_Paint;
+            this.Canvas.MouseDown += Canvas_MouseDown;
+            this.Canvas.KeyDown += Canvas_KeyDown;
+            this.Canvas.AllowDrop = true;
+            this.Canvas.DragEnter += Canvas_DragEnter;
+            this.Canvas.DragDrop += Canvas_DragDrop;
+            this.SelectedNodes = new HashSet<Node>();
+            this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
@@ -76,11 +107,11 @@ namespace Roro.Activities
                     o.LinePenWithArrow.Brush = port.GetBackBrush();
                     if (this.LinkNodeEndPoint != Point.Empty && this.LinkNodeStartPort == port)
                     {
-                        g.DrawLine(o.LinePenWithArrow, port.Bounds.Center().X, port.Bounds.Center().Y, this.LinkNodeEndPoint.X, this.LinkNodeEndPoint.Y);
+                        g.DrawLine(o.LinePenWithArrow, port.Bounds.Center.X, port.Bounds.Center.Y, this.LinkNodeEndPoint.X, this.LinkNodeEndPoint.Y);
                     }
                     else if (this.GetNodeById(port.NextNodeId) is Node linkedNode)
                     {
-                        g.DrawPath(o.LinePenWithArrow, f.GetPath(port.Bounds.Center(), linkedNode.Bounds.CenterTop()));
+                        g.DrawPath(o.LinePenWithArrow, f.GetPath(port.Bounds.Center, linkedNode.Bounds.CenterTop));
                     }
                 }
             }
@@ -99,7 +130,8 @@ namespace Roro.Activities
                 if (this.SelectedNodes.Contains(node))
                 {
                     o.BorderPen = PageRenderOptions.SelectedNodeBorderPen;
-                    r.Offset(this.MoveNodeOffsetPoint);
+                    r.X += this.MoveNodeOffsetPoint.X;
+                    r.Y += this.MoveNodeOffsetPoint.Y;
                 }
                 if (this.currentNode == node)
                 {

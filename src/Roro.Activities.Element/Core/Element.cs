@@ -1,6 +1,6 @@
 ﻿
+using Roro.Activities;
 using System;
-using System.Drawing;
 using System.Linq;
 
 namespace Roro
@@ -19,7 +19,7 @@ namespace Roro
         [Property(Required: true)]
         public abstract string WindowName { get; }
 
-        public abstract Rectangle Bounds { get; }
+        public abstract Rect Bounds { get; }
 
         public abstract void Focus();
 

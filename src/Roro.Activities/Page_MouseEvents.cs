@@ -184,7 +184,8 @@ namespace Roro.Activities
             foreach (var node in this.SelectedNodes)
             {
                 var rect = node.Bounds;
-                rect.Offset(this.MoveNodeOffsetPoint);
+                rect.X += this.MoveNodeOffsetPoint.X;
+                rect.Y += this.MoveNodeOffsetPoint.Y;
                 node.SetBounds(rect);
             }
             this.MoveNodeOffsetPoint = Point.Empty;

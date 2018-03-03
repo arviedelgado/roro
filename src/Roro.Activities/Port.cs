@@ -10,9 +10,9 @@ namespace Roro.Activities
 
         public Guid NextNodeId { get; set; }
 
-        public Rectangle Bounds { get; set; }
+        public Rect Bounds { get; set; }
 
-        public abstract Point GetOffset(Rectangle r);
+        public abstract Point GetOffset(Rect r);
 
         public abstract Brush GetBackBrush();
 
@@ -44,21 +44,21 @@ namespace Roro.Activities
 
     public sealed class NextPort : Port
     {
-        public override Point GetOffset(Rectangle r) => r.CenterBottom();
+        public override Point GetOffset(Rect r) => r.CenterBottom;
 
         public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(100, Color.Blue));
     }
 
     public sealed class TruePort : Port
     {
-        public override Point GetOffset(Rectangle r) => r.CenterBottom();
+        public override Point GetOffset(Rect r) => r.CenterBottom;
 
         public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(100, Color.Green));
     }
 
     public sealed class FalsePort : Port
     {
-        public override Point GetOffset(Rectangle r) => r.CenterRight();
+        public override Point GetOffset(Rect r) => r.CenterRight;
 
         public override Brush GetBackBrush() => new SolidBrush(Color.FromArgb(100, Color.Red));
     }

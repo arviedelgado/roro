@@ -4,13 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Roro
 {
-    [DataContract]
     public sealed class ElementQuery : DataType<List<Condition>>, IEnumerable<Condition>
     {
         public override string Name => "Element";
@@ -19,7 +16,7 @@ namespace Roro
 
         public ElementQuery() : this(new List<Condition>()) { }
 
-        public ElementQuery(string xml): this(DataContractSerializerHelper.ToObject<List<Condition>>(xml)) { }
+        public ElementQuery(string xml): this(XmlSerializerHelper.ToObject<List<Condition>>(xml)) { }
 
         public ElementQuery(IEnumerable<Condition> conditions) : base(new List<Condition>(conditions)) { }
 
@@ -45,7 +42,7 @@ namespace Roro
 
         public override string ToString()
         {
-            return DataContractSerializerHelper.ToString(this.Value);
+            return XmlSerializerHelper.ToString(this.Value);
         }
 
         public static ElementQuery Get(Input<ElementQuery> input)
@@ -53,9 +50,8 @@ namespace Roro
             var value = input.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(input).ToString();
             if (value == string.Empty) return null;
 
-            var query = new ElementQuery(DataContractSerializerHelper.ToObject<List<Condition>>(value));
+            var query = new ElementQuery(XmlSerializerHelper.ToObject<List<Condition>>(value));
             return query;
         }
-
     }
 }

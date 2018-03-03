@@ -77,7 +77,7 @@ return
                 {
                     throw new FormatException(string.Format("Variable {0}{1}{2} not found.", VariableNode.StartToken, variableName, VariableNode.EndToken));
                 }
-                var variable = DataType.GetFromId(variableNode.Type);
+                var variable = DataType.CreateInstance(variableNode.Type);
                 variable.SetValue(variableNode.CurrentValue);
                 resolvedExpression += variable.ToExpression();
                 currentIndex = endIndex + 1;

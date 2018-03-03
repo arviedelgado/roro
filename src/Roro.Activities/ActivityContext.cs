@@ -37,7 +37,7 @@ namespace Roro.Activities
                 t.SetValue(value);
                 return t;
             }
-            throw new Exception(string.Format("Input '{0}' is required", input.Name.Humanize()));
+            throw new Exception(string.Format("The activity input '{0}' is required", input.Name.Humanize()));
         }
 
         public T Get<T>(Input<T> input, T valueIfNull) where T : DataType, new()

@@ -1,84 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
 
 namespace Roro.Activities
 {
-    [DataContract]
     public abstract class Activity
     {
-        private IEnumerable<PropertyInfo> GetInputProperties()
+        protected Activity()
+        {
+            this.Inputs = this.Inputs;
+            this.Outputs = this.Outputs;
+        }
+
+        private IEnumerable<PropertyInfo> GetPropertyInfos<T>()
         {
             return this.GetType().GetProperties()
-                    .Where(x => typeof(Input).IsAssignableFrom(x.PropertyType) &&
-                        !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
+                    .Where(x =>
+                        typeof(T).IsAssignableFrom(x.PropertyType)
+                        && x.PropertyType.IsGenericType);
         }
 
         internal protected virtual List<Input> Inputs
         {
             get
             {
-                var inputs = new List<Input>();
-                foreach (var inputProp in this.GetInputProperties())
+                var args = new List<Input>();
+                foreach (var prop in this.GetPropertyInfos<Input>())
                 {
-                    inputs.Add(new Input()
+                    args.Add(new Input()
                     {
-                        Name = inputProp.Name,
-                        Type = (Activator.CreateInstance(inputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
-                        Value = string.Empty
+                        Name = prop.Name,
+                        Type = prop.PropertyType.GetGenericArguments().First().FullName,
+                        Value = prop.GetValue(this) is Input arg ? arg.Value : string.Empty
                     });
                 }
-                return inputs;
+                return args;
             }
             set
             {
-                var inputs = new List<Input>(value);
-                foreach (var inputProp in this.GetInputProperties())
+                var args = new List<Input>(value);
+                foreach (var prop in this.GetPropertyInfos<Input>())
                 {
-                    var input = Activator.CreateInstance(inputProp.PropertyType) as Input;
-                    input.Name = inputProp.Name;
-                    input.Value = inputs.First(x => x.Name == inputProp.Name && x.Type == input.Type).Value;
-                    inputProp.SetValue(this, input);
+                    var genArgs = prop.PropertyType.GetGenericArguments();
+                    var genType = typeof(Input<>).MakeGenericType(genArgs);
+                    var arg = Activator.CreateInstance(genType) as Input;
+                    arg.Name = prop.Name;
+                    arg.Type = genArgs.First().FullName;
+                    arg.Value = args.First(x => x.Name == prop.Name).Value;
+                    prop.SetValue(this, arg);
                 }
             }
-        }
-
-        private IEnumerable<PropertyInfo> GetOutputProperties()
-        {
-            return this.GetType().GetProperties()
-                    .Where(x => typeof(Output).IsAssignableFrom(x.PropertyType) &&
-                        !x.PropertyType.IsAbstract && x.PropertyType.IsGenericType);
         }
 
         internal protected virtual List<Output> Outputs
         {
             get
             {
-                var outputs = new List<Output>();
-                foreach (var outputProp in this.GetOutputProperties())
+                var args = new List<Output>();
+                foreach (var prop in this.GetPropertyInfos<Output>())
                 {
-                    outputs.Add(new Output()
+                    args.Add(new Output()
                     {
-                        Name = outputProp.Name,
-                        Type = (Activator.CreateInstance(outputProp.PropertyType.GetGenericArguments().First()) as DataType).Id,
-                        Value = string.Empty
+                        Name = prop.Name,
+                        Type = prop.PropertyType.GetGenericArguments().First().FullName,
+                        Value = prop.GetValue(this) is Output arg ? arg.Value : string.Empty
                     });
                 }
-                return outputs;
+                return args;
             }
             set
             {
-                var outputs = new List<Output>(value);
-                foreach (var outputProp in this.GetOutputProperties())
+                var args = new List<Output>(value);
+                foreach (var prop in this.GetPropertyInfos<Output>())
                 {
-                    var output = Activator.CreateInstance(outputProp.PropertyType) as Output;
-                    output.Name = outputProp.Name;
-                    output.Value = outputs.First(x => x.Name == outputProp.Name && x.Type == output.Type).Value;
-                    outputProp.SetValue(this, output);
+                    var genArgs = prop.PropertyType.GetGenericArguments();
+                    var genType = typeof(Output<>).MakeGenericType(genArgs);
+                    var arg = Activator.CreateInstance(genType) as Output;
+                    arg.Name = prop.Name;
+                    arg.Type = genArgs.First().FullName;
+                    arg.Value = args.First(x => x.Name == prop.Name).Value;
+                    prop.SetValue(this, arg);
                 }
             }
         }
@@ -89,6 +92,15 @@ namespace Roro.Activities
             {
                 Assembly.LoadFrom(file);
             }
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var refasm in asm.GetReferencedAssemblies())
+                {
+                    Console.WriteLine(refasm.FullName);
+                }
+            }
+
+
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => !x.IsAbstract

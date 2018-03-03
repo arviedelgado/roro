@@ -1,4 +1,5 @@
 ﻿
+using Roro.Activities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,12 +31,34 @@ namespace Roro
 
         public override string Path => string.Format("{0}/{1}", this.Parent == null ? string.Empty : this.Parent.Path, this.Type);
 
-        public override Rectangle Bounds
+        public override Rect Bounds
         {
             get
             {
                 var r = this.rawElement.Current.BoundingRectangle;
-                return new Rectangle((int)r.X, (int)r.Y, (int)r.Width, (int)r.Height);
+                return new Rect((int)r.X, (int)r.Y, (int)r.Width, (int)r.Height);
+            }
+        }
+
+        [Property]
+        public string Value
+        {
+            get
+            {
+                if (this.rawElement.TryGetCurrentPattern(ValuePattern.Pattern, out object pattern))
+                {
+                    var valuePattern = pattern as ValuePattern;
+                    return valuePattern.Current.Value ?? string.Empty;
+                }
+                return string.Empty;
+            }
+            set
+            {
+                if (this.rawElement.TryGetCurrentPattern(ValuePattern.Pattern, out object pattern))
+                {
+                    var valuePattern = pattern as ValuePattern;
+                    valuePattern.SetValue(value);
+                }
             }
         }
 
@@ -161,7 +184,14 @@ namespace Roro
             {
                 Console.WriteLine("Not responding");
             }
-            this.rawElement.SetFocus();
+            try
+            {
+                this.rawElement.SetFocus();
+            }
+            catch
+            {
+
+            }
         }
     }
 }

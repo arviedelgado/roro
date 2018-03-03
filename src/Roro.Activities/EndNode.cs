@@ -1,30 +1,29 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Runtime.Serialization;
 
 namespace Roro.Activities
 {
-    [DataContract]
     public sealed class EndNode : Node
     {
-        public EndNode(Activity activity) : base(activity)
+        private EndNode()
+        {
+            // required for XmlSerializer.
+        }
+
+        internal EndNode(Activity activity) : base(activity)
         {
             this.Ports.Clear();
         }
 
         public override Guid Execute(ActivityContext context)
         {
-            var activity = Activity.CreateInstance(this.ActivityId) as EndNodeActivity;
-            activity.Execute(context);
             return Guid.Empty;
         }
 
         public override bool CanStartLink => false;
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rect r, NodeStyle o)
         {
             var leftRect = new Rectangle(r.X, r.Y, r.Height, r.Height);
             var rightRect = new Rectangle(r.Right - r.Height, r.Y, r.Height, r.Height);

@@ -16,7 +16,7 @@ namespace Roro.Activities
 
     public partial class Page
     {
-        public PageState State { get; private set; }
+        internal PageState State { get; private set; }
 
         public event EventHandler OnStateChanged;
 
@@ -26,7 +26,7 @@ namespace Roro.Activities
 
         private CancellationTokenSource ctsStop;
 
-        private void Initialize_PageRunner()
+        private void Initialize_Runner()
         {
             this.State = PageState.Stopped;
             this.OnStateChanged = delegate { };
@@ -137,7 +137,7 @@ namespace Roro.Activities
                         throw new OperationCanceledException("The robot cannot find the current activity.", this.ctsPause.Token);
                     }
 
-                    var actContext = new ActivityContext(this.ctsStop.Token, this.VariableNodes);
+                    var actContext = new ActivityContext(this.ctsStop.Token, this.GetNodes<VariableNode>());
                     var nextNodeId = this.currentNode.Execute(actContext);
                     if (this.currentNode is EndNode endNode)
                     {

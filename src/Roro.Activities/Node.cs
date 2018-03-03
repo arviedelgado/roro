@@ -4,42 +4,32 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Roro.Activities
 {
-    [DataContract]
     public abstract class Node
     {
-        [DataMember]
-        public Guid Id { get; private set; }
+        [XmlAttribute]
+        public Guid Id { get; set; }
 
-        [DataMember]
+        [XmlAttribute]
         public string Name { get; set; }
 
-        [DataMember]
-        public Rectangle Bounds { get; private set; }
+        public Rect Bounds { get; set; }
 
-        [DataMember]
-        public string ActivityId { get; private set; }
+        public Activity Activity { get; set; }
 
-        [DataMember]
-        public List<Input> ActivityInputs { get; internal set; }
+        public List<Port> Ports { get; set; }
 
-        [DataMember]
-        public List<Output> ActivityOutputs { get; internal set; }
-
-        [DataMember]
-        public List<Port> Ports { get; private set; }
-
-        public Dictionary<Port, GraphicsPath> RenderedPorts { get; set; }
-
-        public virtual bool CanStartLink => true;
-
-        public virtual bool CanEndLink => true;
+        protected Node()
+        {
+            // required for XmlSerializer.
+        }
 
         public Node(Activity activity)
         {
+            this.Activity = activity;
             this.Id = Guid.NewGuid();
             this.Name = activity.GetType().Name.Humanize();
             this.Bounds = new Rectangle(
@@ -48,19 +38,16 @@ namespace Roro.Activities
                 PageRenderOptions.GridSize * 4,
                 PageRenderOptions.GridSize * 2);
             this.Ports = new List<Port>();
-            this.ActivityId = activity.GetType().FullName;
-            this.ActivityInputs = activity.Inputs;
-            this.ActivityOutputs = activity.Outputs;
-            this.Initialize();
-        }
-
-        [OnDeserializing]
-        private void Initialize(StreamingContext context = default)
-        {
             this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
         }
 
-        public void SetBounds(Rectangle rect)
+        internal Dictionary<Port, GraphicsPath> RenderedPorts { get; set; }
+
+        public virtual bool CanStartLink => true;
+
+        public virtual bool CanEndLink => true;
+
+        public void SetBounds(Rect rect)
         {
             rect.X = Math.Max(0, (rect.X / PageRenderOptions.GridSize) * PageRenderOptions.GridSize);
             rect.Y = Math.Max(0, (rect.Y / PageRenderOptions.GridSize) * PageRenderOptions.GridSize);
@@ -87,9 +74,9 @@ namespace Roro.Activities
 
         public abstract Guid Execute(ActivityContext context);
 
-        public abstract GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o);
+        public abstract GraphicsPath Render(Graphics g, Rect r, NodeStyle o);
 
-        public virtual void RenderText(Graphics g, Rectangle r, NodeStyle o)
+        public virtual void RenderText(Graphics g, Rect r, NodeStyle o)
         {
             g.DrawString(this.Name, o.Font, o.FontBrush, r, o.StringFormat);
         }

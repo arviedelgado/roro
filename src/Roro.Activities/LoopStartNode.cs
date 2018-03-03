@@ -1,20 +1,21 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Roro.Activities
 {
-    [DataContract]
     public sealed class LoopStartNode : Node
     {
-        [DataMember]
-        internal Guid LoopEndNodeId { get; set; }
+        public Guid LoopEndNodeId { get; set; }
 
-        public LoopStartNode(Activity activity) : base(activity)
+        private LoopStartNode()
+        {
+            // required for XmlSerializer.
+        }
+
+        internal LoopStartNode(Activity activity) : base(activity)
         {
             this.Ports.Add(new NextPort());
         }
@@ -24,7 +25,7 @@ namespace Roro.Activities
             return this.Ports.First().NextNodeId;
         }
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rect r, NodeStyle o)
         {
             var path = new GraphicsPath();
             path.StartFigure();

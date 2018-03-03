@@ -15,13 +15,13 @@ namespace Roro.Activities
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.saveButton = new System.Windows.Forms.Button();
-            this.newButton = new System.Windows.Forms.Button();
             this.openButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pauseButton = new System.Windows.Forms.Button();
             this.consoleButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
             this.runButton = new System.Windows.Forms.Button();
+            this.newButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -87,17 +87,6 @@ namespace Roro.Activities
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
-            // 
-            // newButton
-            // 
-            this.newButton.Location = new System.Drawing.Point(3, 3);
-            this.newButton.Name = "newButton";
-            this.newButton.Size = new System.Drawing.Size(70, 23);
-            this.newButton.TabIndex = 2;
-            this.newButton.TabStop = false;
-            this.newButton.Text = "New";
-            this.newButton.UseVisualStyleBackColor = true;
-            this.newButton.Click += new System.EventHandler(this.NewButton_Click);
             // 
             // openButton
             // 
@@ -170,6 +159,17 @@ namespace Roro.Activities
             this.runButton.UseVisualStyleBackColor = true;
             this.runButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
+            // newButton
+            // 
+            this.newButton.Location = new System.Drawing.Point(3, 3);
+            this.newButton.Name = "newButton";
+            this.newButton.Size = new System.Drawing.Size(70, 23);
+            this.newButton.TabIndex = 2;
+            this.newButton.TabStop = false;
+            this.newButton.Text = "New";
+            this.newButton.UseVisualStyleBackColor = true;
+            this.newButton.Click += new System.EventHandler(this.NewButton_Click);
+            // 
             // PageForm
             // 
             this.ClientSize = new System.Drawing.Size(984, 561);
@@ -198,11 +198,12 @@ namespace Roro.Activities
         private Panel panel2;
         private Button saveButton;
         private Button openButton;
+        private Button consoleButton;
+        private Button pauseButton;
         private Button newButton;
 
         private Page page;
-        private Button consoleButton;
-        private Button pauseButton;
+
         private string Title = "Roro - Free RPA Software";
 
         public static PageForm Create()
@@ -218,12 +219,12 @@ namespace Roro.Activities
             this.page.OnStateChanged += Page_OnStateChanged;
             if (Environment.GetCommandLineArgs().ElementAtOrDefault(1) is string xmlFile)
             {
-                if (Page.Open(xmlFile) is Page xPage)
+                if (this.OpenWorkflow(xmlFile) is Page xPage)
                 {
                     this.page = xPage;
                     this.page.Show(this.pagePanel);
                     this.page.OnStateChanged += Page_OnStateChanged;
-                    this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
+                    this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
                     this.runButton.PerformClick();
                     var exitOnComplete = true;
                     xPage.OnStateChanged += (ss, ee) =>
@@ -251,7 +252,7 @@ namespace Roro.Activities
         {
             this.Invoke(new Action(() =>
             {
-                this.Text = string.Format("{0} - {1} [{2}]", this.page.FileName, this.Title, this.page.State);
+                this.Text = string.Format("{0} - {1} [{2}]", this.FileName, this.Title, this.page.State);
                 switch (this.page.State)
                 {
                     case PageState.Running:
@@ -276,25 +277,25 @@ namespace Roro.Activities
 
         private void NewButton_Click(object sender, EventArgs e)
         {
-            if (this.page == null || this.page.Close())
+            if (this.page == null || this.CloseWorkflow())
             {
-                this.page = Page.Create();
+                this.page = new Page();
                 this.page.Show(this.pagePanel);
                 this.page.OnStateChanged += Page_OnStateChanged;
-                this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
+                this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
             }
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
         {
-            if (this.page == null || this.page.Close())
+            if (this.page == null || this.CloseWorkflow())
             {
-                if (Page.Open() is Page newPage)
+                if (this.OpenWorkflow() is Page newPage)
                 {
                     this.page = newPage;
                     this.page.Show(this.pagePanel);
                     this.page.OnStateChanged += Page_OnStateChanged;
-                    this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
+                    this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
                 }
             }
         }
@@ -303,8 +304,8 @@ namespace Roro.Activities
         {
             if (this.page != null)
             {
-                this.page.Save();
-                this.Text = string.Format("{0} - {1}", this.page.FileName, this.Title);
+                this.SaveWorkflow();
+                this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
             }
         }
 
@@ -315,7 +316,6 @@ namespace Roro.Activities
                 this.page.Run();
             }
         }
-
 
         private void PauseButton_Click(object sender, EventArgs e)
         {
@@ -349,6 +349,80 @@ namespace Roro.Activities
                     this.saveButton.PerformClick();
                     break;
             }
+        }
+
+        private string FilePath { get; set; }
+
+        private string FileName => string.IsNullOrEmpty(this.FilePath) ? "New*" : new FileInfo(this.FilePath).Name;
+
+        private const string FileDialogFilter = "Roro Workflow (*.xml)|*.xml";
+
+        private Page OpenWorkflow()
+        {
+            using (var f = new OpenFileDialog())
+            {
+                f.Filter = FileDialogFilter;
+                if (f.ShowDialog() == DialogResult.OK)
+                {
+                    return this.OpenWorkflow(f.FileName);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private Page OpenWorkflow(string path)
+        {
+            try
+            {
+                var data = File.ReadAllText(path);
+                var newPage = XmlSerializerHelper.ToObject<Page>(data);
+                this.FilePath = path;
+                return newPage;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+        }
+
+        public bool SaveWorkflow()
+        {
+            if (string.IsNullOrEmpty(this.FilePath))
+            {
+                using (var f = new SaveFileDialog())
+                {
+                    f.Filter = FileDialogFilter;
+                    if (f.ShowDialog() == DialogResult.OK)
+                    {
+                        this.FilePath = f.FileName;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            return SaveWorkflowAs(this.FilePath);
+        }
+
+        private bool SaveWorkflowAs(string path)
+        {
+            var data = XmlSerializerHelper.ToString(this.page);
+            File.WriteAllText(path, data);
+            this.FilePath = path;
+            return true;
+        }
+
+        private bool CloseWorkflow()
+        {
+            // TODO: ask user to save if has changes.
+            // Show asterisks on filename as well to indicate there are unsaved changes.
+            // Add the mentioned features when we have Undo Redo feature.
+            return true;
         }
 
         [DllImport("kernel32.dll")]

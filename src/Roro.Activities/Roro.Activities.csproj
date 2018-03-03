@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -36,7 +36,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,12 +48,11 @@
     <Compile Include="ActivityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ActivityOutput.cs" />
     <Compile Include="DataType.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="Helper\XmlSerializerHelper.cs" />
     <Compile Include="LabelCell.cs" />
     <Compile Include="LabelColumn.cs" />
-    <Compile Include="Page_FileEvents.cs" />
     <Compile Include="VariableNodeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,8 +67,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Cell.cs" />
     <Compile Include="Helper\CellLocation.cs" />
-    <Compile Include="Helper\DataContractSerializerHelper.cs" />
-    <Compile Include="Helper\Helpers.cs" />
+    <Compile Include="Helper\Rect.cs" />
     <Compile Include="Helper\PathFinder.cs" />
     <Compile Include="Helper\PriorityQueue.cs" />
     <Compile Include="DecisionNode.cs" />
@@ -89,9 +86,7 @@
     <Compile Include="ProcessNodeActivity.cs" />
     <Compile Include="DecisionNodeActivity.cs" />
     <Compile Include="ActivityContext.cs" />
-    <Compile Include="DataTypeColumn.cs" />
-    <Compile Include="DataTypeCell.cs" />
-    <Compile Include="ActivityInput.cs" />
+    <Compile Include="Arguments.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="EndNodeActivity.cs" />
     <Compile Include="LoopEndNodeActivity.cs" />

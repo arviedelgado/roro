@@ -1,20 +1,14 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Roro.Activities
 {
-    [DataContract]
     public sealed class VariableNode : Node
     {
-        [DataMember]
         public string Type { get; set; }
 
-        [DataMember]
         public object InitialValue { get; set; }
 
         public object CurrentValue { get; set; }
@@ -27,9 +21,14 @@ namespace Roro.Activities
 
         public override bool CanStartLink => false;
 
-        public VariableNode(Activity activity) : base(activity)
+        private VariableNode()
         {
-            this.Type = DataType.GetDefault().Id;
+            // required for XmlSerializer.
+        }
+
+        internal VariableNode(Activity activity) : base(activity)
+        {
+            this.Type = DataType.GetDefault().GetType().FullName;
         }
 
         public override Guid Execute(ActivityContext context)
@@ -37,7 +36,7 @@ namespace Roro.Activities
             throw new NotImplementedException();
         }
 
-        public override GraphicsPath Render(Graphics g, Rectangle r, NodeStyle o)
+        public override GraphicsPath Render(Graphics g, Rect r, NodeStyle o)
         {
             var path = new GraphicsPath();
             path.StartFigure();
@@ -55,7 +54,7 @@ namespace Roro.Activities
             return path;
         }
 
-        public override void RenderText(Graphics g, Rectangle r, NodeStyle o)
+        public override void RenderText(Graphics g, Rect r, NodeStyle o)
         {
             g.DrawString(this.Name + Environment.NewLine + this.CurrentValue, o.Font, o.FontBrush, r, o.StringFormat);
         }

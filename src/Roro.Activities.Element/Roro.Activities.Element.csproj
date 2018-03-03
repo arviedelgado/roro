@@ -38,7 +38,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,7 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppStart.cs" />
-    <Compile Include="ElementWriteText.cs" />
+    <Compile Include="ElementValueGet.cs" />
+    <Compile Include="ElementValueSet.cs" />
+    <Compile Include="ElementSendKeys.cs" />
     <Compile Include="ElementExists.cs" />
     <Compile Include="ElementClick.cs" />
     <Compile Include="Core\Context.cs" />

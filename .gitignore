@@ -9,6 +9,4 @@ src/*/bin
 src/packages
 
 bin/*
-!bin/*.exe
-!bin/*.dll
-!bin/*.xml
+!bin/*.zip

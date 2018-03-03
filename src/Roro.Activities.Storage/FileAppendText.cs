@@ -12,6 +12,7 @@ namespace Roro.Activities.Storage
         public override void Execute(ActivityContext context)
         {
             var filePath = context.Get(this.FilePath);
+
             var text = context.Get(this.Text);
 
             File.AppendAllText(filePath, text);

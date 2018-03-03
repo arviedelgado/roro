@@ -1,11 +1,9 @@
 ﻿
 using Microsoft.VisualBasic.CompilerServices;
 using System;
-using System.Runtime.Serialization;
 
 namespace Roro
 {
-    [DataContract]
     public sealed class Condition
     {
         public bool Use
@@ -14,17 +12,18 @@ namespace Roro
             set => this.Enabled = value;
         }
 
-        [DataMember]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
-        [DataMember]
         public object Value { get; set; }
 
-        [DataMember]
-        public bool Enabled { get; private set; }
+        public bool Enabled { get; set; }
 
-        [DataMember]
-        public bool Required { get; private set; }
+        public bool Required { get; set; }
+
+        private Condition()
+        {
+
+        }
 
         public Condition(string name, object value, bool enabled, bool required)
         {

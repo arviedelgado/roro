@@ -25,10 +25,10 @@ namespace Roro.Activities
         private ComboBox typeComboBox;
         private Label typeLabel;
         private LabelColumn inputNameColumn;
-        private DataTypeColumn inputTypeColumn;
+        private LabelColumn inputTypeColumn;
         private GhostTextBoxColumn inputValueColumn;
         private LabelColumn outputNameColumn;
-        private DataTypeColumn outputTypeColumn;
+        private LabelColumn outputTypeColumn;
         private VariableColumn outputValueColumn;
         private Label nameLabel;
 
@@ -43,20 +43,20 @@ namespace Roro.Activities
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.inputsTab = new System.Windows.Forms.TabPage();
             this.inputGrid = new System.Windows.Forms.DataGridView();
-            this.inputNameColumn = new Roro.Activities.LabelColumn();
-            this.inputTypeColumn = new Roro.Activities.DataTypeColumn();
-            this.inputValueColumn = new Roro.Activities.GhostTextBoxColumn();
             this.outputsTab = new System.Windows.Forms.TabPage();
             this.outputGrid = new System.Windows.Forms.DataGridView();
-            this.outputNameColumn = new Roro.Activities.LabelColumn();
-            this.outputTypeColumn = new Roro.Activities.DataTypeColumn();
-            this.outputValueColumn = new Roro.Activities.VariableColumn();
             this.valuesTab = new System.Windows.Forms.TabPage();
             this.currentValueLabel = new System.Windows.Forms.Label();
             this.initialValueLabel = new System.Windows.Forms.Label();
             this.initialValueTextBox = new System.Windows.Forms.TextBox();
             this.currentValueTextBox = new System.Windows.Forms.TextBox();
             this.nameLabel = new System.Windows.Forms.Label();
+            this.outputNameColumn = new Roro.Activities.LabelColumn();
+            this.outputTypeColumn = new Roro.Activities.LabelColumn();
+            this.outputValueColumn = new Roro.Activities.VariableColumn();
+            this.inputNameColumn = new Roro.Activities.LabelColumn();
+            this.inputTypeColumn = new Roro.Activities.LabelColumn();
+            this.inputValueColumn = new Roro.Activities.GhostTextBoxColumn();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.inputsTab.SuspendLayout();
@@ -188,36 +188,9 @@ namespace Roro.Activities
             this.inputGrid.Location = new System.Drawing.Point(6, 6);
             this.inputGrid.Name = "inputGrid";
             this.inputGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.inputGrid.Size = new System.Drawing.Size(540, 208);
+            this.inputGrid.Size = new System.Drawing.Size(540, 206);
             this.inputGrid.TabIndex = 0;
             this.inputGrid.TabStop = false;
-            // 
-            // inputNameColumn
-            // 
-            this.inputNameColumn.FillWeight = 35F;
-            this.inputNameColumn.HeaderText = "Name";
-            this.inputNameColumn.Name = "inputNameColumn";
-            this.inputNameColumn.ReadOnly = true;
-            this.inputNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.inputNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // inputTypeColumn
-            // 
-            this.inputTypeColumn.DisplayMember = "Name";
-            this.inputTypeColumn.DisplayStyleForCurrentCellOnly = true;
-            this.inputTypeColumn.FillWeight = 15F;
-            this.inputTypeColumn.HeaderText = "Type";
-            this.inputTypeColumn.Name = "inputTypeColumn";
-            this.inputTypeColumn.ReadOnly = true;
-            this.inputTypeColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.inputTypeColumn.ValueMember = "Id";
-            // 
-            // inputValueColumn
-            // 
-            this.inputValueColumn.FillWeight = 50F;
-            this.inputValueColumn.HeaderText = "Value";
-            this.inputValueColumn.Name = "inputValueColumn";
-            this.inputValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // outputsTab
             // 
@@ -250,37 +223,9 @@ namespace Roro.Activities
             this.outputGrid.Location = new System.Drawing.Point(6, 6);
             this.outputGrid.Name = "outputGrid";
             this.outputGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.outputGrid.Size = new System.Drawing.Size(540, 208);
+            this.outputGrid.Size = new System.Drawing.Size(540, 206);
             this.outputGrid.TabIndex = 1;
             this.outputGrid.TabStop = false;
-            // 
-            // outputNameColumn
-            // 
-            this.outputNameColumn.FillWeight = 35F;
-            this.outputNameColumn.HeaderText = "Name";
-            this.outputNameColumn.Name = "outputNameColumn";
-            this.outputNameColumn.ReadOnly = true;
-            this.outputNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.outputNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // outputTypeColumn
-            // 
-            this.outputTypeColumn.DisplayMember = "Name";
-            this.outputTypeColumn.DisplayStyleForCurrentCellOnly = true;
-            this.outputTypeColumn.FillWeight = 15F;
-            this.outputTypeColumn.HeaderText = "Type";
-            this.outputTypeColumn.Name = "outputTypeColumn";
-            this.outputTypeColumn.ReadOnly = true;
-            this.outputTypeColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.outputTypeColumn.ValueMember = "Id";
-            // 
-            // outputValueColumn
-            // 
-            this.outputValueColumn.DisplayStyleForCurrentCellOnly = true;
-            this.outputValueColumn.FillWeight = 50F;
-            this.outputValueColumn.HeaderText = "Variable";
-            this.outputValueColumn.Name = "outputValueColumn";
-            this.outputValueColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // valuesTab
             // 
@@ -289,10 +234,10 @@ namespace Roro.Activities
             this.valuesTab.Controls.Add(this.initialValueLabel);
             this.valuesTab.Controls.Add(this.initialValueTextBox);
             this.valuesTab.Controls.Add(this.currentValueTextBox);
-            this.valuesTab.Location = new System.Drawing.Point(4, 24);
+            this.valuesTab.Location = new System.Drawing.Point(4, 22);
             this.valuesTab.Name = "valuesTab";
             this.valuesTab.Padding = new System.Windows.Forms.Padding(3);
-            this.valuesTab.Size = new System.Drawing.Size(552, 230);
+            this.valuesTab.Size = new System.Drawing.Size(552, 232);
             this.valuesTab.TabIndex = 2;
             this.valuesTab.Text = "Values";
             // 
@@ -346,6 +291,57 @@ namespace Roro.Activities
             this.nameLabel.Size = new System.Drawing.Size(39, 15);
             this.nameLabel.TabIndex = 0;
             this.nameLabel.Text = "Name";
+            // 
+            // outputNameColumn
+            // 
+            this.outputNameColumn.FillWeight = 35F;
+            this.outputNameColumn.HeaderText = "Name";
+            this.outputNameColumn.Name = "outputNameColumn";
+            this.outputNameColumn.ReadOnly = true;
+            this.outputNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.outputNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // outputTypeColumn
+            // 
+            this.outputTypeColumn.FillWeight = 15F;
+            this.outputTypeColumn.HeaderText = "Type";
+            this.outputTypeColumn.Name = "outputTypeColumn";
+            this.outputTypeColumn.ReadOnly = true;
+            this.outputTypeColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.outputTypeColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // outputValueColumn
+            // 
+            this.outputValueColumn.DisplayStyleForCurrentCellOnly = true;
+            this.outputValueColumn.FillWeight = 50F;
+            this.outputValueColumn.HeaderText = "Variable";
+            this.outputValueColumn.Name = "outputValueColumn";
+            this.outputValueColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // inputNameColumn
+            // 
+            this.inputNameColumn.FillWeight = 35F;
+            this.inputNameColumn.HeaderText = "Name";
+            this.inputNameColumn.Name = "inputNameColumn";
+            this.inputNameColumn.ReadOnly = true;
+            this.inputNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.inputNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // inputTypeColumn
+            // 
+            this.inputTypeColumn.FillWeight = 15F;
+            this.inputTypeColumn.HeaderText = "Type";
+            this.inputTypeColumn.Name = "inputTypeColumn";
+            this.inputTypeColumn.ReadOnly = true;
+            this.inputTypeColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.inputTypeColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // inputValueColumn
+            // 
+            this.inputValueColumn.FillWeight = 50F;
+            this.inputValueColumn.HeaderText = "Value";
+            this.inputValueColumn.Name = "inputValueColumn";
+            this.inputValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // NodeForm
             // 
@@ -402,13 +398,12 @@ namespace Roro.Activities
 
         private void InputsTab_Initialize()
         {
-            if (this.targetNode.ActivityInputs is List<Input> inputs && inputs.Count > 0)
+            if (this.targetNode.Activity.Inputs is List<Input> inputs && inputs.Count > 0)
             {
-                this.inputTypeColumn.DataSource = DataType.GetCommonTypes();
                 foreach (var input in inputs)
                 {
                     this.inputGrid.Rows.Add(input.Name, input.Type, input.Value);
-                    this.inputGrid[this.inputGrid.ColumnCount - 1, this.inputGrid.RowCount - 1] = DataType.GetFromId(input.Type).CellTemplate;
+                    this.inputGrid[this.inputGrid.ColumnCount - 1, this.inputGrid.RowCount - 1] = DataType.CreateInstance(input.Type).CellTemplate;
                     this.inputGrid[this.inputGrid.ColumnCount - 1, this.inputGrid.RowCount - 1].Value = input.Value;
                 }
 
@@ -418,10 +413,10 @@ namespace Roro.Activities
                     {
                         variableCell.OnDataError(sender, e);
                     }
-                    if (this.inputGrid[e.ColumnIndex, e.RowIndex] is DataTypeCell dataTypeCell)
-                    {
-                        dataTypeCell.OnDataError(sender, e);
-                    }
+                    //if (this.inputGrid[e.ColumnIndex, e.RowIndex] is DataTypeCell dataTypeCell)
+                    //{
+                    //    dataTypeCell.OnDataError(sender, e);
+                    //}
                 };
                 this.inputsTab.Text = this.inputsTab.Text + " (" + inputs.Count + ")";
             }
@@ -433,13 +428,11 @@ namespace Roro.Activities
 
         private void OutputsTab_Initialize(Page page)
         {
-            if (this.targetNode.ActivityOutputs is List<Output> outputs && outputs.Count > 0)
+            if (this.targetNode.Activity.Outputs is List<Output> outputs && outputs.Count > 0)
             {
-                // Type ComboBox
-                this.outputTypeColumn.DataSource = DataType.GetCommonTypes();
-                // Value ComboBOx
+                // Value ComboBox
                 var variableNames = new List<string>() { string.Empty };
-                variableNames.AddRange(page.VariableNodes.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+                variableNames.AddRange(page.GetNodes<VariableNode>().OrderBy(x => x.Name).Select(x => x.Name).ToList());
                 this.outputValueColumn.DataSource = variableNames;
                 //
                 foreach (var output in outputs)
@@ -452,10 +445,10 @@ namespace Roro.Activities
                     {
                         variableCell.OnDataError(sender, e);
                     }
-                    if (this.outputGrid[e.ColumnIndex, e.RowIndex] is DataTypeCell dataTypeCell)
-                    {
-                        dataTypeCell.OnDataError(sender, e);
-                    }
+                    //if (this.outputGrid[e.ColumnIndex, e.RowIndex] is DataTypeCell dataTypeCell)
+                    //{
+                    //    dataTypeCell.OnDataError(sender, e);
+                    //}
                 };
                 this.outputsTab.Text = this.outputsTab.Text + " (" + outputs.Count + ")";
             }
@@ -471,7 +464,7 @@ namespace Roro.Activities
             {
                 this.nameTextBox.Validating += (sender, e) =>
                 {
-                    if (page.VariableNodes.FirstOrDefault(x => x.Name == this.nameTextBox.Text && x != variableNode) != null)
+                    if (page.GetNodes<VariableNode>().FirstOrDefault(x => x.Name == this.nameTextBox.Text && x != variableNode) != null)
                     {
                         e.Cancel = true;
                         MessageBox.Show("Variable name '" + this.nameTextBox.Text + "' already exists");
@@ -499,7 +492,7 @@ namespace Roro.Activities
                 this.initialValueTextBox.Text = variableNode.InitialValue?.ToString();
                 this.initialValueTextBox.Validating += (sender, e) =>
                 {
-                    var data = DataType.GetFromId(this.typeComboBox.SelectedValue.ToString());
+                    var data = DataType.CreateInstance(this.typeComboBox.SelectedValue.ToString());
                     if (this.initialValueTextBox.Text == string.Empty)
                     {
                         this.initialValueTextBox.Text = data.GetValue().ToString();
@@ -550,7 +543,7 @@ namespace Roro.Activities
                             Value = row.Cells[2].Value?.ToString() ?? string.Empty
                         });
                     }
-                    this.targetNode.ActivityInputs = inputs;
+                    this.targetNode.Activity.Inputs = inputs;
 
                     var outputs = new List<Output>();
                     foreach (DataGridViewRow row in this.outputGrid.Rows)
@@ -562,7 +555,7 @@ namespace Roro.Activities
                             Value = row.Cells[2].Value?.ToString() ?? string.Empty
                         });
                     }
-                    this.targetNode.ActivityOutputs = outputs;
+                    this.targetNode.Activity.Outputs = outputs;
                 }
                 this.DialogResult = DialogResult.OK;
             }

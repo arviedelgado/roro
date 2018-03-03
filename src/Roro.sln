@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Storage", "
 		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Cognitive", "Roro.Activities.Cognitive\Roro.Activities.Cognitive.csproj", "{F4558562-7292-4521-AA1D-3D090B070B92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{295EE6C0-64BE-459F-AA05-D4284C8A63F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{295EE6C0-64BE-459F-AA05-D4284C8A63F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{295EE6C0-64BE-459F-AA05-D4284C8A63F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4558562-7292-4521-AA1D-3D090B070B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4558562-7292-4521-AA1D-3D090B070B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4558562-7292-4521-AA1D-3D090B070B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4558562-7292-4521-AA1D-3D090B070B92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

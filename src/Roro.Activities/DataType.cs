@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Security;
 using System.Windows.Forms;
 
@@ -37,13 +36,13 @@ namespace Roro.Activities
 
         public static DataType GetDefault() => new Text();
 
-        public static DataType GetFromId(string id)
+        public static DataType CreateInstance(string fullName)
         {
             if (AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => typeof(DataType).IsAssignableFrom(x) && !x.IsAbstract && !x.IsGenericType)
                 .Select(x => Activator.CreateInstance(x) as DataType)
-                .FirstOrDefault(x => x.Id == id) is DataType type)
+                .FirstOrDefault(x => x.GetType().FullName == fullName) is DataType type)
             {
                 return type;
             }
@@ -53,7 +52,7 @@ namespace Roro.Activities
 
     public abstract class DataType<T> : DataType
     {
-        public override string Id => typeof(T).FullName;
+        public override string Id => this.GetType().FullName;
 
         public override string Name => this.GetType().Name;
 

@@ -1,44 +1,55 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Roro.Activities
 {
-    [DataContract]
-    public partial class Page : IDisposable
+    public interface IPage
     {
-        [DataMember]
-        public Guid Id { get; private set; }
+        Guid Id { get; set; }
 
-        [DataMember]
+        string Name { get; set; }
+
+        List<Node> Nodes { get; set; }
+
+        event EventHandler OnStateChanged;
+
+        void Run();
+
+        void Pause();
+
+        void Stop();
+    }
+
+    public partial class Page : IPage, IDisposable
+    {
+        [XmlAttribute]
+        public Guid Id { get; set; }
+
+        [XmlAttribute]
         public string Name { get; set; }
 
-        [DataMember]
-        private List<Node> Nodes { get; set; }
+        public List<Node> Nodes { get; set; }
 
-        private HashSet<Node> SelectedNodes { get; set; }
+        public IList<T> GetNodes<T>() where T : Node
+        {
+            return this.Nodes.Where(x => x is T).Cast<T>().ToList();
+        }
 
-        private Dictionary<Node, GraphicsPath> RenderedNodes { get; set; }
+        public Page()
+        {
+            this.Initialize();
+            this.Initialize_Events();
+            this.Initialize_Runner();
+        }
 
-        internal List<VariableNode> VariableNodes => this.Nodes.Where(x => x is VariableNode).Cast<VariableNode>().ToList();
-
-        private Panel Canvas { get; set; }
-
-        private Page() => Initialize();
-
-        [OnDeserializing]
-        private void Initialize(StreamingContext context = default)
+        private void Initialize()
         {
             this.Id = Guid.NewGuid();
-            this.Name = string.Format("My{0}_{1}", this.GetType().Name, System.DateTime.Now.Ticks);
+            this.Name = string.Empty;
             this.Nodes = new List<Node>();
-            this.SelectedNodes = new HashSet<Node>();
-            this.RenderedNodes = new Dictionary<Node, GraphicsPath>();
 
             this.AddNode(typeof(StartNodeActivity).FullName,
                 PageRenderOptions.GridSize * 15,
@@ -47,31 +58,11 @@ namespace Roro.Activities
             this.AddNode(typeof(EndNodeActivity).FullName,
                 PageRenderOptions.GridSize * 15,
                 PageRenderOptions.GridSize * 15);
-
-            this.Canvas = new Panel();
-            this.Canvas.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this.Canvas, true);
-            this.Canvas.Paint += Canvas_Paint;
-            this.Canvas.MouseDown += Canvas_MouseDown;
-            this.Canvas.KeyDown += Canvas_KeyDown;
-            this.Canvas.AllowDrop = true;
-            this.Canvas.DragEnter += Canvas_DragEnter;
-            this.Canvas.DragDrop += Canvas_DragDrop;
-
-            this.Initialize_PageRunner();
         }
 
         private Node GetNodeById(Guid id)
         {
             return this.Nodes.FirstOrDefault(x => x.Id == id);
-        }
-
-        private Node GetNodeFromPoint(Point pt)
-        {
-            if (this.RenderedNodes.FirstOrDefault(x => x.Value.IsVisible(pt.X, pt.Y)) is KeyValuePair<Node, GraphicsPath> item)
-            {
-                return item.Key;
-            }
-            return null;
         }
 
         private Node AddNode(string activityId, int x, int y)
@@ -127,7 +118,7 @@ namespace Roro.Activities
             else if (activity is VariableNodeActivity)
             {
                 var variableIndex = 1;
-                while (this.VariableNodes.Exists(v => v.Name == "Variable " + variableIndex))
+                while (this.GetNodes<VariableNode>().Count(v => v.Name == "Variable " + variableIndex) > 0)
                 {
                     variableIndex++;
                 }
@@ -141,8 +132,8 @@ namespace Roro.Activities
                 throw new NotSupportedException();
             }
             var bounds = node.Bounds;
-            bounds.Location = new Point(x, y);
-            bounds.Offset(-bounds.Width / 2, -bounds.Height / 2);
+            bounds.X = x - bounds.Width / 2;
+            bounds.Y = y - bounds.Height / 2;
             node.SetBounds(bounds);
             this.Nodes.Add(node);
             return node;
@@ -174,6 +165,11 @@ namespace Roro.Activities
             {
                 this.Nodes.Remove(node);
             }
+        }
+
+        public override string ToString()
+        {
+            return XmlSerializerHelper.ToString(this);
         }
 
         public void Dispose()

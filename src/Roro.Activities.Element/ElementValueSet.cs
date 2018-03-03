@@ -3,15 +3,17 @@ using System.Linq;
 
 namespace Roro.Activities.Element
 {
-    public sealed class ElementClick : ProcessNodeActivity
+    public sealed class ElementValueSet : ProcessNodeActivity
     {
         public Input<ElementQuery> Element { get; set; }
 
+        public Input<Text> Value { get; set; }
+
         public override void Execute(ActivityContext context)
         {
+            var value = context.Get(this.Value, string.Empty);
+
             var query = ElementQuery.Get(this.Element);
-            if (query == null)
-                return;
 
             var elements = WinContext.Shared.GetElementsFromQuery(query);
             if (elements.Count() == 0)
@@ -19,14 +21,11 @@ namespace Roro.Activities.Element
             if (elements.Count() > 1)
                 throw new Exception("Too many elements found.");
 
-            using (var input = new InputDriver())
-            {
-                var e = elements.First() as WinElement;
-                e.Focus();
-                var p = e.Bounds.Center;
-                input.MouseMove(p.X, p.Y);
-                input.Click(MouseButton.Left);
-            }
+            var e = elements.First() as WinElement;
+
+            e.Focus();
+
+            e.Value = value;
         }
     }
 }

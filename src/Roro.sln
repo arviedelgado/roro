@@ -7,13 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities", "Roro.Act
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Excel", "Roro.Activities.Excel\Roro.Activities.Excel.csproj", "{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Studio", "Roro.Studio\Roro.Studio.csproj", "{5A67CF0F-DA45-4269-B7E8-A9BD24FB0B41}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DB4188B9-7008-4FB9-BC27-6BCA69482801} = {DB4188B9-7008-4FB9-BC27-6BCA69482801}
-		{295EE6C0-64BE-459F-AA05-D4284C8A63F1} = {295EE6C0-64BE-459F-AA05-D4284C8A63F1}
-		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD} = {1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Element", "Roro.Activities.Element\Roro.Activities.Element.csproj", "{DB4188B9-7008-4FB9-BC27-6BCA69482801}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Storage", "Roro.Activities.Storage\Roro.Activities.Storage.csproj", "{295EE6C0-64BE-459F-AA05-D4284C8A63F1}"
@@ -22,6 +15,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Storage", "
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Cognitive", "Roro.Activities.Cognitive\Roro.Activities.Cognitive.csproj", "{F4558562-7292-4521-AA1D-3D090B070B92}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro", "Roro\Roro.csproj", "{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F4558562-7292-4521-AA1D-3D090B070B92} = {F4558562-7292-4521-AA1D-3D090B070B92}
+		{DB4188B9-7008-4FB9-BC27-6BCA69482801} = {DB4188B9-7008-4FB9-BC27-6BCA69482801}
+		{295EE6C0-64BE-459F-AA05-D4284C8A63F1} = {295EE6C0-64BE-459F-AA05-D4284C8A63F1}
+		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD} = {1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +41,6 @@ Global
 		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A67CF0F-DA45-4269-B7E8-A9BD24FB0B41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A67CF0F-DA45-4269-B7E8-A9BD24FB0B41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A67CF0F-DA45-4269-B7E8-A9BD24FB0B41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A67CF0F-DA45-4269-B7E8-A9BD24FB0B41}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,6 +53,10 @@ Global
 		{F4558562-7292-4521-AA1D-3D090B070B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4558562-7292-4521-AA1D-3D090B070B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4558562-7292-4521-AA1D-3D090B070B92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

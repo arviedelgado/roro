@@ -14,6 +14,7 @@ namespace Roro.Activities.Element
             var query = ElementQuery.Get(this.Element);
 
             var elements = WinContext.Shared.GetElementsFromQuery(query);
+
             if (elements.Count() == 0)
                 throw new Exception("Element not found.");
             if (elements.Count() > 1)

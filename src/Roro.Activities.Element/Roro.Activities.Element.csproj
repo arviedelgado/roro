@@ -62,9 +62,10 @@
     <Compile Include="AppStart.cs" />
     <Compile Include="ElementValueGet.cs" />
     <Compile Include="ElementValueSet.cs" />
-    <Compile Include="ElementSendKeys.cs" />
+    <Compile Include="GlobalKeyPress.cs" />
     <Compile Include="ElementExists.cs" />
     <Compile Include="ElementClick.cs" />
+    <Compile Include="GlobalMouseClick.cs" />
     <Compile Include="Core\Context.cs" />
     <Compile Include="Core\ElementPickerForm.cs">
       <SubType>Form</SubType>

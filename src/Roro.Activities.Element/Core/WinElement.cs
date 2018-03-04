@@ -59,6 +59,10 @@ namespace Roro
                     var valuePattern = pattern as ValuePattern;
                     valuePattern.SetValue(value);
                 }
+                else
+                {
+                    throw new NotSupportedException();
+                }
             }
         }
 
@@ -182,7 +186,7 @@ namespace Roro
             var process = Process.GetProcessById(this.ProcessId);
             while (!process.Responding)
             {
-                Console.WriteLine("Not responding");
+
             }
             try
             {
@@ -191,6 +195,19 @@ namespace Roro
             catch
             {
 
+            }
+        }
+
+        public void Click()
+        {
+            if (this.rawElement.TryGetCurrentPattern(InvokePattern.Pattern, out object pattern))
+            {
+                var invokePattern = pattern as InvokePattern;
+                invokePattern.Invoke();
+            }
+            else
+            {
+                throw new NotSupportedException();
             }
         }
     }

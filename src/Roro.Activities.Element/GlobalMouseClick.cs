@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Roro.Activities.Element
 {
-    public sealed class ElementClick : ProcessNodeActivity
+    public sealed class GlobalMouseClick : ProcessNodeActivity
     {
         public Input<ElementQuery> Element { get; set; }
 
@@ -23,7 +23,9 @@ namespace Roro.Activities.Element
             {
                 var e = elements.First() as WinElement;
                 e.Focus();
-                e.Click();
+                var p = e.Bounds.Center;
+                input.MouseMove(p.X, p.Y);
+                input.Click(MouseButton.Left);
             }
         }
     }

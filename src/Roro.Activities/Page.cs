@@ -33,31 +33,34 @@ namespace Roro.Activities
 
         public List<Node> Nodes { get; set; }
 
-        public IList<T> GetNodes<T>() where T : Node
+        public List<T> GetNodes<T>() where T : Node
         {
             return this.Nodes.Where(x => x is T).Cast<T>().ToList();
         }
 
-        public Page()
-        {
-            this.Initialize();
-            this.Initialize_Events();
-            this.Initialize_Runner();
-        }
-
-        private void Initialize()
+        private Page()
         {
             this.Id = Guid.NewGuid();
             this.Name = string.Empty;
             this.Nodes = new List<Node>();
 
-            this.AddNode(typeof(StartNodeActivity).FullName,
+            this.Initialize_Events();
+            this.Initialize_Runner();
+        }
+
+        public static Page Create()
+        {
+            var p = new Page();
+
+            p.AddNode(typeof(StartNodeActivity).FullName,
                 PageRenderOptions.GridSize * 15,
                 PageRenderOptions.GridSize * 5);
 
-            this.AddNode(typeof(EndNodeActivity).FullName,
+            p.AddNode(typeof(EndNodeActivity).FullName,
                 PageRenderOptions.GridSize * 15,
                 PageRenderOptions.GridSize * 15);
+
+            return p;
         }
 
         private Node GetNodeById(Guid id)

@@ -11,7 +11,7 @@ namespace Roro.Activities
 
         public object InitialValue { get; set; }
 
-        public object CurrentValue { get; set; }
+        internal object CurrentValue { get; set; }
 
         public const string StartToken = "[";
 

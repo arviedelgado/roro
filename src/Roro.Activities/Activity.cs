@@ -92,15 +92,6 @@ namespace Roro.Activities
             {
                 Assembly.LoadFrom(file);
             }
-            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (var refasm in asm.GetReferencedAssemblies())
-                {
-                    Console.WriteLine(refasm.FullName);
-                }
-            }
-
-
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => !x.IsAbstract
@@ -109,7 +100,7 @@ namespace Roro.Activities
                 .OrderBy(x => x.FullName);
         }
 
-        private static IEnumerable<Type> GetAllActivities()
+        public static IEnumerable<Type> GetAllActivities()
         {
             Activity.GetExternalActivities();
             return AppDomain.CurrentDomain.GetAssemblies()

@@ -10,8 +10,6 @@ namespace Roro
 {
     public sealed class ElementQuery : DataType<List<Condition>>, IEnumerable<Condition>
     {
-        public override string Name => "Element";
-
         public override DataGridViewCell CellTemplate => new ElementPickerLinkCell();
 
         public ElementQuery() : this(new List<Condition>()) { }
@@ -47,7 +45,7 @@ namespace Roro
 
         public static ElementQuery Get(Input<ElementQuery> input)
         {
-            var value = input.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(input).ToString();
+            var value = input.Value;
             if (value == string.Empty) return null;
 
             var query = new ElementQuery(XmlSerializerHelper.ToObject<List<Condition>>(value));

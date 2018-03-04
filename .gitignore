@@ -10,3 +10,5 @@ src/packages
 
 bin/*
 !bin/*.zip
+!bin/Test Workflows
+!bin/Test Workflows/*.xml

@@ -24,10 +24,11 @@ namespace Roro.Activities
 
         protected Node()
         {
-            // required for XmlSerializer.
+            this.Ports = new List<Port>();
+            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
         }
 
-        public Node(Activity activity)
+        public Node(Activity activity) : this()
         {
             this.Activity = activity;
             this.Id = Guid.NewGuid();
@@ -37,8 +38,6 @@ namespace Roro.Activities
                 PageRenderOptions.GridSize * 0,
                 PageRenderOptions.GridSize * 4,
                 PageRenderOptions.GridSize * 2);
-            this.Ports = new List<Port>();
-            this.RenderedPorts = new Dictionary<Port, GraphicsPath>();
         }
 
         internal Dictionary<Port, GraphicsPath> RenderedPorts { get; set; }

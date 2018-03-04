@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Roro.Activities
@@ -15,13 +13,10 @@ namespace Roro.Activities
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.saveButton = new System.Windows.Forms.Button();
-            this.openButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pauseButton = new System.Windows.Forms.Button();
-            this.consoleButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
             this.runButton = new System.Windows.Forms.Button();
-            this.newButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -69,8 +64,6 @@ namespace Roro.Activities
             // panel2
             // 
             this.panel2.Controls.Add(this.saveButton);
-            this.panel2.Controls.Add(this.newButton);
-            this.panel2.Controls.Add(this.openButton);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(6, 6);
             this.panel2.Name = "panel2";
@@ -79,7 +72,7 @@ namespace Roro.Activities
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(155, 3);
+            this.saveButton.Location = new System.Drawing.Point(3, 3);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(70, 23);
             this.saveButton.TabIndex = 1;
@@ -88,21 +81,9 @@ namespace Roro.Activities
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
-            // openButton
-            // 
-            this.openButton.Location = new System.Drawing.Point(79, 3);
-            this.openButton.Name = "openButton";
-            this.openButton.Size = new System.Drawing.Size(70, 23);
-            this.openButton.TabIndex = 0;
-            this.openButton.TabStop = false;
-            this.openButton.Text = "Open";
-            this.openButton.UseVisualStyleBackColor = true;
-            this.openButton.Click += new System.EventHandler(this.OpenButton_Click);
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.pauseButton);
-            this.panel1.Controls.Add(this.consoleButton);
             this.panel1.Controls.Add(this.stopButton);
             this.panel1.Controls.Add(this.runButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -122,19 +103,6 @@ namespace Roro.Activities
             this.pauseButton.Text = "Pause";
             this.pauseButton.UseVisualStyleBackColor = true;
             this.pauseButton.Click += new System.EventHandler(this.PauseButton_Click);
-            // 
-            // consoleButton
-            // 
-            this.consoleButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.consoleButton.Location = new System.Drawing.Point(649, 3);
-            this.consoleButton.Name = "consoleButton";
-            this.consoleButton.Size = new System.Drawing.Size(70, 23);
-            this.consoleButton.TabIndex = 2;
-            this.consoleButton.TabStop = false;
-            this.consoleButton.Tag = "";
-            this.consoleButton.Text = "Console";
-            this.consoleButton.UseVisualStyleBackColor = true;
-            this.consoleButton.Click += new System.EventHandler(this.ConsoleButton_Click);
             // 
             // stopButton
             // 
@@ -159,17 +127,6 @@ namespace Roro.Activities
             this.runButton.UseVisualStyleBackColor = true;
             this.runButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
-            // newButton
-            // 
-            this.newButton.Location = new System.Drawing.Point(3, 3);
-            this.newButton.Name = "newButton";
-            this.newButton.Size = new System.Drawing.Size(70, 23);
-            this.newButton.TabIndex = 2;
-            this.newButton.TabStop = false;
-            this.newButton.Text = "New";
-            this.newButton.UseVisualStyleBackColor = true;
-            this.newButton.Click += new System.EventHandler(this.NewButton_Click);
-            // 
             // PageForm
             // 
             this.ClientSize = new System.Drawing.Size(984, 561);
@@ -177,9 +134,8 @@ namespace Roro.Activities
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.Name = "PageForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Roro - Free RPA Software";
+            this.Text = "Roro Studio";
             this.Load += new System.EventHandler(this.PageForm_Load);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PageForm_KeyUp);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -197,55 +153,41 @@ namespace Roro.Activities
         private Button stopButton;
         private Panel panel2;
         private Button saveButton;
-        private Button openButton;
-        private Button consoleButton;
         private Button pauseButton;
-        private Button newButton;
 
         private Page page;
 
-        private string Title = "Roro - Free RPA Software";
+        private string Title = "Roro Studio";
 
-        public static PageForm Create()
+        public string FileName = string.Empty;
+
+        public string FileContent => XmlSerializerHelper.ToString(this.page);
+
+        public EventHandler OnBeforeSave = delegate { };
+
+        public PageForm(string xml) : this()
         {
-            return new PageForm();
+            if (string.IsNullOrEmpty(xml))
+            {
+                this.page = Page.Create();
+            }
+            else if (XmlSerializerHelper.ToObject<Page>(xml) is Page p)
+            {
+                this.page = p;
+            }
+            else
+            {
+                throw new FileLoadException();
+            }
         }
 
         private void PageForm_Load(object sender, System.EventArgs e)
         {
-            this.consoleButton.PerformClick();
             ActivityForm.Create().Parent = this.activityPanel;
-            this.newButton.PerformClick();
             this.page.OnStateChanged += Page_OnStateChanged;
-            if (Environment.GetCommandLineArgs().ElementAtOrDefault(1) is string xmlFile)
-            {
-                if (this.OpenWorkflow(xmlFile) is Page xPage)
-                {
-                    this.page = xPage;
-                    this.page.Show(this.pagePanel);
-                    this.page.OnStateChanged += Page_OnStateChanged;
-                    this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
-                    this.runButton.PerformClick();
-                    var exitOnComplete = true;
-                    xPage.OnStateChanged += (ss, ee) =>
-                    {
-                        switch (xPage.State)
-                        {
-                            case PageState.Completed:
-                                if (exitOnComplete)
-                                {
-                                    Environment.Exit(0);
-                                }
-                                break;
-
-                            case PageState.Paused:
-                            case PageState.Stopped:
-                                exitOnComplete = false;
-                                break;
-                        }
-                    };
-                }
-            }
+            this.page.Show(this.pagePanel);
+            this.page.OnStateChanged += Page_OnStateChanged;
+            this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
         }
 
         private void Page_OnStateChanged(object sender, EventArgs e)
@@ -275,40 +217,6 @@ namespace Roro.Activities
             }));
         }
 
-        private void NewButton_Click(object sender, EventArgs e)
-        {
-            if (this.page == null || this.CloseWorkflow())
-            {
-                this.page = new Page();
-                this.page.Show(this.pagePanel);
-                this.page.OnStateChanged += Page_OnStateChanged;
-                this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
-            }
-        }
-
-        private void OpenButton_Click(object sender, EventArgs e)
-        {
-            if (this.page == null || this.CloseWorkflow())
-            {
-                if (this.OpenWorkflow() is Page newPage)
-                {
-                    this.page = newPage;
-                    this.page.Show(this.pagePanel);
-                    this.page.OnStateChanged += Page_OnStateChanged;
-                    this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
-                }
-            }
-        }
-
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            if (this.page != null)
-            {
-                this.SaveWorkflow();
-                this.Text = string.Format("{0} - {1}", this.FileName, this.Title);
-            }
-        }
-
         private void RunButton_Click(object sender, System.EventArgs e)
         {
             if (this.page != null)
@@ -333,112 +241,9 @@ namespace Roro.Activities
             }
         }
 
-        private void PageForm_KeyUp(object sender, KeyEventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
-            switch (e.KeyData)
-            {
-                case Keys.Control | Keys.N:
-                    this.newButton.PerformClick();
-                    break;
-
-                case Keys.Control | Keys.O:
-                    this.openButton.PerformClick();
-                    break;
-
-                case Keys.Control | Keys.S:
-                    this.saveButton.PerformClick();
-                    break;
-            }
-        }
-
-        private string FilePath { get; set; }
-
-        private string FileName => string.IsNullOrEmpty(this.FilePath) ? "New*" : new FileInfo(this.FilePath).Name;
-
-        private const string FileDialogFilter = "Roro Workflow (*.xml)|*.xml";
-
-        private Page OpenWorkflow()
-        {
-            using (var f = new OpenFileDialog())
-            {
-                f.Filter = FileDialogFilter;
-                if (f.ShowDialog() == DialogResult.OK)
-                {
-                    return this.OpenWorkflow(f.FileName);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private Page OpenWorkflow(string path)
-        {
-            try
-            {
-                var data = File.ReadAllText(path);
-                var newPage = XmlSerializerHelper.ToObject<Page>(data);
-                this.FilePath = path;
-                return newPage;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
-            }
-        }
-
-        public bool SaveWorkflow()
-        {
-            if (string.IsNullOrEmpty(this.FilePath))
-            {
-                using (var f = new SaveFileDialog())
-                {
-                    f.Filter = FileDialogFilter;
-                    if (f.ShowDialog() == DialogResult.OK)
-                    {
-                        this.FilePath = f.FileName;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-            return SaveWorkflowAs(this.FilePath);
-        }
-
-        private bool SaveWorkflowAs(string path)
-        {
-            var data = XmlSerializerHelper.ToString(this.page);
-            File.WriteAllText(path, data);
-            this.FilePath = path;
-            return true;
-        }
-
-        private bool CloseWorkflow()
-        {
-            // TODO: ask user to save if has changes.
-            // Show asterisks on filename as well to indicate there are unsaved changes.
-            // Add the mentioned features when we have Undo Redo feature.
-            return true;
-        }
-
-        [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
-
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
-
-        private void ConsoleButton_Click(object sender, EventArgs e)
-        {
-            var visible = this.consoleButton.Tag is bool tag ? tag : true;
-            ShowWindow(GetConsoleWindow(), visible ? SW_HIDE : SW_SHOW);
-            this.consoleButton.Tag = !visible;
+            this.OnBeforeSave.Invoke(sender, e);
         }
     }
 }

@@ -41,7 +41,6 @@ namespace Roro.Activities
             {
                 case PageState.Running:
                     MessageBox.Show("The robot is already running.");
-                    Console.WriteLine("The robot is already running.");
                     break;
 
                 case PageState.Paused:
@@ -59,6 +58,7 @@ namespace Roro.Activities
                     this.ctsStop = new CancellationTokenSource();
                     this.State = PageState.Running;
                     this.OnStateChanged.Invoke(null, null);
+                    this.GetNodes<VariableNode>().ForEach(x => x.CurrentValue = x.InitialValue);
                     this.RunNextAsync();
                     break;
             }
@@ -72,7 +72,6 @@ namespace Roro.Activities
                     if (this.ctsPause.IsCancellationRequested)
                     {
                         MessageBox.Show("The robot is already pausing.");
-                        Console.WriteLine("The robot is already pausing.");
                     }
                     else
                     {
@@ -82,13 +81,11 @@ namespace Roro.Activities
 
                 case PageState.Paused:
                     MessageBox.Show("The robot is not running.");
-                    Console.WriteLine("The robot is not running.");
                     break;
 
                 case PageState.Stopped:
                 case PageState.Completed:
                     MessageBox.Show("The robot is not running.");
-                    Console.WriteLine("The robot is not running.");
                     break;
             }
         }
@@ -101,7 +98,6 @@ namespace Roro.Activities
                     if (this.ctsStop.IsCancellationRequested)
                     {
                         MessageBox.Show("The robot is already stopping.");
-                        Console.WriteLine("The robot is already stopping.");
                     }
                     else
                     {
@@ -117,7 +113,6 @@ namespace Roro.Activities
                 case PageState.Stopped:
                 case PageState.Completed:
                     MessageBox.Show("The robot is not running.");
-                    Console.WriteLine("The robot is not running.");
                     break;
             }
         }
@@ -176,7 +171,6 @@ namespace Roro.Activities
                 {
                     this.State = PageState.Paused;
                     this.OnStateChanged.Invoke(null, null);
-                    Console.WriteLine(ex.Message);
                     MessageBox.Show(ex.Message);
                 }
             });

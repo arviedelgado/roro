@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Roro.Activities.Element
 {
-    public sealed class ElementSendKeys : ProcessNodeActivity
+    public sealed class GlobalKeyPress : ProcessNodeActivity
     {
         public Input<ElementQuery> Element { get; set; }
 
@@ -20,7 +20,7 @@ namespace Roro.Activities.Element
             if (elements.Count() > 1)
                 throw new Exception("Too many elements found.");
 
-            var text = context.Get(this.Text);
+            var text = context.Get(this.Text, string.Empty);
 
             var e = elements.First() as WinElement;
             e.Focus();

@@ -8,6 +8,7 @@ namespace Roro.Activities
     {
         private static XmlSerializer GetSerializer<T>()
         {
+            Activity.GetAllActivities();
             return new XmlSerializer(typeof(T),
                 AppDomain.CurrentDomain.GetAssemblies().SelectMany(
                     x => x.GetTypes())

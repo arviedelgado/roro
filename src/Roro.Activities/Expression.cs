@@ -34,11 +34,12 @@ return
             var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, code);
             if (compilerResults.Errors.HasErrors)
             {
+                var errorText = string.Empty;
                 foreach (CompilerError compilerError in compilerResults.Errors)
                 {
-                    Console.WriteLine("ERROR: Line {0}, Column {1} - {2}", compilerError.Line, compilerError.Column, compilerError.ErrorText);
+                    errorText += string.Format("ERROR: Line {0}, Column {1} - {2}\n", compilerError.Line, compilerError.Column, compilerError.ErrorText);
                 }
-                throw new Exception();
+                throw new Exception(errorText);
             }
 
             var expressionObject = compilerResults.CompiledAssembly.GetType("ExpressionClass");
@@ -82,8 +83,6 @@ return
                 resolvedExpression += variable.ToExpression();
                 currentIndex = endIndex + 1;
             }
-
-            Console.WriteLine(resolvedExpression);
 
             return resolvedExpression;
         }

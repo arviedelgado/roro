@@ -11,9 +11,6 @@ namespace Roro.Activities.Element
         {
             var query = ElementQuery.Get(this.Element);
 
-            if (query == null)
-                throw new Exception("Input 'Element' is required.");
-
             var elements = WinContext.Shared.GetElementsFromQuery(query);
 
             if (elements.Count() == 0)

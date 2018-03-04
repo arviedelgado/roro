@@ -85,6 +85,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>PowerShell -command Compress-Archive -Update -Path "$(TargetDir)*.exe", "$(TargetDir)*.dll" -DestinationPath "$(TargetDir)$(TargetName).Release.zip"</PostBuildEvent>
+    <PostBuildEvent>cd $(SolutionDir)
+cd ..
+PowerShell -command compress-archive -Update -Path "bin\*.exe", "bin\*.dll", "LICENSE" -DestinationPath "bin\$(TargetName).Release.zip"</PostBuildEvent>
   </PropertyGroup>
 </Project>

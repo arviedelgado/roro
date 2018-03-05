@@ -171,15 +171,15 @@ namespace Roro
             return null;
         }
 
-        public override string MainWindowName => this.MainWindow?.Name;
+        public override string MainWindowName => this.MainWindow?.Name ?? string.Empty;
 
-        public override string WindowName => this.Type == "window" ? this.Name : this.Window?.Name;
-
-        [Property]
-        public string ParentName => this.Parent.Name;
+        public override string WindowName => this.Type == "window" ? this.Name : this.Window?.Name ?? string.Empty;
 
         [Property]
-        public int ParentIndex => this.Parent.Index;
+        public string ParentName => this.Parent?.Name ?? string.Empty;
+
+        [Property]
+        public int ParentIndex => this.Parent?.Index ?? 0;
 
         public override void Focus()
         {

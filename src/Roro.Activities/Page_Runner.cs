@@ -171,7 +171,8 @@ namespace Roro.Activities
                 {
                     this.State = PageState.Paused;
                     this.OnStateChanged.Invoke(null, null);
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw ex;
                 }
             });
         }

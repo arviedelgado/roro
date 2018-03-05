@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppStart.cs" />
+    <Compile Include="ElementPropertyGet.cs" />
     <Compile Include="ElementValueGet.cs" />
     <Compile Include="ElementValueSet.cs" />
     <Compile Include="GlobalKeyPress.cs" />

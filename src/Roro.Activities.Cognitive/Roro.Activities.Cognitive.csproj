@@ -57,10 +57,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roro.Activities.Apps\Roro.Activities.Apps.csproj">
-      <Project>{db4188b9-7008-4fb9-bc27-6bca69482801}</Project>
-      <Name>Roro.Activities.Apps</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Roro.Activities\Roro.Activities.csproj">
       <Project>{bd513e2d-46bc-408e-98e6-d12aee06e7ea}</Project>
       <Name>Roro.Activities</Name>

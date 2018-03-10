@@ -1,13 +1,10 @@
-﻿
-using Roro.Activities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Automation;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public sealed class WinElement : Element
     {
@@ -18,14 +15,11 @@ namespace Roro
             this.rawElement = rawElement;
         }
 
-        [Property]
-        public string Id => this.rawElement.Current.AutomationId;
+        public override string Id => this.rawElement.Current.AutomationId;
 
-        [Property]
-        public string Class => this.rawElement.Current.ClassName;
+        public override string Name => this.rawElement.Current.Name;
 
-        [Property(Enabled: true)]
-        public string Name => this.rawElement.Current.Name;
+        public override string ClassName => this.rawElement.Current.ClassName;
 
         public override string Type => this.rawElement.Current.ControlType.ProgrammaticName.Split('.').Last().ToLower();
 
@@ -40,8 +34,7 @@ namespace Roro
             }
         }
 
-        [Property]
-        public string Value
+        public override string Value
         {
             get
             {
@@ -173,13 +166,13 @@ namespace Roro
 
         public override string MainWindowName => this.MainWindow?.Name ?? string.Empty;
 
-        public override string WindowName => this.Type == "window" ? this.Name : this.Window?.Name ?? string.Empty;
+        public override string WindowName => this.Type == "window" ? this.Name : this.Window?.Name;
 
         [Property]
-        public string ParentName => this.Parent?.Name ?? string.Empty;
+        public string ParentName => this.Parent.Name;
 
         [Property]
-        public int ParentIndex => this.Parent?.Index ?? 0;
+        public int ParentIndex => this.Parent.Index;
 
         public override void Focus()
         {
@@ -198,7 +191,7 @@ namespace Roro
             }
         }
 
-        public void Click()
+        public override void Click()
         {
             if (this.rawElement.TryGetCurrentPattern(InvokePattern.Pattern, out object pattern))
             {

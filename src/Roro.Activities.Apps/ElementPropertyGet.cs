@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Roro.Activities.Element
+namespace Roro.Activities.Apps
 {
     public sealed class ElementPropertyGet : ProcessNodeActivity
     {
@@ -14,16 +14,7 @@ namespace Roro.Activities.Element
 
         public override void Execute(ActivityContext context)
         {
-            var query = ElementQuery.Get(this.Element);
-
-            var elements = WinContext.Shared.GetElementsFromQuery(query);
-
-            if (elements.Count() == 0)
-                throw new Exception("Element not found.");
-            if (elements.Count() > 1)
-                throw new Exception("Too many elements found.");
-
-            var e = elements.First() as WinElement;
+            var e = context.GetElement(this.Element);
 
             var name = context.Get(this.PropertyName);
 

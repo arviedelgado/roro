@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class Property : Attribute

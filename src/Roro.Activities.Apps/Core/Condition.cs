@@ -2,7 +2,7 @@
 using Microsoft.VisualBasic.CompilerServices;
 using System;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public sealed class Condition
     {

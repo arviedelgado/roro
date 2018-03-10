@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities", "Roro.Activities\Roro.Activities.csproj", "{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Excel", "Roro.Activities.Excel\Roro.Activities.Excel.csproj", "{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Element", "Roro.Activities.Element\Roro.Activities.Element.csproj", "{DB4188B9-7008-4FB9-BC27-6BCA69482801}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Apps", "Roro.Activities.Apps\Roro.Activities.Apps.csproj", "{DB4188B9-7008-4FB9-BC27-6BCA69482801}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Storage", "Roro.Activities.Storage\Roro.Activities.Storage.csproj", "{295EE6C0-64BE-459F-AA05-D4284C8A63F1}"
 	ProjectSection(ProjectDependencies) = postProject

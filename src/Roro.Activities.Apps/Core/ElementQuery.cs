@@ -1,11 +1,9 @@
-﻿
-using Roro.Activities;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public sealed class ElementQuery : DataType<List<Condition>>, IEnumerable<Condition>
     {
@@ -40,15 +38,6 @@ namespace Roro
         public override string ToString()
         {
             return XmlSerializerHelper.ToString(this.Value);
-        }
-
-        public static ElementQuery Get(Input<ElementQuery> input)
-        {
-            var value = input.Value;
-            if (value == string.Empty) return null;
-
-            var query = new ElementQuery(XmlSerializerHelper.ToObject<List<Condition>>(value));
-            return query;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Roro.Activities.Element
+namespace Roro.Activities.Apps
 {
     public sealed class AppStart : ProcessNodeActivity
     {

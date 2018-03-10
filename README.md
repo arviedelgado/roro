@@ -25,9 +25,9 @@ Watch our "Hello Automation!" example and see how it works!
 - [ ] Business app - Outlook
 
 ## Cognitive services
-- [ ] Image to Text or OCR
-- [ ] Speech to Text or STT
-- [ ] Text to Speech or TTS
+- [x] Image to Text or OCR
+- [x] Speech to Text or STT
+- [x] Text to Speech or TTS
 - [ ] Face Detection
 - [ ] Natural Language Processing
 

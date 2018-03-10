@@ -1,9 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public abstract class Context
     {

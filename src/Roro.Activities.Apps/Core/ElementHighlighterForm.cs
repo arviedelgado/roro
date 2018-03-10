@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     internal class ElementHighlighterForm : Form
     {

@@ -1,9 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public sealed class WinContext : Context
     {
@@ -33,13 +31,33 @@ namespace Roro
             var targetPath = query.FirstOrDefault(x => x.Name == "Path")?.Value.ToString();
             if (targetPath == null) return result;
 
+            var targetMainWindowName = query.FirstOrDefault(x => x.Name == "MainWindowName").Value.ToString();
+            var targetWindowName = query.FirstOrDefault(x => x.Name == "WindowName").Value.ToString();
+            var targetWindowCount = targetPath.Split('/').Count();
+
+
             candidates.Enqueue(WinElement.GetRoot());
             while (candidates.Count > 0)
             {
                 var candidate = candidates.Dequeue();
                 var candidatePath = candidate.Path;
+                var candidateWindowCount = candidatePath.Split('/').Count(x => x == "window");
                 if (targetPath.StartsWith(candidatePath))
                 {
+                    if (candidateWindowCount > 0)
+                    {
+                        if (candidate.MainWindowName != targetMainWindowName)
+                        {
+                            continue;
+                        }
+                    }
+                    if (candidateWindowCount == targetWindowCount)
+                    {
+                        if (candidate.WindowName != targetWindowName)
+                        {
+                            continue;
+                        }
+                    }
                     if (targetPath.Equals(candidatePath))
                     {
                         if (candidate.TryQuery(query))
@@ -56,6 +74,7 @@ namespace Roro
                     }
                 }
             }
+
             return result;
         }
     }

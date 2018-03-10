@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Windows.Forms;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public sealed class ElementPickerForm : Form
     {
@@ -19,7 +19,7 @@ namespace Roro
         private Button testButton;
         private SplitContainer splitContainer1;
         private DataGridViewCheckBoxColumn conditionEnabledColumn;
-        private Activities.LabelColumn conditionNameColumn;
+        private LabelColumn conditionNameColumn;
         private DataGridViewTextBoxColumn conditionValueColumn;
         private Label label1;
 
@@ -189,6 +189,7 @@ namespace Roro
             this.conditionNameColumn.Name = "conditionNameColumn";
             this.conditionNameColumn.ReadOnly = true;
             this.conditionNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.conditionNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // conditionValueColumn
             // 
@@ -196,7 +197,6 @@ namespace Roro
             this.conditionValueColumn.FillWeight = 60F;
             this.conditionValueColumn.HeaderText = "Value";
             this.conditionValueColumn.Name = "conditionValueColumn";
-            this.conditionValueColumn.ReadOnly = true;
             // 
             // ElementPickerForm
             // 

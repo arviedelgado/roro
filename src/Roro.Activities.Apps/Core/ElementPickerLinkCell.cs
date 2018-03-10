@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public sealed class ElementPickerLinkCell : DataGridViewLinkCell
     {

@@ -30,6 +30,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -87,6 +90,7 @@
   <PropertyGroup>
     <PostBuildEvent>cd $(SolutionDir)
 cd ..
-PowerShell -command compress-archive -Update -Path "bin\*.exe", "bin\*.dll", "LICENSE" -DestinationPath "bin\$(TargetName).Release.zip"</PostBuildEvent>
+PowerShell -command remove-item "bin\$(TargetName).Release.zip"
+PowerShell -command compress-archive -Update -Path "bin\*.exe", "bin\*.dll", "bin\*.winmd", "LICENSE" -DestinationPath "bin\$(TargetName).Release.zip"</PostBuildEvent>
   </PropertyGroup>
 </Project>

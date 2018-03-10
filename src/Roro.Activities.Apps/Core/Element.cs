@@ -1,17 +1,29 @@
-﻿
-using Roro.Activities;
-using System;
+﻿using System;
 using System.Linq;
 
-namespace Roro
+namespace Roro.Activities.Apps
 {
     public abstract class Element
     {
+        [Property]
+        public abstract string Id { get; }
+
+        [Property]
+        public abstract string Name { get; }
+
+        [Property]
+        public abstract string ClassName { get; }
+
         [Property(Required: true)]
         public abstract string Type { get; }
 
         [Property(Required: true)]
         public abstract string Path { get; }
+
+        [Property(Enabled: true)]
+        public abstract string Value { get; set; }
+
+        public abstract Rect Bounds { get; }
 
         [Property(Required: true)]
         public abstract string MainWindowName { get; }
@@ -19,9 +31,9 @@ namespace Roro
         [Property(Required: true)]
         public abstract string WindowName { get; }
 
-        public abstract Rect Bounds { get; }
-
         public abstract void Focus();
+
+        public abstract void Click();
 
         public ElementQuery GetQuery()
         {

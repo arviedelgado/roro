@@ -88,11 +88,12 @@ namespace Roro.Activities
 
         public static IEnumerable<Type> GetExternalActivities()
         {
-            foreach (var file in Directory.GetFiles(Environment.CurrentDirectory, "Roro.Activities.*.dll"))
+            foreach (var file in Directory.GetFiles(Environment.CurrentDirectory, typeof(Activity).Namespace + ".*.dll"))
             {
                 Assembly.LoadFrom(file);
             }
             return AppDomain.CurrentDomain.GetAssemblies()
+                .Where(x => x.FullName.StartsWith(typeof(Activity).Namespace))
                 .SelectMany(x => x.GetTypes())
                 .Where(x => !x.IsAbstract
                     && (typeof(ProcessNodeActivity).IsAssignableFrom(x)
@@ -104,6 +105,7 @@ namespace Roro.Activities
         {
             Activity.GetExternalActivities();
             return AppDomain.CurrentDomain.GetAssemblies()
+                .Where(x => x.FullName.StartsWith(typeof(Activity).Namespace))
                 .SelectMany(x => x.GetTypes())
                 .Where(x => !x.IsAbstract)
                 .OrderBy(x => x.FullName);

@@ -31,11 +31,10 @@ namespace Roro.Activities.Apps
             var targetPath = query.FirstOrDefault(x => x.Name == "Path")?.Value.ToString();
             if (targetPath == null) return result;
 
-            var targetMainWindowName = query.FirstOrDefault(x => x.Name == "MainWindowName").Value.ToString();
-            var targetWindowName = query.FirstOrDefault(x => x.Name == "WindowName").Value.ToString();
+            var targetMainWindowName = query.FirstOrDefault(x => x.Name == "MainWindowName").Value?.ToString() ?? string.Empty;
+            var targetWindowName = query.FirstOrDefault(x => x.Name == "WindowName").Value?.ToString() ?? string.Empty;
             var targetWindowCount = targetPath.Split('/').Count();
-
-
+            
             candidates.Enqueue(WinElement.GetRoot());
             while (candidates.Count > 0)
             {

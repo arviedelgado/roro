@@ -10,8 +10,9 @@ namespace Roro.Activities
         {
             Activity.GetAllActivities();
             return new XmlSerializer(typeof(T),
-                AppDomain.CurrentDomain.GetAssemblies().SelectMany(
-                    x => x.GetTypes())
+                AppDomain.CurrentDomain.GetAssemblies()
+                .Where(x => x.FullName.StartsWith(typeof(XmlSerializerHelper).Namespace))
+                .SelectMany(x =>  x.GetTypes())
                     .Where(t =>
                         typeof(Node).IsAssignableFrom(t) ||
                         typeof(Port).IsAssignableFrom(t) ||

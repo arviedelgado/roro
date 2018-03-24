@@ -35,7 +35,8 @@ namespace Roro.Activities.Apps
 
         public bool Compare(object otherValue, Type otherType)
         {
-            var value = this.Value;
+            var value = this.Value ?? string.Empty;
+            otherValue = otherValue ?? string.Empty;
             if (otherType == typeof(string))
             {
                 return LikeOperator.LikeString(

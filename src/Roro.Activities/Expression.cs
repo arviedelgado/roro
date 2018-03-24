@@ -1,9 +1,13 @@
 ﻿
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CSharp;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Roro.Activities
 {
@@ -16,36 +20,20 @@ namespace Roro.Activities
                 return null;
             }
 
-            expression = Expression.Resolve(expression, variableNodes);
-
-            var codeProvider = new CSharpCodeProvider();
-            var compilerParameters = new CompilerParameters
+            try
             {
-                GenerateInMemory = true,
-                GenerateExecutable = false,
-            };
-            var code = @"
-using System;
-public class ExpressionClass { public static object ExpressionMethod() {
-return
-#line 1
-" +  expression + @"
-;}}";
-            var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, code);
-            if (compilerResults.Errors.HasErrors)
-            {
-                var errorText = string.Empty;
-                foreach (CompilerError compilerError in compilerResults.Errors)
+                expression = Expression.Resolve(expression, variableNodes);
+                var result = Task.Run(async () =>
                 {
-                    errorText += string.Format("ERROR: Line {0}, Column {1} - {2}\n", compilerError.Line, compilerError.Column, compilerError.ErrorText);
-                }
-                throw new Exception(errorText);
+                    return await CSharpScript.EvaluateAsync(expression, ScriptOptions.Default.WithImports("System"));
+                }).Result;
+                return result;
             }
-
-            var expressionObject = compilerResults.CompiledAssembly.GetType("ExpressionClass");
-            var expressionResult = expressionObject.GetMethod("ExpressionMethod").Invoke(expressionObject, null);
-
-            return expressionResult;
+            catch (CompilationErrorException)
+            {
+                throw;
+                //                string.Join(Environment.NewLine, e.Diagnostics)
+            }
         }
 
         private static string Resolve(string expression, IEnumerable<VariableNode> variableNodes)

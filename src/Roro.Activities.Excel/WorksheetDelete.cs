@@ -10,7 +10,10 @@ namespace Roro.Activities.Excel
 
         public override void Execute(ActivityContext context)
         {
-            throw new NotImplementedException();
+            var wbName = context.Get(this.WorkbookName);
+            var wsName = context.Get(this.WorksheetName);
+
+            ExcelBot.Shared.GetWorksheetByName(wbName, wsName, true).Delete();
         }
     }
 }

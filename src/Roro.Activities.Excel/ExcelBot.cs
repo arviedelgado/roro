@@ -9,22 +9,24 @@ namespace Roro.Activities.Excel
 
         private const uint RPC_SERVER_UNAVAILABLE = 0x800706BA;
 
-        public static readonly ExcelBot Shared = new ExcelBot();
+        public static ExcelBot Shared = new ExcelBot();
 
         private dynamic App { get; set; }
 
-        public dynamic GetInstance()
+        public dynamic GetApp()
         {
             if (this.App == null)
             {
                 try
                 {
-                    var excelType = Type.GetTypeFromProgID(EXCEL_PROG_ID);
-                    if (excelType == null)
+                    if (Type.GetTypeFromProgID(EXCEL_PROG_ID) is Type excelType)
                     {
-                        throw new TypeLoadException("The Excel application is not installed.");
+                        this.App = Activator.CreateInstance(excelType);
                     }
-                    this.App = Activator.CreateInstance(excelType);
+                    else
+                    {
+                        throw new ExcelNotFoundException();
+                    }
                 }
                 catch
                 {
@@ -40,41 +42,52 @@ namespace Roro.Activities.Excel
                 catch
                 {
                     this.Dispose();
-                    return this.GetInstance();
+                    return this.GetApp();
                 }
             }
             this.App.Visible = true;
             return this.App;
         }
 
-        public dynamic GetWorkbook(dynamic xlApp, string workbookName)
+        public dynamic GetWorkbookByName(string wbName, bool throwIfNotFound)
         {
-            dynamic xlWb = null;
-            if (workbookName == string.Empty)
+            var xlWb = this.GetApp().Workbooks.Item(wbName);
+            if (xlWb == null)
             {
-                xlWb = xlApp.ActiveWorkbook ?? xlApp.Workbooks.Add();
-            }
-            else
-            {
-                xlWb = xlApp.Workbooks.Item(workbookName);
+                if (throwIfNotFound)
+                {
+                    throw new ExcelWorkbookNotFoundException();
+                }
+                else
+                {
+                    return null;
+                }
             }
             xlWb.Activate();
             return xlWb;
         }
 
-        public dynamic GetWorksheet(dynamic xlWb, string worksheetName)
+        public dynamic GetWorksheetByName(string wbName, string wsName, bool throwIfNotFound)
         {
-            dynamic xlWs = null;
-            if (worksheetName == string.Empty)
+            var xlWs = this.GetWorkbookByName(wbName, true).Worksheets.Item(wsName);
+            if (xlWs == null)
             {
-                xlWs = xlWb.ActiveSheet;
-            }
-            else
-            {
-                xlWs = xlWb.Item(worksheetName);
+                if (throwIfNotFound)
+                {
+                    throw new ExcelWorksheetNotFoundException();
+                }
+                else
+                {
+                    return null;
+                }
             }
             xlWs.Activate();
             return xlWs;
+        }
+
+        public dynamic GetRange(string wbName, string wsName, string rangeAddr)
+        {
+            return ExcelBot.Shared.GetWorksheetByName(wbName, wsName, true).Range(rangeAddr);
         }
 
         private ExcelBot()

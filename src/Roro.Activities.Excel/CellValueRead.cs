@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Roro.Activities.Excel
+﻿namespace Roro.Activities.Excel
 {
-    public class CellValueCopy : ProcessNodeActivity
+    public class CellValueRead : ProcessNodeActivity
     {
         public Input<Text> WorkbookName { get; set; }
 
@@ -10,13 +8,17 @@ namespace Roro.Activities.Excel
 
         public Input<Text> Cell { get; set; }
 
+        public Output<Text> Value { get; set; }
+
         public override void Execute(ActivityContext context)
         {
             var wbName = context.Get(this.WorkbookName);
             var wsName = context.Get(this.WorksheetName);
             var range = context.Get(this.Cell);
 
-            ExcelBot.Shared.GetRange(wbName, wsName, range).Copy();
+            var value = ExcelBot.Shared.GetRange(wbName, wsName, range).Value?.ToString() ?? string.Empty;
+
+            context.Set(this.Value, value);
         }
     }
 }

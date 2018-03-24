@@ -107,6 +107,8 @@ namespace Roro.Activities
         public static implicit operator String(Text item) => item.Value;
 
         public static implicit operator Text(String item) => new Text(item);
+
+        public override string ToString() => this.Value;
     }
 
     public sealed class Number : DataType<Decimal>

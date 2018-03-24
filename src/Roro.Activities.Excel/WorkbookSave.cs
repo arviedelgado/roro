@@ -8,7 +8,9 @@ namespace Roro.Activities.Excel
 
         public override void Execute(ActivityContext context)
         {
-            throw new NotImplementedException();
+            var wbName = context.Get(this.WorkbookName);
+
+            ExcelBot.Shared.GetWorkbookByName(wbName, true).Save();
         }
     }
 }

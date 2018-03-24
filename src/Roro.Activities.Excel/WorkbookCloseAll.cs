@@ -2,15 +2,15 @@
 
 namespace Roro.Activities.Excel
 {
-    public class WorkbookClose : ProcessNodeActivity
+    public class WorkbookCloseAll : ProcessNodeActivity
     {
-        public Input<Text> WorkbookName { get; set; }
-
         public override void Execute(ActivityContext context)
         {
-            var wbName = context.Get(this.WorkbookName);
-
-            ExcelBot.Shared.GetWorkbookByName(wbName, true).Close();
+            var count = ExcelBot.Shared.GetApp().Workbooks.Count;
+            for (var i = 0; i < count; i++)
+            {
+                ExcelBot.Shared.GetApp().Workbooks.Item(i).Close();
+            }
 
             if (ExcelBot.Shared.GetApp().Workbooks.Count == 0)
             {

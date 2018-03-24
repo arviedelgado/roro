@@ -8,13 +8,9 @@ namespace Roro.Activities.Excel
 
         public override void Execute(ActivityContext context)
         {
-            // inputs
-            //
+            var wbName = ExcelBot.Shared.GetApp().Workbooks.Add().Name.ToString();
 
-            var workbookName = ExcelBot.Shared.GetInstance().Workbooks.Add().Name.ToString();
-
-            // outputs
-            context.Set(this.WorkbookName, workbookName);
+            context.Set(this.WorkbookName, wbName);
         }
     }
 }

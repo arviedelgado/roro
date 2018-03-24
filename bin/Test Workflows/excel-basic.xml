@@ -43,7 +43,7 @@
       <Activity xsi:type="CellValueWrite">
         <WorkbookName>
           <Name>WorkbookName</Name>
-          <Value>[Worbook Name]</Value>
+          <Value>[My Workbook Name]</Value>
         </WorkbookName>
         <WorksheetName>
           <Name>WorksheetName</Name>

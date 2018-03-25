@@ -11,7 +11,7 @@ Watch our "Hello Automation!" example and see how it works!
 [![http://roroscript.com](http://roroscript.com/media/roro-notepad-hello-automation.gif?maxAge=2592000)](http://roroscript.com)
 
 ## Platforms
-- [x] Windows 10
+- [x] Windows 10 (.NET Framework 4.6+)
 - [ ] Windows Server
 
 ## Supported apps
@@ -30,6 +30,10 @@ Watch our "Hello Automation!" example and see how it works!
 - [x] Text to Speech or TTS
 - [ ] Face Detection
 - [ ] Natural Language Processing
+
+## Credits
+- [x] https://github.com/dotnet/roslyn
+- [x] https://github.com/Fody/Costura
 
 ## Need help?
 > Message me on [LinkedIn](https://linkedin.com/in/arviedelgado)

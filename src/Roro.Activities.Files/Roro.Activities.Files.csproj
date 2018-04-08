@@ -7,8 +7,8 @@
     <ProjectGuid>{295EE6C0-64BE-459F-AA05-D4284C8A63F1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roro.Activities.Storage</RootNamespace>
-    <AssemblyName>Roro.Activities.Storage</AssemblyName>
+    <RootNamespace>Roro.Activities.Files</RootNamespace>
+    <AssemblyName>Roro.Activities.Files</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

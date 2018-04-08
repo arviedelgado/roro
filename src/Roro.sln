@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Excel", "Ro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Apps", "Roro.Activities.Apps\Roro.Activities.Apps.csproj", "{DB4188B9-7008-4FB9-BC27-6BCA69482801}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Storage", "Roro.Activities.Storage\Roro.Activities.Storage.csproj", "{295EE6C0-64BE-459F-AA05-D4284C8A63F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Files", "Roro.Activities.Files\Roro.Activities.Files.csproj", "{295EE6C0-64BE-459F-AA05-D4284C8A63F1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
 	EndProjectSection

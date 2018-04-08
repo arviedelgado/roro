@@ -1,16 +1,16 @@
 ﻿using System;
 using System.IO;
 
-namespace Roro.Activities.Storage
+namespace Roro.Activities.Files
 {
-    public class FolderDelete : ProcessNodeActivity
+    public class FolderCreate : ProcessNodeActivity
     {
         public Input<Text> FolderPath { get; set; }
 
         public override void Execute(ActivityContext context)
         {
             var folderPath = context.Get(this.FolderPath);
-            Directory.Delete(folderPath, true);
+            Directory.CreateDirectory(folderPath);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Roro.Activities.Storage
+namespace Roro.Activities.Files
 {
     public class FileWriteText : ProcessNodeActivity
     {

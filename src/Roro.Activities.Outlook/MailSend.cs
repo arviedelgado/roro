@@ -37,7 +37,17 @@ namespace Roro.Activities.Outlook
             dynamic app = Activator.CreateInstance(Type.GetTypeFromProgID("Outlook.Application"));
 
             var mailItem = app.CreateItem(0 /*  OlItemType.olMailItem */);
-            mailItem.SentOnBehalfOfName = from;
+
+            if (from.ToString().Length > 0)
+            {
+                var fromAccount = app.Session.Accounts.Item(from.ToString());
+                if (fromAccount == null)
+                {
+                    throw new Exception("Cannot find " + from + " account.");
+                }
+                mailItem.SendUsingAccount = fromAccount;
+            }
+
             mailItem.To = to;
             mailItem.CC = cc;
             mailItem.BCC = bcc;

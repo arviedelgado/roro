@@ -7,8 +7,8 @@
     <ProjectGuid>{AA652A7F-FE1F-4824-80AC-715BF2A1AB86}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roro.Activities.Outlook</RootNamespace>
-    <AssemblyName>Roro.Activities.Outlook</AssemblyName>
+    <RootNamespace>Roro.Activities.SharePoint</RootNamespace>
+    <AssemblyName>Roro.Activities.SharePoint</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

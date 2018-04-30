@@ -14,8 +14,12 @@ namespace Roro.Activities.SharePoint
 
             ClientContext spContext = new ClientContext(this.SiteUrl.ToString());
             Web spWeb = spContext.Web;
-            List spList = spWeb.Lists.GetByTitle(this.ListTitle.ToString());
-            spContext.Load(spList);
+
+            ListCreationInformation lci = new ListCreationInformation();
+            lci.Title = this.ListTitle.ToString();
+            lci.TemplateType = (int)ListTemplateType.DocumentLibrary;
+
+            List newList = spWeb.Lists.Add(lci);
 
             try
             {

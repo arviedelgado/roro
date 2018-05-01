@@ -26,8 +26,6 @@ namespace Roro.Activities.SharePoint
             newItem.Update();
 
             clientContext.ExecuteQuery();
-
-            throw new NotImplementedException();
         }
     }
 }

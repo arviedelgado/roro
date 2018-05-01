@@ -12,12 +12,12 @@ namespace Roro.Activities.SharePoint
         public override void Execute(ActivityContext context)
         {
 
-            ClientContext spContext = new ClientContext(this.SiteUrl.ToString());
+            ClientContext spContext = new ClientContext(context.Get(this.SiteUrl));
             Web spWeb = spContext.Web;
 
             ListCreationInformation lci = new ListCreationInformation();
-            lci.Title = this.ListTitle.ToString();
-            lci.TemplateType = (int)ListTemplateType.DocumentLibrary;
+            lci.Title = context.Get(this.ListTitle);
+            lci.TemplateType = (int) Microsoft.SharePoint.Client.ListTemplateType.DocumentLibrary;
 
             List newList = spWeb.Lists.Add(lci);
 

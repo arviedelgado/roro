@@ -13,7 +13,7 @@ namespace Roro.Activities.SharePoint
         public Input<Text> ListTitle { get; set; }
         public Input<Text> ItemTitle { get; set; }
         public Input<Text> filePath { get; set; }
-        public Input<Text> overwrite { get; set; }
+        public Input<bool> overwrite { get; set; }
 
         public override void Execute(ActivityContext context)
         {
@@ -24,7 +24,7 @@ namespace Roro.Activities.SharePoint
 
             FileCreationInformation fci = new FileCreationInformation();
             fci.Content = System.IO.File.ReadAllBytes(context.Get(filePath));
-            fci.Overwrite = context.
+            fci.Overwrite = context.Get(this.overwrite);
 
             clientContext.ExecuteQuery();
         }

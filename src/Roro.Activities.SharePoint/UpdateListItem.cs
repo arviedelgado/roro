@@ -7,24 +7,26 @@ using Microsoft.SharePoint.Client;
 
 namespace Roro.Activities.SharePoint
 {
-    class CreateListItem : ProcessNodeActivity
+    class UpdateListItem : ProcessNodeActivity
     {
         public Input<Text> SiteUrl { get; set; }
         public Input<Text> ListTitle { get; set; }
-        public Input<Text> ItemTitle { get; set; }
-        public Input<Text> filePath { get; set; }
-        public Input<Text> overwrite { get; set; }
+        public Input<Text> ItemId { get; set; }
+        public Input<Text> ColumnName { get; set; }
+        public Input<Text> ColumnValue { get; set; }
 
         public override void Execute(ActivityContext context)
         {
-            //TODO: Handle fields other than the Title field.
             ClientContext clientContext = new ClientContext(context.Get(this.SiteUrl));
 
             List list = clientContext.Web.Lists.GetByTitle(context.Get(this.ListTitle));
 
-            FileCreationInformation fci = new FileCreationInformation();
-            fci.Content = System.IO.File.ReadAllBytes(context.Get(filePath));
-            fci.Overwrite = context.
+            ListItem item = list.GetItemById(context.Get(this.ItemId));
+            clientContext.Load(item);
+            clientContext.ExecuteQuery();
+
+            item[context.Get(this.ColumnName)] = context.Get(this.ColumnValue);
+            item.Update();
 
             clientContext.ExecuteQuery();
         }

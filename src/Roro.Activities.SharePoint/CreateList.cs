@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
+using System;
 
 namespace Roro.Activities.SharePoint
 {
@@ -7,6 +7,7 @@ namespace Roro.Activities.SharePoint
     {
 
         public Input<Text> SiteUrl { get; set; }
+
         public Input<Text> ListTitle { get; set; }
 
         public override void Execute(ActivityContext context)
@@ -17,7 +18,7 @@ namespace Roro.Activities.SharePoint
 
             ListCreationInformation lci = new ListCreationInformation();
             lci.Title = context.Get(this.ListTitle);
-            lci.TemplateType = (int) Microsoft.SharePoint.Client.ListTemplateType.DocumentLibrary;
+            lci.TemplateType = (int)ListTemplateType.DocumentLibrary;
 
             List newList = spWeb.Lists.Add(lci);
 

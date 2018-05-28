@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
 
 namespace Roro.Activities.SharePoint
 {
     class UpdateListItem : ProcessNodeActivity
     {
         public Input<Text> SiteUrl { get; set; }
+
         public Input<Text> ListTitle { get; set; }
+
         public Input<Text> ItemId { get; set; }
+
         public Input<Text> ColumnName { get; set; }
+
         public Input<Text> ColumnValue { get; set; }
 
         public override void Execute(ActivityContext context)

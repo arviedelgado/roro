@@ -6,7 +6,7 @@ namespace Roro.Activities
 {
     public sealed class EndNode : Node
     {
-        private EndNode()
+        public EndNode()
         {
             // required for XmlSerializer.
         }

@@ -21,7 +21,7 @@ namespace Roro.Activities
 
         public override bool CanStartLink => false;
 
-        private VariableNode()
+        public VariableNode()
         {
             // required for XmlSerializer.
         }

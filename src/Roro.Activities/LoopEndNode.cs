@@ -11,7 +11,7 @@ namespace Roro.Activities
 
         public Guid LoopStartNodeId { get; set; }
 
-        private LoopEndNode()
+        public LoopEndNode()
         {
             // required for XmlSerializer.
         }

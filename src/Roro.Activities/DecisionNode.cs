@@ -12,7 +12,7 @@ namespace Roro.Activities
 
         //public Guid False { get; set; }
 
-        private DecisionNode()
+        public DecisionNode()
         {
             // required for XmlSerializer.
         }

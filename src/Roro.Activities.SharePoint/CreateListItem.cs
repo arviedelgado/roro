@@ -2,7 +2,7 @@
 
 namespace Roro.Activities.SharePoint
 {
-    public class CreateListItem : ProcessNodeActivity
+    class CreateListItem : ProcessNodeActivity
     {
         public Input<Text> SiteUrl { get; set; }
 

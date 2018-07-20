@@ -10,7 +10,7 @@ namespace Roro.Activities
     {
         //public Guid Next { get; set; }
 
-        public StartNode()
+        private StartNode()
         {
             // required for XmlSerializer.
         }

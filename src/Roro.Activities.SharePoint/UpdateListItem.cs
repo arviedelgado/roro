@@ -2,7 +2,7 @@
 
 namespace Roro.Activities.SharePoint
 {
-    public class UpdateListItem : ProcessNodeActivity
+    class UpdateListItem : ProcessNodeActivity
     {
         public Input<Text> SiteUrl { get; set; }
 

@@ -1,5 +1,7 @@
 ## Roro - Free RPA Software
 
+### *Notice: Roro is migrating to NETStandard + WPF under the roro-wpf branch.*
+
 Roro is a free open-source [Robotic Process Automation](https://en.wikipedia.org/wiki/Robotic_process_automation) software.
 
 The software is released under BSD 2-Clause open-source [license](LICENSE).

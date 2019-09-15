@@ -1,39 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities", "Roro.Activities\Roro.Activities.csproj", "{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Excel", "Roro.Activities.Excel\Roro.Activities.Excel.csproj", "{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Apps", "Roro.Activities.Apps\Roro.Activities.Apps.csproj", "{DB4188B9-7008-4FB9-BC27-6BCA69482801}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Files", "Roro.Activities.Files\Roro.Activities.Files.csproj", "{295EE6C0-64BE-459F-AA05-D4284C8A63F1}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Cognitive", "Roro.Activities.Cognitive\Roro.Activities.Cognitive.csproj", "{F4558562-7292-4521-AA1D-3D090B070B92}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro", "Roro\Roro.csproj", "{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}"
-	ProjectSection(ProjectDependencies) = postProject
-		{C4291815-8E69-4AF4-BD7E-8A9DB3B6D63F} = {C4291815-8E69-4AF4-BD7E-8A9DB3B6D63F}
-		{F4558562-7292-4521-AA1D-3D090B070B92} = {F4558562-7292-4521-AA1D-3D090B070B92}
-		{DB4188B9-7008-4FB9-BC27-6BCA69482801} = {DB4188B9-7008-4FB9-BC27-6BCA69482801}
-		{295EE6C0-64BE-459F-AA05-D4284C8A63F1} = {295EE6C0-64BE-459F-AA05-D4284C8A63F1}
-		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD} = {1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.Outlook", "Roro.Activities.Outlook\Roro.Activities.Outlook.csproj", "{C4291815-8E69-4AF4-BD7E-8A9DB3B6D63F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA} = {BD513E2D-46BC-408E-98E6-D12AEE06E7EA}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Activities.SharePoint", "Roro.Activities.SharePoint\Roro.Activities.SharePoint.csproj", "{AA652A7F-FE1F-4824-80AC-715BF2A1AB86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Workspace", "Roro.Workspace\Roro.Workspace.csproj", "{3688E286-1096-4A0C-BAD8-60C2A70A1863}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,43 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD513E2D-46BC-408E-98E6-D12AEE06E7EA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BA8B7CA-6BCB-434E-B7A8-4268962D35DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB4188B9-7008-4FB9-BC27-6BCA69482801}.Release|Any CPU.Build.0 = Release|Any CPU
-		{295EE6C0-64BE-459F-AA05-D4284C8A63F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295EE6C0-64BE-459F-AA05-D4284C8A63F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{295EE6C0-64BE-459F-AA05-D4284C8A63F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295EE6C0-64BE-459F-AA05-D4284C8A63F1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4558562-7292-4521-AA1D-3D090B070B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4558562-7292-4521-AA1D-3D090B070B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4558562-7292-4521-AA1D-3D090B070B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4558562-7292-4521-AA1D-3D090B070B92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9565EB4-FAD3-4B1E-BD5C-CE2D28B23A06}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C4291815-8E69-4AF4-BD7E-8A9DB3B6D63F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C4291815-8E69-4AF4-BD7E-8A9DB3B6D63F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C4291815-8E69-4AF4-BD7E-8A9DB3B6D63F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C4291815-8E69-4AF4-BD7E-8A9DB3B6D63F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA652A7F-FE1F-4824-80AC-715BF2A1AB86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA652A7F-FE1F-4824-80AC-715BF2A1AB86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA652A7F-FE1F-4824-80AC-715BF2A1AB86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA652A7F-FE1F-4824-80AC-715BF2A1AB86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3688E286-1096-4A0C-BAD8-60C2A70A1863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3688E286-1096-4A0C-BAD8-60C2A70A1863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3688E286-1096-4A0C-BAD8-60C2A70A1863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3688E286-1096-4A0C-BAD8-60C2A70A1863}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9847E870-0178-4C3C-A5A2-748FBCD42DDC}
+		SolutionGuid = {5BE52BBD-FAB0-4E38-9899-390821CA0E1C}
 	EndGlobalSection
 EndGlobal

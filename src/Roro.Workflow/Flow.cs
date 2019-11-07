@@ -1,6 +1,8 @@
 ﻿using Roro.Workflow.Framework;
+using Roro.Workflow.Statements;
 using System;
 using System.Collections.ObjectModel;
+using Action = Roro.Workflow.Statements.Action;
 
 namespace Roro.Workflow
 {
@@ -8,14 +10,22 @@ namespace Roro.Workflow
     {
         public Guid Id { get; }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set => NotifyPropertyChanged(ref _name, value);
+        }
+        private string _name;
 
-        public ObservableCollection<Step> Steps { get; }
+        public Step RootStep { get; }
 
         public Flow()
         {
             Id = Guid.NewGuid();
             Name = GetType().Name + '_' + Id;
+            RootStep = new Action();
+            RootStep.AddChildCommand.Execute();
+            RootStep.FirstChild.AddChildCommand.Execute();
         }
     }
 }

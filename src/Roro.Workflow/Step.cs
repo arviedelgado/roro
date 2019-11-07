@@ -1,6 +1,7 @@
 ﻿using Roro.Workflow.Framework;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace Roro.Workflow
@@ -9,19 +10,41 @@ namespace Roro.Workflow
     {
         public Guid Id { get; }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set => NotifyPropertyChanged(ref _name, value);
+        }
+        private string _name;
+
+        public string Number
+        {
+            get => (Parent is null ? string.Empty : Parent.Number + ".") + ChildIndex;
+        }
 
         public ObservableCollection<StepInput> Inputs { get; }
 
         public ObservableCollection<StepOutput> Outputs { get; }
 
-        public StepExecutionState State { get; set; }
+        public StepExecutionState State
+        {
+            get => _state;
+            set => NotifyPropertyChanged(ref _state, value);
+        }
+        private StepExecutionState _state;
+
+        public RelayCommand AddChildCommand { get; }
 
         public abstract StepExecutionResult Execute(StepExecutionContext context);
 
         #region Navigation
 
-        public Step Parent { get; }
+        public Step Parent
+        {
+            get => _parent;
+            set => NotifyPropertyChanged(ref _parent, value);
+        }
+        private Step _parent;
 
         public ObservableCollection<Step> Children { get; }
 
@@ -38,6 +61,8 @@ namespace Roro.Workflow
         public bool IsFirstChild => Parent?.FirstChild == this;
 
         public bool IsLastChild => Parent?.LastChild == this;
+
+        public bool HasChildren => Children.Count > 0;
 
         public Step GetAncestor(Func<Step, bool> condition)
         {
@@ -90,6 +115,28 @@ namespace Roro.Workflow
             Inputs = new ObservableCollection<StepInput>();
             Outputs = new ObservableCollection<StepOutput>();
             Children = new ObservableCollection<Step>();
+            Children.CollectionChanged += Children_CollectionChanged;
+            AddChildCommand = new RelayCommand(() => true, AddChild);
+        }
+
+        private void Children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            NotifyPropertyChanged(
+                nameof(HasChildren),
+                nameof(FirstChild),
+                nameof(LastChild));
+
+            Children.ToList().ForEach(child => child.NotifyPropertyChanged(
+                nameof(child.Number),
+                nameof(child.PreviousSibling),
+                nameof(child.NextSibling),
+                nameof(child.IsFirstChild),
+                nameof(child.IsLastChild)));
+        }
+
+        private void AddChild()
+        {
+            Children.Add(new Statements.Action() { Parent = this });
         }
     }
 }

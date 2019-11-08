@@ -1,8 +1,6 @@
 ﻿using Roro.Workflow.Framework;
-using Roro.Workflow.Statements;
 using System;
-using System.Collections.ObjectModel;
-using Action = Roro.Workflow.Statements.Action;
+using System.Linq;
 
 namespace Roro.Workflow
 {
@@ -17,15 +15,17 @@ namespace Roro.Workflow
         }
         private string _name;
 
-        public Step RootStep { get; }
+        public bool IsReadOnly { get; }
+
+        public StepCollection Steps { get; }
 
         public Flow()
         {
             Id = Guid.NewGuid();
             Name = GetType().Name + '_' + Id;
-            RootStep = new Action();
-            RootStep.AddChildCommand.Execute();
-            RootStep.FirstChild.AddChildCommand.Execute();
+            Steps = new StepCollection(this);
+            Steps.AddCommand.Execute();
+            Steps.First().Children.AddCommand.Execute();
         }
     }
 }

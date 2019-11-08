@@ -13,16 +13,16 @@
             <DataTemplate DataType="{x:Type vm:Step}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="48" />
+                        <RowDefinition Height="32" />
                         <RowDefinition Height="16" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="48" />
-                        <ColumnDefinition Width="48" />
-                        <ColumnDefinition Width="48" />
-                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="32" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
@@ -44,49 +44,30 @@
                                Background="LightGreen" />
 
                     <Button Grid.Row="1"
-                            Grid.Column="1">
+                            Grid.Column="1"
+                            FontSize="6"
+                            Content="Add Sibling">
                         <Button.Style>
                             <Style TargetType="Button">
+                                <Setter Property="Command" Value="{Binding AddSiblingCommand}" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsLastChild}" Value="True">
-                                        <Setter Property="Command" Value="{Binding Parent.AddChildCommand}" />
-                                    </DataTrigger>
                                     <DataTrigger Binding="{Binding IsLastChild}" Value="False">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Ellipse Grid.Column="1"
-                                             Fill="Yellow"
-                                             Stroke="DarkOrange"
-                                             StrokeThickness="1"
-                                             Stretch="UniformToFill"
-                                             />
-                                </Grid>
-                            </ControlTemplate>                            
-                        </Button.Template>
                     </Button>
 
                     <Button Grid.Row="1"
-                            Grid.Column="3">
-                        <Button.Content>
-                            <Ellipse Stroke="Purple"
-                                     StrokeThickness="1" />
-                        </Button.Content>
+                            Grid.Column="3"
+                            FontSize="6"
+                            Content="Add Child">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding HasChildren}" Value="False">
-                                        <Setter Property="Command" Value="{Binding AddChildCommand}" />
+                                        <Setter Property="Command" Value="{Binding Children.AddCommand}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding HasChildren}" Value="True">
                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -113,6 +94,8 @@
             </DataTemplate>                       
         </Grid.Resources>
 
-        <ItemsControl ItemsSource="{Binding RootStep.Children}" />
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Steps}" />
+        </ScrollViewer>
     </Grid>
 </Window>

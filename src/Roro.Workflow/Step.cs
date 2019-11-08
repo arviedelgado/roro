@@ -39,72 +39,27 @@ namespace Roro.Workflow
 
         #region Navigation
 
-        public Step Parent
-        {
-            get => _parent;
-            set => NotifyPropertyChanged(ref _parent, value);
-        }
-        private Step _parent;
+        public Flow Flow => Get_Flow();
 
-        public ObservableCollection<Step> Children { get; }
+        public Step Parent => Get_Parent();
+
+        public StepCollection Children { get; }
+
+        public bool HasChildren => Children.Count > 0;
 
         public Step FirstChild => Children.FirstOrDefault();
 
         public Step LastChild => Children.LastOrDefault();
 
-        public Step PreviousSibling => Parent?.Children.ElementAtOrDefault(ChildIndex - 1);
+        public Step PreviousSibling => (Parent is null ? Flow.Steps : Parent.Children).ElementAtOrDefault(ChildIndex - 1);
 
-        public Step NextSibling => Parent?.Children.ElementAtOrDefault(ChildIndex + 1);
+        public Step NextSibling => (Parent is null ? Flow.Steps : Parent.Children).ElementAtOrDefault(ChildIndex + 1);
 
-        public int ChildIndex => Parent?.Children.IndexOf(this) ?? -1;
+        public int ChildIndex => (Parent is null ? Flow.Steps : Parent.Children).IndexOf(this);
 
-        public bool IsFirstChild => Parent?.FirstChild == this;
+        public bool IsFirstChild => (Parent is null ? Flow.Steps : Parent.Children).FirstOrDefault() == this;
 
-        public bool IsLastChild => Parent?.LastChild == this;
-
-        public bool HasChildren => Children.Count > 0;
-
-        public Step GetAncestor(Func<Step, bool> condition)
-        {
-            var ancestor = Parent;
-            while (ancestor != null)
-            {
-                if (condition.Invoke(ancestor))
-                    break;
-
-                ancestor = ancestor.Parent;
-            }
-
-            return ancestor;
-        }
-
-        public Step GetPreviousSibling(Func<Step, bool> condition)
-        {
-            var previousSibling = Parent;
-            while (previousSibling != null)
-            {
-                if (condition.Invoke(previousSibling))
-                    break;
-
-                previousSibling = previousSibling.PreviousSibling;
-            }
-
-            return previousSibling;
-        }
-
-        public Step GetNextSibling(Func<Step, bool> condition)
-        {
-            var nextSibling = Parent;
-            while (nextSibling != null)
-            {
-                if (condition.Invoke(nextSibling))
-                    break;
-
-                nextSibling = nextSibling.NextSibling;                    
-            }
-
-            return nextSibling;
-        }
+        public bool IsLastChild => (Parent is null ? Flow.Steps : Parent.Children).LastOrDefault() == this;
 
         #endregion
 
@@ -114,29 +69,43 @@ namespace Roro.Workflow
             Name = GetType().Name + '_' + Id;
             Inputs = new ObservableCollection<StepInput>();
             Outputs = new ObservableCollection<StepOutput>();
-            Children = new ObservableCollection<Step>();
-            Children.CollectionChanged += Children_CollectionChanged;
-            AddChildCommand = new RelayCommand(() => true, AddChild);
+            Children = new StepCollection(this);
+            AddSiblingCommand = new RelayCommand(() => IsLastChild, () => (Parent is null ? Flow.Steps : Parent.Children).AddCommand.Execute());
         }
 
-        private void Children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        #region Flow
+
+        private Flow _flow;
+
+        private Flow Get_Flow()
         {
-            NotifyPropertyChanged(
-                nameof(HasChildren),
-                nameof(FirstChild),
-                nameof(LastChild));
-
-            Children.ToList().ForEach(child => child.NotifyPropertyChanged(
-                nameof(child.Number),
-                nameof(child.PreviousSibling),
-                nameof(child.NextSibling),
-                nameof(child.IsFirstChild),
-                nameof(child.IsLastChild)));
+            return _flow;
         }
 
-        private void AddChild()
+        internal void InternalSet_Flow(Flow value)
         {
-            Children.Add(new Statements.Action() { Parent = this });
+            NotifyPropertyChanged(ref _flow, value, nameof(Flow));
         }
+
+        #endregion
+
+        #region Parent
+
+        private Step _parent;
+
+        private Step Get_Parent()
+        {
+            return _parent;
+        }
+
+        internal void InternalSet_Parent(Step value)
+        {
+            NotifyPropertyChanged(ref _parent, value, nameof(Parent));
+        }
+
+        #endregion
+
+        public RelayCommand AddSiblingCommand { get; }
+
     }
 }
